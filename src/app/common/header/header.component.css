@@ -1,0 +1,58 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;  
+  background: #ffffff;
+  padding: 10px 16px;
+  border-bottom: 1px solid #D1D1D1;
+}
+.app-title {
+font-weight: 600;
+font-size: 16px;
+line-height: 18.16px;
+font-family: 'Saans-SemiBold';
+color: #3d3d3d;
+
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+}
+.notif {
+  position: relative;
+}
+.notif i {
+  font-size: 18px;
+}
+.notif span {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  height: 15px;
+  width: 15px;
+  background: #8F53F0;
+  border-radius: 20px;
+  color: #fff;
+  font-weight: 600;
+  font-family: 'Saans-SemiBold';
+  font-size: 12px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  background: #334155;
+  color:#fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-family: 'Saans-SemiBold';
+  font-size: 12px;
+  border-radius: 28px;
+  margin-left: 24px;
+}

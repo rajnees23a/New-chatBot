@@ -1,0 +1,31 @@
+<!-- <div class="container-fluid">
+  <div class="row">
+    <app-left-nav></app-left-nav>
+
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+      <button class="sidebar-toggle-btn" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Your Idea</h1>
+      </div>
+      <div>
+      </div>
+    </main>
+  </div>
+</div> -->
+<div class="screen-wrap"> 
+<app-left-nav></app-left-nav>
+<div class="layout"> 
+  <app-header></app-header>
+  <div class="content">
+    <router-outlet></router-outlet>
+    <div *ngIf="showSuccessMessage" class="validation-msg global-valid success">
+      <i class="bi bi-check-circle"></i> 
+      <span>{{ message }}</span>      
+      <button type="button" class="close-alert" (click)="successDivCloseInstant()"><i class="bi bi-x"></i></button>
+    </div>
+  </div>
+</div>
+</div>

@@ -1,0 +1,182 @@
+
+.business-container {   
+  padding: 20px;
+}
+.business-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+}
+.business-card h1 {
+  margin-bottom: 16px;
+}
+.popup-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); 
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.guide-container {
+  margin-top: 40px;
+}
+.guide-container .popup-container {
+  background: #fff;
+  padding: 20px;
+  width: 600px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  height: 624px;
+  position: relative;
+}
+.guide-title {
+  display: flex;
+  justify-content: flex-start;  
+  margin-bottom: 15px;
+}
+.guide-title span {
+  height: 28px;
+  width: 28px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Saans-Semibold';
+  color: #fff;
+  border-radius: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #373737;
+  border: 1px solid #CBD5E1;
+  margin-right: 6px;
+}
+.guideimg {
+  margin-bottom: 24px;
+}
+.guide-inner h2 {
+  margin-bottom: 20px;
+}
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.progress-container {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.progress {
+  height: 4px;
+  width: 100%;
+}
+.progress-bar {
+  background-color: #007bff;
+}
+.business-inner-wrap {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.business-content {
+  margin-left: 16px;
+}
+.business-content p {
+  margin-bottom: 10px;
+}
+.guide-list {
+  list-style-type: disc;
+}
+.guide-list li {
+line-height: 18px;
+color: #373737;
+margin-bottom: 5px;
+}
+
+.carousel-control {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+}
+.carousel-control button {
+  position: static;
+  margin: 0 5px;
+}
+.carousel-indicators button {
+  background: #f6f6f6;
+  width: 40px;
+  height: 4px;
+  border-radius: 10px; 
+  border: 0;
+}
+.carousel-indicators button.active {
+  background: #8F53F0;
+}
+.carousel-control-next, 
+.carousel-control-prev {
+  border: 1px solid #8F53F0;
+  width:auto;
+  padding: 10px 15px;
+  color: #8F53F0;
+  opacity: 1;
+  border-radius: 4px;
+}
+.carousel-control-next {
+  background: #8F53F0;
+  color: #fff;
+}
+.let-me-skip {
+  color: #8F53F0;
+  background: none;
+  border: 0;
+}
+.carousel-indicators {
+  position: absolute;
+  right: auto;
+  bottom: 45px; 
+  margin-right: 0;
+  margin-bottom: 1rem;
+  margin-left: 20px;
+}
+.category-box ul {
+  padding-left: 0;
+}
+.category-box li {
+  display: inline-block;
+  padding: 12px;
+  border:1px solid #EFEFEF;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.category-box li span {
+  font-weight: 600;
+  color: #0C3145;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+.part-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+.part-inner strong {
+  text-transform: capitalize;
+  margin-bottom: 10px;
+  display: block;
+}
+.carousel-fade .carousel-item {
+  transition: opacity 0.5s ease 0s;
+}
+.need-fill {
+ display: flex;
+ justify-content: space-between;
+ align-items: flex-start;
+}
+.need-fill .btn {
+  text-transform: none;
+}

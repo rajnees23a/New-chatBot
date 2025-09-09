@@ -1,0 +1,331 @@
+<div class="chatbot-wrap" *ngIf="!userComeFirstTime">
+    <div id="rowBox" class="row">
+      <div id="leftBox" class="col-md-6">
+        <h1 class="headingClass">Conversational assistant </h1>
+        <div class="chat-outer-wrap"> 
+        <div class="chat-container d-flex flex-column" #chatContainerBox>
+          <div *ngFor="let message of chatHistory; let i = index">
+            <div *ngIf="message.sender === 'user'">
+              <div *ngIf="message.isFile == true" class="file-info file-info-inside">
+                <div class="file-icon">
+                  <img [src]="fileIcon" alt="file icon"/>
+                </div>
+                <div class="file-name">
+                 <span>{{ uploadFileName }}</span>
+                  <p>{{ fileExtension }}</p>
+                </div>
+                <!-- <button (click)="removeFile()" class="remove-btn"><i class="bi bi-x"></i></button> -->
+              </div>
+             <span class="user-text" *ngIf="message.isFile == false"> <span>{{ message.text }}</span></span>
+              <!-- <a *ngIf="message.isFile" [href]="message.fileUrl" target="_blank">{{ message.fileName }}</a> -->
+             </div>
+             <div *ngIf="message.sender === 'bot'">
+              <div class="user-input" *ngIf="isString(message.text)">
+                <span><img src="../../assets/images/moji.svg"/> </span>
+                <p>{{ message.text }}</p>                
+              </div>
+              <div class="user-input" *ngIf="!isString(message.text) && !message.followingText && (message.staticBotMessage == false || message.staticBotMessage == undefined || message.staticBotMessage == null)"> 
+                  <span><img src="../../assets/images/moji.svg"/> </span>
+                  <p>{{ message.text.question }}</p>                
+              </div>
+              <!-- <div class="user-input without-bold"> 
+                <span><img src="../../assets/images/moji.svg"/> </span>
+                <p>Hi i m font-weight normal</p>                
+            </div> -->
+              <div class="guidance-box" *ngIf="!isString(message.text) && !message.followingText"> 
+                <div>
+                  <button>Guidance text</button>
+                  <p *ngIf = "message.staticBotMessage == true">{{ message.text.question }}</p>  
+                  <ul *ngFor="let text of message.text.guidelines">
+                    <li [innerHTML]="text"></li>
+                  </ul>
+                </div>
+              </div>
+              <div  class="following-ways" *ngIf="message.followingText"> 
+                <p>{{ message?.followingText?.question }}</p>
+                <ul>
+                  <li><i><img src="../../assets/images/edit.svg" alt=""/> </i><span>{{ message?.followingText?.hints[0]}}</span></li>
+                  <li><i><img src="../../assets/images/attach.svg" alt=""/></i><span>{{ message?.followingText?.hints[1]}}</span></li>
+                  <li><i><img src="../../assets/images/mic.svg" alt=""/></i><span>{{ message?.followingText?.hints[2]}}</span></li>
+                </ul>
+              </div>
+              <div class="user-order" *ngIf="message?.button?.length > 0">
+                <ng-container *ngIf="message.fieldName === 'Timelines' || message.fieldName === 'Portfolio alignment'; else checkC">
+                  <div *ngFor="let button of message.button; let i = index">
+                    <button (click)="timeLiButton(message.button[i])">{{button}}</button>
+                  </div>
+                </ng-container>
+              
+                <ng-template #checkC>
+                  <div *ngFor="let button of message.button; let i = index">
+                    <button 
+                      (click)="yesNoButton(message.button[i])"
+                      [ngClass]="{'active-class': selectedIndexOfButton == i}">
+                      {{button}}
+                    </button>
+                  </div>
+                </ng-template>
+              </div>
+              
+              <!-- <div class="user-order" *ngIf="message?.button?.length > 0">
+                <div *ngFor="let button of message.button; let i = index">
+                  <button (click)="yesNoButton(message.button[i])" [ngClass]="{'active-class': selectedIndexOfButton == i}">{{button}}</button>
+                </div>
+              </div> -->
+              <div class="user-order" *ngIf="message?.mappingButton?.length > 0">
+                <div *ngIf="message.fieldName == 'Business sponsor'">
+                  <div *ngFor="let button of message.mappingButton; let i = index">
+                    <button (click)="businessMappingButtonClicked(message.mappingButton[i])" [ngClass]="{'active-class': selectedIndexOfButton == i}">{{button}}</button>
+                  </div>
+                  <input *ngIf="bussinessMappingButtonClicke" type="text" [(ngModel)]="bussinessUserInputForMappingButtons" placeholder="Enter user first and last name"/>
+                  <button *ngIf="bussinessMappingButtonClicke" [disabled]="!bussinessUserInputForMappingButtons" (click)="businessConfirmButton()">confirm</button>
+                </div>
+                <div *ngIf="message.fieldName == 'IT sponsor'">
+                  <div *ngFor="let button of message.mappingButton; let i = index">
+                    <button (click)="itMappingButtonClicked(message.mappingButton[i])" [ngClass]="{'active-class': selectedIndexOfButton == i}">{{button}}</button>
+                  </div>
+                  <input *ngIf="itMappingButtonClicke" type="text" [(ngModel)]="itUserInputForMappingButtons" placeholder="Enter user first and last name"/>
+                  <button *ngIf="itMappingButtonClicke" [disabled]="!itUserInputForMappingButtons" (click)="itConfirmButton()">confirm</button>
+                </div>
+              </div>
+              <div class="multi-select-box" *ngIf="message?.dropdown?.length > 0">
+  
+                <div *ngIf="message.fieldName == 'Areas involved' ">
+                 
+                  <mat-checkbox [disabled]="confirmBtnOfAreaClk" *ngFor="let region of message.dropdown; let i = index" 
+                                 [(ngModel)]="selectedAreas[i]" 
+                                 >
+                                 <span>  {{ region }} </span>
+                  </mat-checkbox>
+               
+                  <button mat-raised-button color="primary" [hidden]="confirmBtnOfAreaClk" (click)="onConfirmAreas()">Confirm</button>
+                
+                </div>
+  
+                <div *ngIf="message.fieldName == 'Destination 2027 alignment' ">
+                 
+                  <mat-checkbox [disabled]="confirmBtnOfDestClk" *ngFor="let region of message.dropdown; let i = index" 
+                                 [(ngModel)]="selectedDestination[i]" 
+                                 >
+                    {{ region }}
+                  </mat-checkbox>
+                  <button mat-raised-button color="primary" [hidden]="confirmBtnOfDestClk" (click)="onConfirmDestination()">Confirm</button>
+                  
+                </div>
+
+                <div *ngIf="message.fieldName == 'Business case impacts' ">
+                 
+                  <mat-checkbox [disabled]="confirmBtnOfBussClk" *ngFor="let region of message.dropdown; let i = index" 
+                                 [(ngModel)]="selectedBussiness[i]" 
+                                 >
+                    {{ region }}
+                  </mat-checkbox>
+                  <button mat-raised-button color="primary" [hidden]="confirmBtnOfBussClk" (click)="onConfirmBussiness()">Confirm</button>
+                  
+                </div>
+  
+                <!-- <label for="options">Select Options:</label>
+                <select (click)="dropDownSel()" id="options" multiple [(ngModel)]="selectedOptionsofDropdown">
+                <option *ngFor="let item of message.dropdown" [value]="item" (click)="dropDownSel()">
+                      {{ item }}
+                </option>
+                </select> -->
+                </div>              
+             </div>
+            </div>             
+            <div *ngIf="loader">
+              <div class="loader-wrap"> <div class="loader"></div></div>          
+            </div>
+            <!-- <div class="loader-wrap"> <div class="loader"></div></div>   -->
+            <!-- <div class="loading">Loading </div> -->
+          <!-- <div class="user-input">
+            <span><img src="../../assets/images/moji.svg"/> </span>
+            <p>Thanks for sharing that! Based on your input, I’ve auto-filled the following details for you. Please review them below and confirm if everything looks correct</p>
+          </div>       -->
+        </div>
+       
+        <div id="textArDiv" class="send-input-wrap">
+          <div *ngIf="selectedFile" class="file-info">
+            <div class="file-icon">
+              <img [src]="fileIcon" alt="file icon" />
+            </div>
+            <div class="file-name">
+             <span> {{ selectedFile.name }}</span>
+              <p>{{ fileExtension }}</p>
+            </div>
+            <button (click)="removeFile()" class="remove-btn"><i class="bi bi-x"></i></button>
+          </div>
+          <textarea #autoResizeTextarea (keydown)="onKeyDown($event)" (blur)="onBlur()" (focus)="onFocus()" (input)="onInput()" name="" rows="1" [(ngModel)]="userInput" placeholder="Reply to ADA"  id="textAFie"></textarea>
+          <input type="file" (change)="onFileSelected($event)" #fileInput hidden>
+          
+          <div class="send-attach-btns">           
+          <button data-bs-toggle="tooltip" data-bs-trigger="hover focus" data-tooltip-id="upload-icon" data-placement="right" title="Upload files (max 20mb each)" (click)="fileInput.click()" [disabled]="uploadFileFirstTime" class="btn">
+            <i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M14.1015 7.26634L8.09108 13.2768C6.72425 14.6436 4.50817 14.6436 3.14134 13.2768C1.7745 11.9099 1.7745 9.69384 3.14134 8.327L9.15174 2.3166C10.063 1.40537 11.5404 1.40537 12.4516 2.3166C13.3628 3.22782 13.3628 4.7052 12.4516 5.61643L6.67687 11.3911C6.22126 11.8467 5.48257 11.8467 5.02695 11.3911C4.57134 10.9355 4.57134 10.1968 5.02695 9.74122L10.0946 4.67362" stroke="#8F53F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+           </i>
+          </button>
+          <button data-bs-toggle="tooltip" data-placement="right" title="Use voice mode" (click)="startListening()" class="btn">
+            <i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M12.6666 6.66659V7.99992C12.6666 10.5772 10.5773 12.6666 7.99998 12.6666M3.33331 6.66659V7.99992C3.33331 10.5772 5.42265 12.6666 7.99998 12.6666M7.99998 12.6666V14.6666M5.33331 14.6666H10.6666M7.99998 9.99992C6.89541 9.99992 5.99998 9.10449 5.99998 7.99992V3.33325C5.99998 2.22868 6.89541 1.33325 7.99998 1.33325C9.10455 1.33325 9.99998 2.22868 9.99998 3.33325V7.99992C9.99998 9.10449 9.10455 9.99992 7.99998 9.99992Z" stroke="#8F53F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </i>
+          </button>
+          <button data-bs-toggle="tooltip" data-placement="right" title="Reply" id="textAbut" class="btn" [hidden]="!userInput && !selectedFile" [disabled]="!userInput && !selectedFile" (click)="handleUserInput(userInput)">
+            <i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M7.00028 8.0001H3.33362M3.27718 8.19444L1.72057 12.8442C1.59828 13.2095 1.53713 13.3922 1.58101 13.5047C1.61912 13.6023 1.70096 13.6764 1.80195 13.7046C1.91824 13.737 2.09388 13.658 2.44517 13.4999L13.5862 8.48647C13.929 8.33217 14.1005 8.25502 14.1535 8.14784C14.1995 8.05473 14.1995 7.94548 14.1535 7.85237C14.1005 7.74519 13.929 7.66805 13.5862 7.51375L2.44129 2.49859C2.09106 2.34098 1.91595 2.26218 1.79977 2.29451C1.69888 2.32258 1.61704 2.39644 1.57881 2.49393C1.53478 2.6062 1.59527 2.78845 1.71625 3.15295L3.27761 7.85712C3.29839 7.91973 3.30878 7.95103 3.31288 7.98304C3.31652 8.01145 3.31649 8.04021 3.31277 8.06861C3.30859 8.10061 3.29812 8.13189 3.27718 8.19444Z" stroke="#8F53F0" stroke-width="1.46667" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </i>
+          </button>
+        </div>
+        </div>
+      </div>
+      </div>
+      <div id="rightBox" class="col-md-6 fielsReq">
+        <div class="fld-inner-wrap"> 
+        <div class="row mt-4">          
+          <div class="col-md-8">
+            <p class="headingClass" (click)="toggleButton()"> <i #tooltipRef data-bs-toggle="tooltip" data-bs-placement="top" title="Collapse" class="business-idea-ic"><img src="../../assets/images/business.svg" alt="business"/></i> <span>Your business idea overview</span></p>
+          </div>
+          <div class="col-md-4 prg-out-wrap">
+            <div class="progress mt-2">
+              <div class="progress-bar bg-success" [style.width.%]="progressPercentage"></div>
+              
+            </div>
+            <h6 class="progressBar"><span>Progress</span> {{progressPercentage}}% <span>completed</span></h6>
+          </div>     
+          
+        </div>
+        <div class="form-container">
+         <div class="req-fld-wrap"> 
+          <h6>Required key fields</h6>
+          <button [hidden]="allFieldssLookGoodButton" (click)="AllGoodButton()" class="btn add-btn">All details looks good to me</button>
+         </div>
+          <div *ngFor="let field of fields; let i = index" class="field-container" [ngClass]="{'grey-bg': field.value == '', 'risk-box': i === 8}">
+            <div class="field-outer-box">              
+              <!-- <i class="bi bi-file-earmark-text me-2"></i>  -->
+               <div class="iconNumbermargin">
+                <!-- <i *ngIf="field.value == ''"class="bi fs-4" [ngClass]="field.icon"></i> -->
+                <div *ngIf="field.value == '' || field.value == ADAtext" class="number-series">{{i+1}}</div>
+                <i *ngIf="field.completed"> <img src="../../assets/images/step-badge2.svg" alt="step-badge2"/> </i>
+                <i *ngIf="field.value !== '' && !field.completed && field.value !== ADAtext"> <img src="../../assets/images/step-badge.svg" alt="step-badge"/> </i>
+               </div>
+               <div class="field-head-wrap">
+              <span class="fld-img-wrap"> <img [src]="field.image" alt="icon"></span>
+               <div class="field-text-wrap">
+                <!-- <span class="add-more-doc"><img src="../../assets/images/plus.svg" alt=""/> </span> -->
+               <div>
+                <!-- <img [src]="field.image" alt="icon"> -->
+                <!-- <i class="bi bi-info-circle"></i> -->
+                <label class="fw-bold ml-2 field_div">{{field.label}} <i data-bs-toggle="tooltip" data-placement="right" [title]="field.tooltip" class="bi bi-info-circle"></i></label>
+                
+              <span class="ms-auto"  *ngIf="field.valid">
+                <i class="bi bi-pencil text-primary" (click)="editField(field)"></i>
+              </span>
+              <div *ngIf="field.value !== '' && field.value !== ADAtext && field.label !== 'Additional attachments'" class="edit-fields">
+                <i  *ngIf="field.completed == true"> <img src="../../assets/images/history.svg" (click)="checkButton(i)" alt="history"/> </i>
+                <i data-bs-toggle="tooltip" data-placement="top" title="Edit"> <img src="../../assets/images/edit-btn.svg" (click)="editButton(i)" alt="edit-btn"/> </i>
+                <i data-bs-toggle="tooltip" data-placement="top" title="Confirm" *ngIf="field.completed == false"> <img src="../../assets/images/chk-btn.svg" (click)="checkButton(i)" alt="chk-btn"/> </i>
+                
+              </div>
+               </div>
+               <div>
+                <!-- <p *ngIf="!field.editing" class="mb-0">{{field.value}}</p> -->
+                <p *ngIf="field.value == '' && field.label !== 'Additional attachments'" class="notFilledYet notFilledYetText mb-0">Not filled yet</p>
+                <p *ngIf="field.value !== ''" class="filled" [ngClass]="{'red-text': field.value == ADAtext}">{{field.value}}</p>
+                <input type="file" (change)="onFileAttach($event)" #fileInputAttach hidden>
+                <button [hidden]="uploadFileFirstTime" *ngIf="field.value == '' && field.label == 'Additional attachments'" (click)="fileInputAttach.click()" class="btn choose-file">Drag and drop or <span> Choose files </span></button>
+                <div *ngIf="uploadFileName &&  field.label == 'Additional attachments'" class="file-info">
+                  <div class="file-icon">
+                    <img [src]="fileIcon" alt="file icon" />
+                  </div>
+                  <div class="file-name">
+                   <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ uploadFileName }}"> {{ uploadFileName}}</span>
+                    <p>{{ fileExtension }}</p>
+                  </div>                  
+                   <div class="down-del-wrap">
+                    <i class="bi bi-three-dots-vertical" (click)="showChatDeleteMethod()"></i>
+                    <ul *ngIf="showChatDelete">
+                      <li (click)="downloadFileFromChat()"><i><img src="../../assets/images/down.svg" alt=""/></i>Download</li>
+                      <li class="disabled-delete"><i><img src="../../assets/images/del.svg" alt=""/></i>Delete</li>                      
+                    </ul>                    
+                   </div>
+                </div>
+                <div *ngIf="fileUploadFromAttachment &&  field.label == 'Additional attachments'" class="file-info">
+                  <div class="file-icon">
+                    <img [src]="fileIcon" alt="file icon" />
+                  </div>
+                  <div class="file-name">
+                   <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ fileUploadFromAttachment.name }}"> {{ fileUploadFromAttachment.name }}</span>
+                    <p>{{ addfileExtension }}</p>
+                  </div>                  
+                   <div class="down-del-wrap">
+                    <i class="bi bi-three-dots-vertical" (click)="showAttachmentDeleteMethod()"></i>
+                    <ul *ngIf="showAttachmentDelete">
+                      <li (click)="downloadFileFromAdditional()"><i><img src="../../assets/images/down.svg" alt=""/></i>Download</li>
+                      <li (click)="deleteAttachment()"><i><img src="../../assets/images/del.svg" alt=""/></i>Delete</li>                      
+                    </ul>
+                   </div>
+                </div>
+                <div *ngIf="field.value == ADAtext || (field.label == 'Additional comments' && isAdditionalCommentsEmpty && botRespondedFirstTime)"><button class="btn add-btn" (click)="addButton(i)">add</button></div>
+                <span *ngIf="field.value !== '' && !field.completed && field.value !== ADAtext && field.label !== 'Areas involved' && field.label !== 'Additional attachments'
+                && field.label !== 'Destination 2027 alignment' && field.label !== 'Timelines' && field.label !== 'Business sponsor'
+                && field.label !== 'Additional comments' && field.label !== 'Business case impacts' && field.label !== 'Portfolio alignment' && field.label !== 'IT sponsor'" class="not-final-content"> This is not the final content until you confirm it. This is generated by AI. </span>
+              </div>
+              </div>
+            </div>          
+              
+            </div>
+            <div *ngIf="i === 8" class="static-content">
+              <p>Additional fields</p>
+              </div>
+            <!-- <p *ngIf="!field.editing" class="mt-2">{{field.value}}</p>
+            <p *ngIf="!field.value" class="notFilledYet notFilledYetText">Not filled yet</p> -->
+            <!-- <textarea *ngIf="field.editing" [(ngModel)]="field.value" class="form-control mt-2" (blur)="validateField(field)"></textarea> -->
+            <!-- <span *ngIf="!field.valid && field.value !== ''" class="text-danger">Please enter it correctly</span> -->
+          </div>
+        </div>
+        <div class="subnit-btn"> 
+        <button class="btn btn-success" [disabled]="buttonDisabled" (click)="submitButton()">Submit</button>
+        <!-- <button *ngIf = "checkFirst10Completed()"class="btn btn-success mt-3" [disabled]="checkFirst10Completed()">Submit</button> -->
+      </div>
+      <div *ngIf="errorDivVisible" class="validation-msg warning">
+        <i class="bi bi-exclamation-triangle"></i> 
+        <span>{{ errorDivText }}</span>      
+        <button type="button" class="close-alert" (click)="errorDivCloseInstant()"><i class="bi bi-x"></i></button>
+      </div>
+      <div *ngIf="successDivVisible" class="validation-msg success">
+        <i class="bi bi-check-circle"></i> 
+        <span>{{ successDivText }}</span>      
+        <button type="button" class="close-alert" (click)="successDivCloseInstant()"><i class="bi bi-x"></i></button>
+      </div>
+      </div>
+    </div>
+    <div class="modal fade confirm-dialoge" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true" #reviewModal>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="reviewModalLabel">Please review your idea</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Before submitting, please review the details you’ve provided and the fields we’ve auto-filled. Make sure everything looks correct and complete.
+          </div>
+          <div class="modal-footer">
+            <div><button type="button" class="btn add-btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button></div>
+            <div>
+            <button type="button" class="btn add-btn me-2" data-bs-dismiss="modal" aria-label="Close">Let me edit</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" (click)="submitButtonPopup()">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- <div *ngIf="userComeFirstTime"> -->
+    <app-carousel *ngIf="userComeFirstTime" (hideParent)="hideCrousel()"></app-carousel>
+  <!-- </div> -->

@@ -1,0 +1,91 @@
+<div class="user-detail-wrapper"> 
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true" (click)="activeTab = 'summary'">Summary</button>
+    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false" (click)="activeTab = 'idea'; chatDetail()">Your idea</button>    
+  </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+    
+      <div class="user-detail-inner"> 
+        <!-- Information Banner -->
+        <div class="changes-guide">
+          <i class="bi bi-info-circle-fill"></i> If you wish to <strong><a href="#">make any changes</a></strong>, you can still update the information through 
+          <strong><a href="#">ADA conversations</a></strong>. The team will always consider the latest details provided.
+        </div>  
+        <!-- Request Details Section -->
+        <div class="req-dtl-table">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="req-dtl-cont"> 
+                <i class="bi bi-check-circle-fill"></i>
+              <h5> Business Idea Canvas</h5>
+              <p class="text-muted">{{ requestDetails?.Ideatitle }}</p>
+              </div>
+              <div class="req-dtl-cont"> 
+              <i><img src="../../assets/images/step-icon.svg" alt="step-icon"/> </i>
+              <h5> Pending review</h5>
+              <p class="text-muted">Your idea is pending view with SPPM team 07 Jan 2025</p>
+              </div>
+              <div class="req-dtl-cont"> 
+              <i><span class="number-series">3</span></i>
+              <h5> Feedback</h5>
+              <p class="text-muted">If it's not accepted, you might get feedback to revise the idea</p>
+              </div>
+              <div class="req-dtl-cont"> 
+                <i><span class="number-series">4</span></i>
+              <h5> Accepted</h5>
+              <p class="text-muted">If your idea is reviewed, it'll get accepted directly</p>
+                </div>
+            </div>  
+            <!-- Request Details Table -->
+            <div class="col-md-6">         
+              <table class="table">
+                <tr>
+                  <td><span>Request number</span></td>
+                  <td><a href="#">{{ requestDetails?.Requestnumber }}</a></td>
+                </tr>
+                <tr>
+                  <td><span>Status</span></td>
+                  <td>
+                    <span class="badge" 
+                      [ngClass]="{
+                        'bg-primary': requestDetails?.Status === 'Pending_review' || requestDetails?.Status === 'Pending-review',
+                        'bg-warning': requestDetails?.Status === 'Feedback',
+                        'bg-success': requestDetails?.Status === 'Approved'
+                      }">
+                      {{ requestDetails?.Status }}
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span>Submitted date</span></td>
+                  <td><strong>{{ requestDetails?.Submitteddate }}</strong></td>
+                </tr>
+                <tr>
+                  <td><span>Last updated</span></td>
+                  <td><strong>{{ requestDetails?.Lastupdated }}</strong></td>
+                </tr>
+                <tr>
+                  <td><span>Total no questions completed</span></td>
+                  <td><strong>{{ requestDetails?.Totalnoofquestionscompleted }}</strong></td>
+                </tr>
+                <tr>
+                  <td><span>Comments</span></td>
+                  <td><strong>0</strong></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+    <app-history  *ngIf="activeTab === 'idea'"></app-history>
+  </div>
+  
+</div>
+
+

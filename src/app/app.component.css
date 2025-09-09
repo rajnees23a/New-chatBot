@@ -1,0 +1,9 @@
+.content {
+    margin-left: 250px;
+    transition: margin-left 0.3s ease;
+  
+    .sidebar.collapsed + & {
+      margin-left: 70px;
+    }
+  }
+  

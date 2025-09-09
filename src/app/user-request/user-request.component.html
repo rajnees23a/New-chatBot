@@ -1,0 +1,45 @@
+
+  <div class="myrequest-outer">
+  <div class="my-requests-container">
+    <h1>My requests <span>{{requestData?.length || 0}}</span></h1>
+    <ng-container *ngIf="requestData !== null && requestData !== undefined">  
+      <table class="requests-table" *ngIf="requestData.length > 0">
+        <thead>
+          <tr>
+            <th>Request number</th>
+            <th>Idea title</th>
+            <th>Submitted date</th>
+            <th>Last updated</th>
+            <th>Total no questions completed</th>
+            <th>Comments</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let request of requestData">          
+            <td><a class="req-link" (click)="onClickRequestID(request.SessionID,request.Username,request.Requestnumber)">{{ request.Requestnumber }}</a></td>
+          <td>{{ request.Ideatitle }}</td>
+          <td>{{ request.Submitteddate }}</td>
+          <td>{{ request.Lastupdated }}</td>
+          <td>{{ request.Totalnoofquestionscompleted }}/{{ 25 }}</td>
+          <td>
+           <i><img src="../../assets/images/message-chat-square.svg" alt="message-chat-square"/></i>
+           <span class="chat-num">0</span>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="{
+              'bg-primary': request.Status === 'Pending_review' || request.Status === 'Pending-review',
+              'bg-success': request.Status === 'Approved',
+              'bg-warning': request.Status === 'Feedback'
+            }">{{ request.Status }}</span>
+          </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+    <div *ngIf="requestData.length === 0" class="no-req-wrap"> 
+      <span><img src="../../assets/images/grey-logo.svg" alt=""/> </span>
+      <p>You have no request created</p>
+  </div>
+  </div>
+</div>

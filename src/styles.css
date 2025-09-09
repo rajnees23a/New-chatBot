@@ -1,0 +1,885 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+@font-face {
+    font-family: 'Saans-Light';
+    src: url('./assets/fonts/Saans-Light.woff') format('woff'),
+         url('./assets/fonts/Saans-Light.woff2') format('woff2'),
+}
+@font-face {
+    font-family: 'Saans-Medium';
+    src: url('./assets/fonts/Saans-Medium.woff') format('woff'),
+         url('./assets/fonts/Saans-Medium.woff2') format('woff2'),
+}
+@font-face {
+    font-family: 'Saans-Regular';
+    src: url('./assets/fonts/Saans-Regular.woff') format('woff'),
+         url('./assets/fonts/Saans-Regular.woff2') format('woff2'),
+}
+@font-face {
+    font-family: 'Saans-SemiBold';
+    src: url('./assets/fonts/Saans-SemiBold.woff') format('woff'),
+         url('./assets/fonts/Saans-SemiBold.woff2') format('woff2'),
+}
+
+html,
+body {
+    height: 100%;
+    font-family: 'Saans-Regular';
+    line-height: 1;
+    font-size: 14px;
+}
+
+body {
+    margin: 0;    
+    font-family: 'Saans-Regular';
+    background: #F6F6F6;
+    color: #373737;
+}
+ul {
+  list-style-type: none;
+}
+a {
+  text-decoration: none;
+}
+a:-webkit-any-link:focus-visible {
+  outline:0;
+}
+h1 {
+  font-size: 24px;
+  font-weight: 300;
+  font-family: 'Saans-Light';
+  color: #373737;
+  margin-bottom: 0;
+}
+h2 {
+  font-size: 18px;
+  font-weight: 600;
+  font-family: 'Saans-Semibold';
+  color: #334155;
+  margin-bottom: 0;
+}
+p {
+  line-height: 20px;
+}
+.field_div {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 13.62px;
+    color:#656565;
+    }
+  
+  .notFilledYetText{
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 13.62px;
+  color: #BDBDBD;
+  margin-top:7px
+  }
+  
+  .headingClass{
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 27.24px;
+  color: #373737;
+  }
+  
+  .chatText{
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 13.62px;
+  color: #000000;
+  word-wrap: break-word;
+  }
+  
+  .progressBar{
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 13.62px;  
+  }
+  .btn {
+    border-radius: 4px;
+  }
+  .btn-primary {
+    background-color:#8F53F0;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.5s ease 0s;
+  }
+  .btn.btn-primary:hover {
+    background: #8A40E7;
+  }
+  .btn-danger {
+    background:#DC2626;
+  } 
+  .chatbot-wrap {
+    padding: 16px 11px;
+    overflow: hidden;
+    height: calc(100vh - 50px);
+  }
+  #leftBox .headingClass {
+    margin-left: 20px;
+    padding-bottom: 10px;
+  }
+  .chat-outer-wrap {
+    position: relative;
+  }
+  .chat-container {      
+      padding: 16px;
+      height: calc(100vh - 180px);
+      overflow: auto;
+    }
+    .chat-bubble {
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      max-width: 80%;
+    } 
+    .user-text {
+      background: #D1D1D1;
+      color: #373737;
+      align-self: flex-end;
+      padding: 8px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: inline-block;
+      float: right;
+      max-width: 60%;
+      line-height: 21px;
+      box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+    }
+    .file-info-inside {
+      float: right;
+    }
+    .progress-bar {
+      transition: width 0.5s ease-in-out;
+    }
+    .field-container {
+      border: 1px solid #efefef;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;   
+      position:relative;
+      box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+    }
+    .grey-bg {
+      background:#F6F6F6;  
+    }
+    .valid {
+      border-color: green;
+    }
+    .invalid {
+      border-color: red;
+    }
+    
+    .fielsReq {
+      background: white;
+      border-radius: 4px;
+      padding: 0 16px;
+      position: relative;
+    }
+    .fielsReq .btn.btn-success {
+      background:#8F53F0;
+      border: 0;
+      font-size: 14px;
+      padding: 6px 18px;
+      transition: all 0.5s ease 0s;
+    }
+    .fielsReq .btn.btn-success:hover {
+      background: #8A40E7;
+    }
+    
+    .form-container {
+      height: calc(100vh - 212px);
+      overflow: auto;
+    }
+    
+    .input-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .input-wrapper input {
+      padding-right: 40px;
+    }
+    
+    .input-wrapper button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+    }
+    
+    .sidebar {
+      transition: width 0.3s ease-in-out;
+    }
+    
+    .collapsed {
+      width: 60px;
+    }
+    
+    .toggle-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      width: 100%;
+      text-align: left;
+    }
+  
+    .iconNumbermargin {
+      margin-right: 25px;
+    }
+  
+     .prg-out-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+     }
+     .business-idea-ic {
+      margin-right: 5px;
+      cursor: pointer;
+     }
+    .progress {
+      background: #E1D7FD;
+      width:131px;
+      height:8px;
+      margin-bottom: 5px;
+    }
+    .iconNumbermargin {
+      display: flex;
+      align-items: flex-start;
+    }
+    .field-outer-box,.field-head-wrap {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 100%;
+    }
+    
+    .field-text-wrap {
+      line-height: 1;
+      width: 100%;
+      position: relative;
+    }
+    .add-more-doc {
+      position: absolute;
+      top:0;
+      right:0;
+    }
+    .filled {
+      font-size: 14px;
+      font-weight: 600;
+      color: #373737;
+      margin-top: 15px;
+      line-height: 150%;
+    }
+    .not-final-content {
+      font-size: 12px;
+      color: #64748B;
+      border:1px solid #E2E8F0;
+      padding: 5px;
+      display: block;
+      cursor: pointer;
+      margin-top: 10px;
+      background: #F8FAFC;
+      border-radius: 2px;
+      width: 100%;
+    }
+    .edit-fields{
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+    .edit-fields i { 
+      height: 20px;
+      width: 20px;
+      display: inline-block;
+      margin: 0 3px;
+      cursor: pointer;
+    }
+  
+    .send-input-wrap {
+      border:1px solid #d1d1d1;
+      position: relative;
+      padding:16px 145px 9px 16px;
+      line-height: 1.1;
+      background: #fff;  
+      margin: 0 16px; 
+      border-radius: 4px;
+      position: absolute;
+      bottom: -70px;
+      width: 97%;
+      left: 0;
+    }
+    .send-input-wrap.active {
+      border:1px solid#9747FF;
+    }    
+    .send-input-wrap textarea { 
+      border: 0;
+      resize: none;
+      height: 100%;
+      width: 100%;
+      outline: 0;
+      padding: 4px 5px 6px;
+      color: #373737;
+      line-height: 20px;
+    }
+    /* .send-input-wrap textarea:focus .send-input-wrap {
+      border:1px solid #9747FF;
+    } */
+    textarea {
+      overflow: hidden; /* Hide the overflow to avoid scrolling within the textarea */
+      resize: none; /* Disable manual resizing */
+      transition: height 0.2s ease-in-out; /* Smooth transition when expanding */
+      min-height: 38px; /* or whatever is your preferred minimum */
+  max-height: 300px; /* optional: limit max height */
+  padding-bottom: 10px;
+  overflow-y: auto;
+    }
+    
+    .send-attach-btns {
+      position: absolute;
+      top: 16px;
+      right: 12px;
+     
+    }
+    .send-attach-btns .btn {    
+      border: 1px solid #8F53F0;
+      color:  #8F53F0;
+      border-radius: 0;
+      margin: 0 4px;      
+      transition: all 0.5s ease 0s;
+      height: 34px;
+      width: 34px;
+      padding: 0;
+    }
+    
+    .send-attach-btns .btn:hover { 
+      background:#F1F5F9;      
+    }
+    .send-attach-btns .btn:hover svg path{       
+      stroke:#8F53F0;
+    }
+    .send-attach-btns .btn.primaryeffect {
+      background: #8F53F0; 
+      
+    }
+    .send-attach-btns .btn.primaryeffect svg path {     
+      stroke:#fff;
+    }
+    .user-input {
+      display: flex;
+      margin-bottom: 10px;
+    }
+    .user-input p {
+      background: #fff;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 0;
+      font-weight: 600;
+      font-family: 'Saans-Semibold';
+      font-size: 14px;
+      line-height: 18px;
+      width:100%;
+      box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+    }
+    .user-input.without-bold p{
+      font-weight: 400;
+      font-family: 'Saans-Regular';
+    }
+    .user-input span {
+      margin-right: 15px;
+    }
+    .number-series {
+      height: 20px;
+      width: 20px;
+      background: #fff;
+      border-radius: 20px;
+      border:1px solid #D1D1D1;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: "Roboto", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #leftBox, .fielsReq {
+      transition: all 0.5s ease 0s;
+    }
+    .fieldresize #leftBox {
+      width: calc(100% - 90px);
+      transition: all 0.5s ease 0s;
+    }
+    .fieldresize .fielsReq{
+      width: 70px;
+      transition: all 0.5s ease 0s;
+    }
+    .fieldresize .fielsReq .form-container {
+      display: none;
+    }
+    .fieldresize .fielsReq .headingClass span {
+      display: none;
+    }
+    .fieldresize .fielsReq .subnit-btn {
+      display: none;
+    }
+    .fieldresize .fielsReq .progressBar span {
+      display: none;
+    }
+    .fieldresize .fielsReq .progress {
+      width: 44px;
+    }
+    .fieldresize .fielsReq .col-md-8 {
+      width: 100%;
+    }
+    .fieldresize .fielsReq .col-md-8 .headingClass {
+      text-align: center;
+    }
+  
+    .red-text{
+      color:#D12D46;
+      font-size: 12px;
+      font-weight: 400;
+      margin-bottom: 5px;
+    }
+  
+    .static-content {     
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+      bottom: -50px;
+      width: 100%;
+    }
+    .static-content p {
+      margin-bottom: 0;
+    }
+  .user-order {    
+      padding-left: 50px;   
+  }
+  .user-order button {
+    font-size: 12px;
+    font-weight: 400;
+    color: #373737;
+    border: 1px solid #D1D1D1;
+    background: #fff;
+    border-radius: 4px;
+    margin-right: 3px;
+    margin-bottom: 4px;
+    padding: 5px;
+  }
+  .user-order button.active {  
+    color: #8F53F0;
+    border: 1px solid #8F53F0;
+    
+  }
+  .guidance-box {
+    background: #fff;
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 10px;
+    margin-left: 50px;
+    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+  }
+  .guidance-box button {
+    border:1px solid #FBD3A7;
+    background: #FEF7EC;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Saans-Semibold';
+    margin-bottom: 7px;
+    padding: 2px 8px 4px;  
+    color: #FF7214;
+    border-radius: 2px;
+  }
+  .guidance-box p {
+    font-weight: 600;
+    font-family: 'Saans-Semibold';
+    font-size: 12px;
+  }
+  .guidance-box li {
+    margin-bottom: 4px;
+    color: #000000;
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .guidance-box ul {
+    margin-bottom: 0;
+    list-style-type: disc;
+  }
+  .add-btn {
+    border: 1px solid #8F53F0;
+    background: #fff;
+    font-size: 12px;
+    color: #8F53F0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    margin-top: 5px;
+  }
+  /* HTML: <div class="loader"></div> */
+  .loader {
+    width: 25px;
+    aspect-ratio: 4;
+    --_g: no-repeat radial-gradient(circle closest-side,#8F53F0 90%,#0000);
+    background: 
+      var(--_g) 0%   50%,
+      var(--_g) 50%  50%,
+      var(--_g) 100% 50%;
+    background-size: calc(100%/3) 50%;
+    animation: l3 1s infinite linear;
+  }
+  @keyframes l3 {
+      20%{background-position:0%   0%, 50%  50%,100%  50%}
+      40%{background-position:0% 100%, 50%   0%,100%  50%}
+      60%{background-position:0%  50%, 50% 100%,100%   0%}
+      80%{background-position:0%  50%, 50%  50%,100% 100%}
+  }
+  
+  .loader-wrap {
+    background: #fff;
+    padding: 4px 6px;
+    border: 1px solid #D1D1D1;
+    width: 35px;
+    border-radius: 4px;
+  }
+  .following-ways {
+    background: #fff;
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    margin-left: 50px;
+    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+  }
+  .following-ways p {
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Saans-Semibold';
+    color: #373737;
+  }
+  .following-ways ul {
+    padding-left: 16px;
+  }
+  .following-ways li {
+    font-size: 12px;
+    font-weight: 400;
+    font-family: 'Saans-Regular';
+    color: #334155;
+    margin-bottom: 12px;
+  }
+  .following-ways li i {
+    margin-right: 5px;
+  }
+  .req-fld-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .req-fld-wrap h6 {
+    margin-bottom: 0;
+    font-weight: 600;
+  }
+  .req-fld-wrap .add-btn {
+    margin-top: 0;
+    text-transform: math-auto;
+  }
+  .file-info {
+    display: flex;
+    align-items: flex-start;
+    background: #F6F6F6; 
+    border-radius: 5px;
+    width: 99%; 
+    border:1px solid #CBD5E1;
+    height: 41px;
+    margin: 4px 0 0 4px;
+    padding: 2px;
+   
+  }
+  .file-info.file-info-inside {
+      align-self: flex-end;
+      width: 65%;
+      margin-bottom: 10px;
+      background: #fff;
+  }
+  .file-icon img {
+    width: 32px;
+    height: 35px;
+    margin-right: 10px;
+  }
+  
+  .file-name {
+    flex-grow: 1;
+    font-size: 14px;
+    color: #4a4a4a;
+    padding-top: 2px;
+  }
+  .file-name p {
+    margin-bottom: 0;
+    line-height: 1;
+  }
+  .subnit-btn {
+    padding: 20px 16px;
+    position: absolute;
+    bottom: -70px;
+    left:0;
+    background: #fff;
+    z-index: 1;
+    width:100%;
+    
+  }
+  .fld-img-wrap {
+    margin-right: 4px;
+    display: inline-block;
+    width: 30px;
+  }
+  .remove-btn {
+    background: none;
+    border: none;
+    color: #000000;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  .remove-btn:hover {
+    color: #9747FF;
+  }
+  .file-name span {
+      white-space: nowrap;
+      width: 175px;
+      display: inline-block;
+      text-overflow: ellipsis;
+      overflow: hidden;
+  }
+  .field-container .file-name span {
+    width: 400px;
+  }
+  .validation-msg {
+    display: flex;
+    padding: 5px;
+    justify-content: flex-start;
+    align-items: center;
+    width: 340px;    
+    position: absolute;
+    right: 0;
+    margin: 0 auto;
+    left: 0;
+    z-index: 1;
+    transition: all 0.5s ease 0s;
+    padding-right: 35px;
+  }
+  .validation-msg button {
+    width: 30px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+  }
+  .validation-msg span {
+    font-size: 12px;
+    color: #fff;
+  }
+  .validation-msg i {
+    font-size: 18px;
+    color: #ffffff;
+    margin-right: 4px;
+  }
+  .validation-msg.warning {
+    background: #DC2626;
+  }
+  .validation-msg.success {
+    background: #047857;
+  }
+  .close-alert {
+    border: 0;
+    background: 0;
+    color: #fff;
+    font-size: 20px;
+  }
+  .down-del-wrap i.bi-three-dots-vertical {
+    font-size: 25px;
+    margin-top: 6px;
+    display: block;
+    cursor: pointer;
+  }
+  .down-del-wrap {
+    position: relative;
+  }
+  .down-del-wrap ul {
+    position: absolute;
+    top:42px;
+    right:5px;
+      background: #fff;
+      padding: 5px 0;
+      border: 1px solid #CBD5E1;
+      width: 160px;
+      z-index: 1;
+  }
+  .down-del-wrap ul li {
+    padding: 7px 10px;
+    font-family: 'Saans-Regular';
+    color: #000;
+    display: flex;
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 14px;
+  }
+  .down-del-wrap ul li i {
+    margin-right: 4px;
+  }
+  .disabled-delete {
+    pointer-events: none;  /* Disables any click, hover, etc. interactions */
+    opacity: 0.5;          /* Optional: makes the div look visually "disabled" */
+  }
+ .confirm-dialoge h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #334155;
+ }
+ .confirm-dialoge .modal-body {
+    color: #475569;
+    line-height: 21px;
+ }
+ .confirm-dialoge .modal-body ul {
+    padding-left: 16px;
+    list-style-type: disc;
+ }
+ .confirm-dialoge .modal-footer {
+    display: flex;
+    justify-content: space-between;
+ }
+ .confirm-dialoge .modal-footer .btn-primary {
+    padding: 5px 10px;
+ }
+ .confirm-dialoge .modal-footer .add-btn {
+  padding: 6px 10px;
+  margin-top: 0;
+  text-transform: none;
+}
+.fieldresize .fielsReq .prg-out-wrap {
+  align-items: center; 
+  width: 100%;
+}
+.multi-select-box {
+  padding-left: 50px;
+}
+.mat-mdc-checkbox {
+  display: block !important;  
+}
+.multi-select-box .mat-mdc-raised-button {
+  background-color: #9747FF !important;
+}
+.mdc-form-field {
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  padding-right: 5px !important; 
+  margin-bottom: 4px;
+  background: #fff;
+}
+.mat-mdc-checkbox .mdc-checkbox {
+  padding: 5px !important;
+}
+.mdc-checkbox__background {
+  top:5px !important;
+  left:5px !important;
+}
+.mdc-checkbox__background {
+  border-radius: 4px !important;  
+  border:1px solid #CBD5E1 !important;
+}
+.mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background, .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background, .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control[data-indeterminate=true]:enabled~.mdc-checkbox__background {
+  border-color: #9747FF !important;
+  background-color: #9747FF !important;
+}
+.mat-mdc-checkbox-checked .mdc-form-field {
+  border-color: #9747FF !important;  
+}
+.mdc-form-field label {
+  font-size: 12px !important;
+  color: #373737 !important;
+}
+.mat-mdc-checkbox-checked .mdc-form-field label {
+  color: #9747FF !important;  
+}
+.mdc-checkbox__checkmark {
+  top: 2px !important;   
+  left: 2px !important;
+  width: 12px !important;  
+}
+.mat-mdc-checkbox-disabled .mdc-checkbox__background {
+  border:#CBD5E1 !important;
+  background: #E2E8F0 !important;
+}
+.mat-mdc-checkbox-disabled.mat-mdc-checkbox-checked .mdc-checkbox__background {  
+  border-color: #9747FF !important;
+  background-color: #9747FF !important;
+}
+.btn.add-btn {
+  transition: all 0.5s ease 0s;
+}
+.btn.add-btn:hover {
+  background:#F1F5F9;
+  color: #9747FF;
+  border: 1px solid #9747FF;
+}
+.user-detail-wrapper #leftBox .headingClass {
+  margin-left: 0;
+}
+.user-detail-wrapper #leftBox {
+  padding-left: 0;
+}
+.user-detail-wrapper #leftBox .chat-container {
+  padding-left: 0;
+}
+.user-detail-wrapper #leftBox .send-input-wrap {
+  margin-left: 0;
+  width: 100%;
+}
+.user-detail-wrapper #leftBox .chat-container {
+  height: calc(100vh - 246px);
+}
+.user-detail-wrapper {
+  height: calc(100vh - 50px);
+  overflow: hidden;
+}  
+.user-detail-wrapper .form-container {
+  height: calc(100vh - 280px);
+}
+.risk-box{
+  margin-bottom: 60px;
+  position: relative;
+}
+.choose-file {
+  padding: 0;
+  margin-top: 5px;
+  color: #BDBDBD;
+}
+.choose-file:hover {
+  color: #BDBDBD;
+}
+.choose-file span {
+  color: #8F53F0;
+}
+.validation-msg.global-valid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  bottom: 10px;
+  z-index: 9;
+}
+.bg-primary {
+  background: #DBEAFE !important;
+  color: #2563EB !important;
+  border:1px solid #BFDBFE;
+}
+.badge {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  font-family: 'Saans-SemiBold' !important;
+  border-radius: 4px;
+}

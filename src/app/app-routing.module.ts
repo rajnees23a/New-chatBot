@@ -1,0 +1,32 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { LayoutComponent } from './layout/layout.component';
+import { HomepageComponent } from './homepage/homepage.component';
+import { UserRequestComponent } from './user-request/user-request.component';
+import { TestComponent } from './test/test.component';
+import { UserRRequestDetailComponent } from './user-rrequest-detail/user-rrequest-detail.component';
+import { HistoryComponent } from './history/history.component';
+import { CreateComponent } from './create/create.component';
+const routes: Routes = [
+  {
+    path: '',
+    component: LayoutComponent,
+    // component: ChatGptCodeComponent,
+    children: [
+      { path: '', redirectTo: '/home', pathMatch: 'full' },
+      // { path: '', component: HomepageComponent },
+      { path: 'home', component: HomepageComponent },
+      { path: 'request', component: UserRequestComponent },
+      { path: 'requestDetail/:id', component: UserRRequestDetailComponent },
+      { path: 'trial', component: TestComponent },
+      { path: 'create', component: CreateComponent },
+      { path: 'bic', component: HistoryComponent },
+    ],
+  },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
