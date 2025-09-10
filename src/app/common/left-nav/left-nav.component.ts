@@ -3,6 +3,7 @@ import { Router, NavigationEnd  } from '@angular/router';
 import { SerrviceService } from '../../serrvice.service';  // Import the DataService
 import { filter, Subscription } from 'rxjs';
 import * as bootstrap from 'bootstrap';
+import { APP_CONSTANTS } from '../../constants';
 
 @Component({
   selector: 'app-left-nav',
@@ -10,6 +11,8 @@ import * as bootstrap from 'bootstrap';
   styleUrls: ['./left-nav.component.css']
 })
 export class NavbarComponent implements OnInit {
+
+  readonly navText = APP_CONSTANTS.LEFT_NAV;
   navbarData: any;  // This will store the latest data for the Navbar
   private routerSubscription: Subscription = new Subscription;
   dataSubscription: Subscription = new Subscription(); 
@@ -57,6 +60,10 @@ isItemSelected: boolean = false;
     });
     console.log("selecteditem",this.selectedItem);
     this.fetchData();
+  }
+
+  get deleteConfirmTitle() {
+    return `${this.navText.DELETE_CONFIRM_TITLE} ${this.deletingTitle} ${this.navText.DELETE_CONFIRM_SUFFIX}`;
   }
 
     // Method to trigger data retrieval

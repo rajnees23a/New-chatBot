@@ -1,63 +1,35 @@
-<!-- <div class="sidebar" [class.collapsed]="isCollapsed">
-    <button class="toggle-btn" (click)="toggleSidebar()">
-      {{ isCollapsed ? 'Expand' : 'Collapse' }}
-    </button>
-    <ul class="nav-items">
-      <li *ngFor="let item of menuItems" (click)="navigateTo(item.route)">
-        <i [class]="item.icon"></i>
-        <span *ngIf="!isCollapsed">{{ item.label }}</span>
-      </li>
-    </ul>
-  </div> -->
-
-  <!-- sidebar.component.html -->
-<!-- <nav class="sidebar">
-  <ul>
-    <li><mat-icon>dashboard</mat-icon> Dashboard</li>
-    <li><mat-icon>business</mat-icon> Business Ideas</li>
-    <li><mat-icon>settings</mat-icon> Settings</li>
-    <li><mat-icon>help</mat-icon> Help</li>
-  </ul>
-</nav> -->
-
 <div class="sidebar collapsed" [ngClass]="{'collapsed': isCollapsed}">
 <div class="logo-toggle-wrap"> 
   <div class="logo">
     <a href="#">
       <img src="assets/IconWrapper.svg" alt="Logo">
-      <span>Avolta</span>
+      <span>{{ navText.LOGO_TEXT }}</span>
     </a>   
    </div>
    <button class="toggle-btn toggle-btn2" (click)="toggleSidebar()">
-    <!-- <mat-icon>{{ isCollapsed ? 'menu_open' : 'menu' }}</mat-icon> -->
      <span><img src="../../../assets/images/hamburger.svg" alt="hamburger"/> </span>
   </button>
 </div>
   <button class="toggle-btn" (click)="toggleSidebar()">
-    <!-- <mat-icon>{{ isCollapsed ? 'menu_open' : 'menu' }}</mat-icon> -->
-     <span data-bs-toggle="tooltip" data-bs-placement="right" title="Open"><img src="../../../assets/images/hamburger.svg" alt="hamburger"/> </span>
+     <span data-bs-toggle="tooltip" data-bs-placement="right" [title]="navText.OPEN_TOOLTIP"><img src="../../../assets/images/hamburger.svg" alt="hamburger"/> </span>
   </button>
   <div class="page-tabs"> 
   <ul class="nav-list">
-    <!-- <li *ngFor="let item of menuItems" class="nav-item" (click)="navigateTo(item.route)">
-      <mat-icon>{{ item.icon }}</mat-icon>
-      <span *ngIf="!isCollapsed">{{ item.label }}</span>
-    </li> -->
-    <li routerLink="/create"  data-bs-toggle="tooltip" data-placement="right" title="Create new BIC" class="nav-item" (click)="navigateTo('/create','create')"> 
+    <li routerLink="/create"  data-bs-toggle="tooltip" data-placement="right" [title]="navText.CREATE_TOOLTIP" class="nav-item" (click)="navigateTo('/create','create')"> 
       <i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
         <path d="M8.00065 3.33337V12.6667M3.33398 8.00004H12.6673" stroke="#334155" stroke-width="1.46667" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </i>
-      <span *ngIf="isCollapsed">Create</span>
+      <span *ngIf="isCollapsed">{{ navText.CREATE }}</span>
     </li>
-    <li routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" data-bs-toggle="tooltip" data-bs-placement="right" title="Home" class="nav-item" (click)="navigateTo('/home','home')"> 
+    <li routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" data-bs-toggle="tooltip" data-bs-placement="right" [title]="navText.HOME_TOOLTIP" class="nav-item" (click)="navigateTo('/home','home')"> 
       <i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
         <path d="M8.65487 1.84267C8.42065 1.6605 8.30354 1.56941 8.17423 1.5344C8.06013 1.50351 7.93987 1.50351 7.82577 1.5344C7.69646 1.56941 7.57935 1.6605 7.34513 1.84267L2.82359 5.35942C2.52135 5.5945 2.37022 5.71204 2.26135 5.85924C2.16491 5.98963 2.09307 6.13652 2.04935 6.2927C2 6.46901 2 6.66046 2 7.04337V11.8667C2 12.6134 2 12.9868 2.14532 13.272C2.27316 13.5229 2.47713 13.7268 2.72801 13.8547C3.01323 14 3.3866 14 4.13333 14H5.46667C5.65335 14 5.74669 14 5.818 13.9637C5.88072 13.9317 5.93171 13.8807 5.96367 13.818C6 13.7467 6 13.6533 6 13.4667V9.06666C6 8.69329 6 8.5066 6.07266 8.364C6.13658 8.23855 6.23857 8.13657 6.36401 8.07265C6.50661 7.99999 6.6933 7.99999 7.06667 7.99999H8.93333C9.3067 7.99999 9.49339 7.99999 9.63599 8.07265C9.76144 8.13657 9.86342 8.23855 9.92734 8.364C10 8.5066 10 8.69329 10 9.06666V13.4667C10 13.6533 10 13.7467 10.0363 13.818C10.0683 13.8807 10.1193 13.9317 10.182 13.9637C10.2533 14 10.3466 14 10.5333 14H11.8667C12.6134 14 12.9868 14 13.272 13.8547C13.5229 13.7268 13.7268 13.5229 13.8547 13.272C14 12.9868 14 12.6134 14 11.8667V7.04337C14 6.66046 14 6.46901 13.9506 6.2927C13.9069 6.13652 13.8351 5.98963 13.7386 5.85924C13.6298 5.71204 13.4787 5.5945 13.1764 5.35942L8.65487 1.84267Z" stroke="#334155" stroke-width="1.46667" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </i>
-      <span *ngIf="isCollapsed">Home</span>
+      <span *ngIf="isCollapsed">{{ navText.HOME }}</span>
     </li>
-    <li routerLink="/request" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" data-bs-toggle="tooltip" data-bs-placement="right" title="My Request" class="nav-item" (click)="navigateTo('/request','request')"> 
+    <li routerLink="/request" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" data-bs-toggle="tooltip" data-bs-placement="right" [title]="navText.REQUEST_TOOLTIP" class="nav-item" (click)="navigateTo('/request','request')"> 
       <i> 
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
           <g clip-path="url(#clip0_4946_21711)">
@@ -70,25 +42,25 @@
           </defs>
           </svg>
       </i>      
-      <span *ngIf="isCollapsed">Request</span>
+      <span *ngIf="isCollapsed">{{ navText.REQUEST }}</span>
     </li>
   </ul>
 </div>
   <div class="recent-tabs"> 
-    <h2>Drafts</h2>
+    <h2>{{ navText.DRAFTS }}</h2>
     <ul class="nav-list" *ngFor="let item of modifiedData; let i = index">
       <li [ngClass]="{'active': isItemSelected && selectedItem === i}" class="nav-item" (mouseover)="onHover(i)"  (click)="onItemClick(item.session_data,item.session_id,item.user_name,i)"> 
-       <span data-bs-toggle="tooltip" data-placement="bottom" title="{{item.displayTitle}}"> {{ item.displayTitle}}</span>
+       <span data-bs-toggle="tooltip" data-placement="bottom" [title]="item.displayTitle"> {{ item.displayTitle}}</span>
         <i class="bi bi-three-dots-vertical" (click)="showHideDraft(i, $event)"></i>
         <ul *ngIf="openedDropdownIndex === i">
-          <li (click)="deleteConfirmationBox(item.user_name,item.session_id, item.displayTitle); $event.stopPropagation()"><i class="bi bi-trash"></i>Delete</li>
+          <li (click)="deleteConfirmationBox(item.user_name,item.session_id, item.displayTitle); $event.stopPropagation()"><i class="bi bi-trash"></i>{{ navText.DELETE }}</li>
           <!-- <li><i class="bi bi-share"></i>Share</li> -->
         </ul>
       </li>
     </ul>
     <ul class="nav-list" *ngIf="!modifiedData || modifiedData.length == 0">
       <li> 
-       <span>No drafts</span>
+       <span>{{ navText.NO_DRAFTS }}</span>
       </li>
     </ul>
   </div>
@@ -96,7 +68,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="modal-title" id="reviewModalLabel">Are you sure you want to delete {{deletingTitle}} draft ?</h2>
+          <h2 class="modal-title" id="reviewModalLabel">{{ deleteConfirmTitle }}</h2>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -105,20 +77,20 @@
           </h1>  -->
           <ul>
             <li>
-              All data related to this idea will be permanently removed. 
+              {{ navText.DELETE_CONFIRM_BODY_1 }}
 
             </li>
             <li>
-              You will lose any progress and will not be able to recover it.
+              {{ navText.DELETE_CONFIRM_BODY_2 }}
             </li>        
           </ul>
-          <p>Please confirm your decision before proceeding.</p>
+          <p>{{ navText.DELETE_CONFIRM_FOOTER }}</p>
         </div>
         <div class="modal-footer">
-          <div><button type="button" class="btn add-btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button></div>
+          <div><button type="button" class="btn add-btn" data-bs-dismiss="modal" aria-label="Close">{{ navText.CANCEL }}</button></div>
           <div>
-          <button type="button" class="btn add-btn me-2" data-bs-dismiss="modal" aria-label="Close">Let me edit</button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close" (click)="deleteDraft()">Delete</button>
+          <button type="button" class="btn add-btn me-2" data-bs-dismiss="modal" aria-label="Close">{{ navText.LET_ME_EDIT }}</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close" (click)="deleteDraft()">{{ navText.DELETE }}</button>
           </div>
         </div>
       </div>

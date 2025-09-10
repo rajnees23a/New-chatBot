@@ -11,9 +11,11 @@ import { APP_CONSTANTS } from '../../constants';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  appTitle = APP_CONSTANTS.APP_TITLE;
-  notificationTooltip = APP_CONSTANTS.NOTIFICATION_TOOLTIP;
-  myAccountTooltip = APP_CONSTANTS.MY_ACCOUNT_TOOLTIP;
-  userInitials = APP_CONSTANTS.USER_INITIALS;
+
+  readonly headerText = APP_CONSTANTS.HEADER;
+  appTitle = this.headerText.APP_TITLE;
+  notificationTooltip = this.headerText.NOTIFICATION_TOOLTIP;
+  myAccountTooltip = this.headerText.MY_ACCOUNT_TOOLTIP;
+  userInitials = this.headerText.USER_INITIALS;
 
 }
