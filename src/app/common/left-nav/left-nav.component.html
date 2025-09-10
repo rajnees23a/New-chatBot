@@ -6,11 +6,11 @@
       <span>{{ navText.LOGO_TEXT }}</span>
     </a>   
    </div>
-   <button class="toggle-btn toggle-btn2" (click)="toggleSidebar()">
+   <button class="toggle-btn toggle-btn2" aria-label="Toggle btn" role="button" (click)="toggleSidebar()">
      <span><img src="../../../assets/images/hamburger.svg" alt="hamburger"/> </span>
   </button>
 </div>
-  <button class="toggle-btn" (click)="toggleSidebar()">
+  <button class="toggle-btn" aria-label="Togglle btn right" role="button" (click)="toggleSidebar()">
      <span data-bs-toggle="tooltip" data-bs-placement="right" [title]="navText.OPEN_TOOLTIP"><img src="../../../assets/images/hamburger.svg" alt="hamburger"/> </span>
   </button>
   <div class="page-tabs"> 
@@ -50,7 +50,7 @@
     <h2>{{ navText.DRAFTS }}</h2>
     <ul class="nav-list" *ngFor="let item of modifiedData; let i = index">
       <li [ngClass]="{'active': isItemSelected && selectedItem === i}" class="nav-item" (mouseover)="onHover(i)"  (click)="onItemClick(item.session_data,item.session_id,item.user_name,i)"> 
-       <span data-bs-toggle="tooltip" data-placement="bottom" [title]="item.displayTitle"> {{ item.displayTitle}}</span>
+       <span data-bs-toggle="tooltip" data-placement="bottom" [title]="item?.displayTitle"> {{ item?.displayTitle}}</span>
         <i class="bi bi-three-dots-vertical" (click)="showHideDraft(i, $event)"></i>
         <ul *ngIf="openedDropdownIndex === i">
           <li (click)="deleteConfirmationBox(item.user_name,item.session_id, item.displayTitle); $event.stopPropagation()"><i class="bi bi-trash"></i>{{ navText.DELETE }}</li>
@@ -69,7 +69,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h2 class="modal-title" id="reviewModalLabel">{{ deleteConfirmTitle }}</h2>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" role="button"></button>
         </div>
         <div class="modal-body">
           <!-- <h1>
@@ -87,10 +87,10 @@
           <p>{{ navText.DELETE_CONFIRM_FOOTER }}</p>
         </div>
         <div class="modal-footer">
-          <div><button type="button" class="btn add-btn" data-bs-dismiss="modal" aria-label="Close">{{ navText.CANCEL }}</button></div>
+          <div><button type="button" class="btn add-btn" data-bs-dismiss="modal" aria-label="Close" role="button">{{ navText.CANCEL }}</button></div>
           <div>
-          <button type="button" class="btn add-btn me-2" data-bs-dismiss="modal" aria-label="Close">{{ navText.LET_ME_EDIT }}</button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close" (click)="deleteDraft()">{{ navText.DELETE }}</button>
+          <button type="button" class="btn add-btn me-2" data-bs-dismiss="modal" aria-label="Close" role="button">{{ navText.LET_ME_EDIT }}</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close" (click)="deleteDraft()" role="button">{{ navText.DELETE }}</button>
           </div>
         </div>
       </div>
@@ -99,6 +99,6 @@
   <div *ngIf="successDivVisible" class="validation-msg success">
     <i class="bi bi-check-circle"></i> 
     <span>{{ successDivText }}</span>      
-    <button type="button" class="close-alert" (click)="successDivCloseInstant()"><i class="bi bi-x"></i></button>
+    <button type="button" class="close-alert" (click)="successDivCloseInstant()" aria-label="close alert" role="button"><i class="bi bi-x"></i></button>
   </div>
 </div>
