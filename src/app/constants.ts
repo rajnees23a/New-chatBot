@@ -27,6 +27,9 @@ export const APP_CONSTANTS = {
     DELETE: 'Delete',
     OPEN_TOOLTIP: 'Open',
     SUCCESS: 'Success',
+    DELETE_SUCCESS: 'Successfully delete the bic',
+    YOUR_IDEA_TITLE: 'Your Idea Title',
+    ADA_STATIC_TEXT: "ADA couldn't fill this field, please continue the conversation to fill it"
   },
   CAROUSEL: {
     FIRST_TITLE: 'Let’s create something amazing together🌟',

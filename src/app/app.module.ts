@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './common/left-nav/left-nav.component';
+import { LeftNavComponent } from './common/left-nav/left-nav.component';
 import { HeaderComponent } from './common/header/header.component';
 import { LayoutComponent } from './layout/layout.component';
 import { HomepageComponent } from './homepage/homepage.component';
@@ -33,7 +33,7 @@ import { LoaderComponent } from './loader/loader.component';
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
+    LeftNavComponent,
     LayoutComponent,
     HomepageComponent,
     UserRequestComponent,
