@@ -1,4 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { APP_CONSTANTS } from '../constants';
 
@@ -17,7 +24,7 @@ export class CarouselComponent implements OnInit {
   step = 1;
   isFirstSlide: boolean = false;
   @Output() hideParent = new EventEmitter<void>();
-
+  @ViewChild('carousel', { static: true }) carousel!: ElementRef;
   secondListImages = [
     'title.svg',
     'problem-statement.svg',
@@ -75,7 +82,16 @@ export class CarouselComponent implements OnInit {
     this.setTotalSlides();
     // this.checkIfLastSlide();
   }
-
+  ngAfterViewInit() {
+    this.carousel.nativeElement.addEventListener(
+      'slid.bs.carousel',
+      (e: any) => {
+        const idx = e.to; // current slide index
+        this.isFirstSlide = idx === 0;
+        this.isLastSlideReached = idx === 3; // update if slide count changes
+      }
+    );
+  }
   // hideChild() {
   //   this.hideParent.emit();
   // }
@@ -133,6 +149,5 @@ export class CarouselComponent implements OnInit {
     if (this.isLastSlideReached == true) {
       console.log('You are on the last slide');
     }
-    // console.log("mmmmm",event.target.children.length);
   }
 }
