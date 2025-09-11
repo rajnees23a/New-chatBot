@@ -1,23 +1,30 @@
-
-<div class="business-container">
+<div class="business-container container-max">
   <div class="business-card">
-    <div class="need-fill"> 
-    <h1>Hi! 👋 Good morning John Doe!</h1>
-    <button class="btn add-btn" *ngIf="!userComeFirstTime" (click)="openPopupOnClick()">See what needs to be filled?</button>    
-   </div>
+    <div class="need-fill">
+      <h1>Hi! 👋 Good morning John Doe!</h1>
+      <button class="btn add-btn btn-fluid-sm" *ngIf="!userComeFirstTime" (click)="openPopupOnClick()">See what needs to be filled?</button><!-- NEW -->
+    </div>
+
     <div class="business-inner-wrap">
-       <div class="business-img-wrap"> <img src="../../assets/images/landing-img.svg" alt="landing-img"> </div>  
-       <div class="business-content">      
-          <p>👋 Hi, I’m ADA (AI Digital Assistant)!</p>
-          <p> 💡 I help shape and refine your Business Idea.</p>
-          <p>⚡ Based on your input, I generate key details instantly.</p>
-          <p>🎯 My goal? Clear, structured content to set you up for success!</p>
-          <p>🚀 Let’s bring your idea to life! </p>        
-        <button class="btn-primary" (click)="openPopup()">Create new business idea</button>
-      </div> 
+      <div class="business-img-wrap">
+        <img
+          src="../../assets/images/landing-img.svg"
+          alt="landing-img"
+          loading="lazy" 
+          decoding="async" />
+      </div>
+
+      <div class="business-content">
+        <p>👋 Hi, I’m ADA (AI Digital Assistant)!</p>
+        <p> 💡 I help shape and refine your Business Idea.</p>
+        <p>⚡ Based on your input, I generate key details instantly.</p>
+        <p>🎯 My goal? Clear, structured content to set you up for success!</p>
+        <p>🚀 Let’s bring your idea to life! </p>
+        <button class="btn-primary btn-fluid-sm" (click)="openPopup()">Create new business idea</button><!-- NEW -->
+      </div>
     </div>
   </div>
-</div> 
+</div>
 
 <div *ngIf="showCarousel || showOnlyPopup">
   <app-carousel></app-carousel>

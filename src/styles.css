@@ -117,7 +117,7 @@ p {
   } 
   .chatbot-wrap {
     padding: 16px 11px;
-    overflow: hidden;
+    overflow-y: scroll;
     height: calc(100vh - 50px);
   }
   #leftBox .headingClass {
@@ -883,3 +883,165 @@ p {
   font-family: 'Saans-SemiBold' !important;
   border-radius: 4px;
 }
+
+:root{ 
+  --gutter: 16px; 
+  --panel-pad: 16px; 
+} 
+
+.chatbot-wrap{ 
+  padding: clamp(8px, 1.2vw, 16px) clamp(6px, .8vw, 11px); 
+  height: calc(100dvh - 50px); 
+} 
+
+
+.file-name span{ 
+  max-width: 100%; 
+  width: auto; 
+} 
+
+.user-text{ 
+  max-width: 85%; 
+} 
+
+
+.send-input-wrap{ 
+  bottom: 0; 
+} 
+
+
+.subnit-btn{ 
+  bottom: 0; 
+} 
+
+
+.validation-msg{ 
+  max-width: 90vw; 
+} 
+
+
+.progress{ 
+  width: clamp(90px, 16vw, 131px); 
+} 
+
+/* -------- Phones: <576px (xs) -------- */
+@media (max-width: 575.98px){ 
+  #leftBox, #rightBox{ 
+    padding: 0 8px; 
+  } 
+
+  .chat-container{ 
+    height: auto; 
+    max-height: none; 
+    padding: 12px; 
+    padding-bottom: 120px;
+  } 
+
+  .send-input-wrap{ 
+    position: fixed; 
+    left: 0; right: 0; 
+    width: 100%; 
+    border-radius: 0; 
+    margin: 0; 
+    z-index: 1000; 
+    padding: 12px 118px 8px 12px; 
+  } 
+  .send-attach-btns{ 
+    top: 12px; right: 8px; 
+  } 
+
+  .file-info{ 
+    width: 100%; 
+    margin-left: 0; 
+  } 
+  .file-info.file-info-inside{ 
+    width: 100%; 
+    float: none; 
+  } 
+
+  .fielsReq{ 
+    margin-top: 12px; 
+    padding: 12px; 
+  } 
+  .form-container{ 
+    height: auto; 
+    max-height: none; 
+  } 
+  .subnit-btn{ 
+    position: sticky; 
+    bottom: 0; 
+    padding: 12px; 
+    z-index: 900; 
+  } 
+
+  .user-order, 
+  .guidance-box, 
+  .following-ways, 
+  .multi-select-box{ 
+    padding-left: 38px; 
+  } 
+
+  h1.headingClass{ font-size: 20px; line-height: 24px; } 
+} 
+
+/* -------- Small devices: ≥576px and <768px (sm) -------- */
+@media (min-width: 576px) and (max-width: 767.98px){ 
+  .chat-container{ 
+    height: 52dvh; 
+    padding-bottom: 110px; 
+  } 
+  .send-input-wrap{ 
+    position: fixed; 
+    left: 0; right: 0; width: 100%; margin: 0; z-index: 1000; 
+  } 
+  .subnit-btn{ 
+    position: sticky; bottom: 0; z-index: 900; 
+  } 
+} 
+
+/* -------- Tablets: ≥768px and <992px (md) -------- */
+@media (min-width: 768px) and (max-width: 991.98px){ 
+  .chat-container{ 
+    height: calc(100dvh - 240px); 
+  } 
+  .send-input-wrap{ 
+    position: absolute; margin: 0 8px; width: calc(100% - 16px); left: 0; 
+  } 
+  .form-container{ 
+    height: calc(100dvh - 260px); 
+  } 
+  .file-info.file-info-inside{ width: 75%; } 
+} 
+
+/* -------- Laptops: ≥992px and <1200px (lg) -------- */
+@media (min-width: 992px) and (max-width: 1199.98px){ 
+  .chat-container{ height: calc(100dvh - 200px); } 
+  .form-container{ height: calc(100dvh - 230px); } 
+  .send-input-wrap{ position: absolute; width: 97%; left: 0; } 
+  .subnit-btn{ position: absolute; } 
+} 
+
+/* -------- Desktops: ≥1200px (xl+) -------- */
+@media (min-width: 1200px){ 
+  .chat-container{ height: calc(100dvh - 180px); } 
+  .form-container{ height: calc(100dvh - 212px); } 
+  .user-text{ max-width: 60%; } 
+} 
+
+/* -------- Very wide: ≥1400px (xxl) -------- */
+@media (min-width: 1400px){ 
+  .chatbot-wrap{ padding: 20px 14px; } 
+  #leftBox .headingClass{ margin-left: 24px; } 
+  .send-input-wrap{ padding: 16px 145px 10px 16px; } 
+} 
+
+
+@media (hover: none){ 
+  .send-attach-btns .btn{ height: 40px; width: 40px; } 
+  .user-order button{ padding: 7px 9px; } 
+} 
+
+
+@media (prefers-reduced-motion: reduce){ 
+  *{ transition: none !important; animation: none !important; } 
+} 

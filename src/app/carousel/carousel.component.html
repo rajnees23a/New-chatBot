@@ -1,10 +1,16 @@
-<div class="popup-overlay">
+<div
+  class="popup-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="guideTitle"
+>
   <div class="guide-container">
     <div
+      #carousel
       id="carouselExampleIndicators"
       class="carousel slide carousel-fade popup-container"
     >
-      <h2>{{ firstTitle }}</h2>
+      <h2 id="guideTitle">{{ firstTitle }}</h2>
       <div class="carousel-inner">
         <div class="carousel-item active">
           <div class="guide-inner">
@@ -35,71 +41,6 @@
               {{ secondGuideDescription }}
             </p>
             <div class="category-box">
-              <!-- <ul>
-                <li>
-                  <i><img src="../../assets/images/title.svg" alt="title" /></i>
-                  <span>Title</span>
-                </li>
-                <li>
-                  <i
-                    ><img
-                      src="../../assets/images/problem-statement.svg"
-                      alt="problem-statement"
-                  /></i>
-                  <span>Problem statement</span>
-                </li>
-                <li>
-                  <i
-                    ><img
-                      src="../../assets/images/objective.svg"
-                      alt="objective"
-                  /></i>
-                  <span>objective</span>
-                </li>
-                <li>
-                  <i
-                    ><img
-                      src="../../assets/images/key-result.svg"
-                      alt="key-result"
-                  /></i>
-                  <span>Key Result</span>
-                </li>
-                <li>
-                  <i
-                    ><img
-                      src="../../assets/images/key-result.svg"
-                      alt="key-result"
-                  /></i>
-                  <span>Key Feature</span>
-                </li>
-                <li>
-                  <i
-                    ><img src="../../assets/images/urgency.svg" alt="urgency"
-                  /></i>
-                  <span>Urgency</span>
-                </li>
-                <li>
-                  <i
-                    ><img
-                      src="../../assets/images/area-involved.svg"
-                      alt="area-involved"
-                  /></i>
-                  <span>area involved</span>
-                </li>
-                <li>
-                  <i
-                    ><img
-                      src="../../assets/images/destination.svg"
-                      alt="destination"
-                  /></i>
-                  <span>Destination 2027 alignment</span>
-                </li>
-                <li>
-                  <i><img src="../../assets/images/risk.svg" alt="risk" /></i>
-                  <span>Risks</span>
-                </li>
-              </ul> -->
-
               <ul class="guide-list">
                 <li *ngFor="let img of secondListImages; let i = index">
                   <i>
@@ -239,7 +180,7 @@
           *ngIf="!isLastSlideReached"
           (click)="onCarouselSlide()"
           id="carouselNextBtn"
-          class="carousel-control-next"
+          class="btn-primary"
           type="button"
           data-bs-target="#carouselExampleIndicators"
           data-bs-slide="next"
