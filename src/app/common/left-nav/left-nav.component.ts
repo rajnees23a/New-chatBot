@@ -15,6 +15,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
 
   readonly navText = APP_CONSTANTS.LEFT_NAV;
   private routerSubscription: Subscription = new Subscription;
+  private boundClickHandler = this.closeDropdownOnClickOutside.bind(this);
   dataSubscription: Subscription = new Subscription();
   modifiedData: ModifiedDraft[] = [];
   bicCounter = 1;
@@ -40,7 +41,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
       }
     });
 
-    document.addEventListener('click', this.closeDropdownOnClickOutside.bind(this));
+    document.addEventListener('click', this.boundClickHandler);
 
     // Reset active item on page load or navigation, change Reset highlighted state on route change
     this.router.events.pipe(
@@ -199,8 +200,14 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+ngOnDestroy() {
+  document.removeEventListener('click', this.boundClickHandler);
+
+  if (this.routerSubscription) {
     this.routerSubscription.unsubscribe();
+  }
+  if (this.dataSubscription) {
     this.dataSubscription.unsubscribe();
   }
+}
 }
