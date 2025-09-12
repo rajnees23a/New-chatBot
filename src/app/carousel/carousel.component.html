@@ -1,111 +1,67 @@
-<div class="popup-overlay">
-  <div class="guide-container">
+<div
+  class="popup-overlay position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+>
+  <div class="guide-container w-100 px-3 px-sm-4">
     <div
       id="carouselExampleIndicators"
-      class="carousel slide carousel-fade popup-container"
+      class="carousel slide carousel-fade popup-container mx-auto d-flex flex-column p-3 p-sm-4"
     >
-      <h2>{{ firstTitle }}</h2>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <div class="guide-inner">
-            <div class="guideimg">
-              <img src="../../assets/images/guide-1.svg" alt="guide-1" />
+      <!-- Header -->
+      <h2 class="h5 h-sm4 mb-3 text-center text-sm-start">{{ firstTitle }}</h2>
+
+      <!-- Slides -->
+      <div class="carousel-inner flex-grow-1 overflow-y-scroll overflow-x-hidden">
+        <!-- Slide 1 -->
+        <div class="carousel-item active h-100">
+          <div class="guide-inner h-100 d-flex flex-column">
+            <div class="guideimg mb-3 text-center">
+              <img
+                src="../../assets/images/guide-1.svg"
+                alt="guide-1"
+                class="img-fluid d-block mx-auto w-100 guide-hero object-fit-contain"
+              />
             </div>
-            <div class="guide-title">
+
+            <div class="guide-title d-flex align-items-center mb-2">
               <span>{{ firstTitleNo }}</span>
-              <h1>{{ firstGuideTitle }}</h1>
+              <h1 class="h6 mb-0 ms-2">{{ firstGuideTitle }}</h1>
             </div>
-            <ul class="guide-list">
+
+            <ul class="guide-list ps-3 flex-grow-1 overflow-auto">
               <li *ngFor="let item of carouselItems" [innerHTML]="item"></li>
             </ul>
           </div>
         </div>
-        <div class="carousel-item">
-          <div class="guide-inner">
-            <div class="guideimg">
-              <img src="../../assets/images/guide-2.svg" alt="guide-2" />
-            </div>
-            <div class="guide-title">
-              <span>{{ secondTitleNo }}</span>
-              <h1>
-                {{ secondGuideTitle }}
-              </h1>
-            </div>
-            <p>
-              {{ secondGuideDescription }}
-            </p>
-            <div class="category-box">
-              <!-- <ul>
-                <li>
-                  <i><img src="../../assets/images/title.svg" alt="title" /></i>
-                  <span>Title</span>
-                </li>
-                <li>
-                  <i
-                    ><img
-                      src="../../assets/images/problem-statement.svg"
-                      alt="problem-statement"
-                  /></i>
-                  <span>Problem statement</span>
-                </li>
-                <li>
-                  <i
-                    ><img
-                      src="../../assets/images/objective.svg"
-                      alt="objective"
-                  /></i>
-                  <span>objective</span>
-                </li>
-                <li>
-                  <i
-                    ><img
-                      src="../../assets/images/key-result.svg"
-                      alt="key-result"
-                  /></i>
-                  <span>Key Result</span>
-                </li>
-                <li>
-                  <i
-                    ><img
-                      src="../../assets/images/key-result.svg"
-                      alt="key-result"
-                  /></i>
-                  <span>Key Feature</span>
-                </li>
-                <li>
-                  <i
-                    ><img src="../../assets/images/urgency.svg" alt="urgency"
-                  /></i>
-                  <span>Urgency</span>
-                </li>
-                <li>
-                  <i
-                    ><img
-                      src="../../assets/images/area-involved.svg"
-                      alt="area-involved"
-                  /></i>
-                  <span>area involved</span>
-                </li>
-                <li>
-                  <i
-                    ><img
-                      src="../../assets/images/destination.svg"
-                      alt="destination"
-                  /></i>
-                  <span>Destination 2027 alignment</span>
-                </li>
-                <li>
-                  <i><img src="../../assets/images/risk.svg" alt="risk" /></i>
-                  <span>Risks</span>
-                </li>
-              </ul> -->
 
-              <ul class="guide-list">
-                <li *ngFor="let img of secondListImages; let i = index">
-                  <i>
+        <!-- Slide 2 -->
+        <div class="carousel-item h-100">
+          <div class="guide-inner h-100 d-flex flex-column">
+            <div class="guideimg mb-3 text-center">
+              <img
+                src="../../assets/images/guide-2.svg"
+                alt="guide-2"
+                class="img-fluid d-block mx-auto w-100 guide-hero object-fit-contain"
+              />
+            </div>
+
+            <div class="guide-title d-flex align-items-center mb-2">
+              <span>{{ secondTitleNo }}</span>
+              <h1 class="h6 mb-0 ms-2">{{ secondGuideTitle }}</h1>
+            </div>
+
+            <p class="mb-2">{{ secondGuideDescription }}</p>
+
+            <div class="category-box">
+              <ul class="guide-list d-flex flex-wrap gap-2 ps-0">
+                <li
+                  *ngFor="let img of secondListImages; let i = index"
+                  class="d-inline-flex align-items-center gap-2"
+                >
+                  <i class="d-inline-flex">
                     <img
                       [src]="'assets/images/' + img"
                       [alt]="secondListItems[i]"
+                      class="img-fluid"
                     />
                   </i>
                   <span>{{ secondListItems[i] }}</span>
@@ -114,49 +70,56 @@
             </div>
           </div>
         </div>
-        <div class="carousel-item">
-          <div class="guide-inner">
-            <div class="guideimg">
-              <img src="../../assets/images/guide-3.svg" alt="guide-3" />
+
+        <!-- Slide 3 -->
+        <div class="carousel-item h-100">
+          <div class="guide-inner h-100 d-flex flex-column">
+            <div class="guideimg mb-3 text-center">
+              <img
+                src="../../assets/images/guide-3.svg"
+                alt="guide-3"
+                class="img-fluid d-block mx-auto w-100 guide-hero object-fit-contain"
+              />
             </div>
-            <div class="guide-title">
+
+            <div class="guide-title d-flex align-items-center mb-2">
               <span>{{ thirdTitleNo }}</span>
-              <h1>{{ thirdGuideTitle }}</h1>
+              <h1 class="h6 mb-0 ms-2">{{ thirdGuideTitle }}</h1>
             </div>
-            <p>
-              {{ thirdGuideDescription }}
-            </p>
-            <div class="part-wrap">
-              <div class="part-inner">
+
+            <p class="mb-2">{{ thirdGuideDescription }}</p>
+
+            <div class="part-wrap row g-3">
+              <div class="part-inner col-12 col-sm-6" *ngIf="thirdPartOne">
                 <strong>{{ thirdPartOne }}</strong>
-                <ul class="guide-list">
+                <ul class="guide-list ps-3">
                   <li
                     *ngFor="let item of thirdPartOneList"
                     [innerHTML]="item"
                   ></li>
                 </ul>
               </div>
-              <div class="part-inner">
+              <div class="part-inner col-12 col-sm-6" *ngIf="thirdPartTwo">
                 <strong>{{ thirdPartTwo }}</strong>
-                <ul class="guide-list">
+                <ul class="guide-list ps-3">
                   <li
                     *ngFor="let item of thirdPartTwoList"
                     [innerHTML]="item"
                   ></li>
                 </ul>
               </div>
-              <div class="part-inner">
+              <div class="part-inner col-12 col-sm-6" *ngIf="thirdPartThree">
                 <strong>{{ thirdPartThree }}</strong>
-                <ul class="guide-list">
+                <ul class="guide-list ps-3">
                   <li
                     *ngFor="let item of thirdPartThreeList"
                     [innerHTML]="item"
                   ></li>
                 </ul>
               </div>
-              <div class="part-inner">
+              <div class="part-inner col-12 col-sm-6" *ngIf="thirdPartFour">
                 <strong>{{ thirdPartFour }}</strong>
-                <ul class="guide-list">
+                <ul class="guide-list ps-3">
                   <li
                     *ngFor="let item of thirdPartFourList"
                     [innerHTML]="item"
@@ -166,21 +129,30 @@
             </div>
           </div>
         </div>
-        <div class="carousel-item">
-          <div class="guide-inner">
-            <div class="guideimg">
-              <img src="../../assets/images/guide-4.svg" alt="guide-4" />
+
+        <!-- Slide 4 -->
+        <div class="carousel-item h-100">
+          <div class="guide-inner h-100 d-flex flex-column">
+            <div class="guideimg mb-3 text-center">
+              <img
+                src="../../assets/images/guide-4.svg"
+                alt="guide-4"
+                class="img-fluid d-block mx-auto w-100 guide-hero object-fit-contain"
+              />
             </div>
-            <div class="guide-title">
+
+            <div class="guide-title d-flex align-items-center mb-2">
               <span>{{ fourthTitleNo }}</span>
-              <h1>{{ fourthGuideTitle }}</h1>
+              <h1 class="h6 mb-0 ms-2">{{ fourthGuideTitle }}</h1>
             </div>
-            <ul class="guide-list">
+
+            <ul class="guide-list ps-3">
               <li *ngFor="let item of fourthListOne" [innerHTML]="item"></li>
             </ul>
-            <div class="part-inner">
+
+            <div class="part-inner mt-2">
               <strong>{{ fourthDontWorry }}</strong>
-              <ul class="guide-list">
+              <ul class="guide-list ps-3">
                 <li *ngFor="let item of fourthListTwo" [innerHTML]="item"></li>
               </ul>
             </div>
@@ -188,7 +160,10 @@
         </div>
       </div>
 
-      <div class="carousel-indicators">
+      <!-- Indicators -->
+      <div
+        class="carousel-indicators m-0 mt-3 position-static justify-content-center"
+      >
         <button
           type="button"
           data-bs-target="#carouselExampleIndicators"
@@ -216,47 +191,77 @@
           aria-label="Slide 4"
         ></button>
       </div>
-      <div class="carousel-control">
+
+      <!-- Controls -->
+      <!-- <div class="carousel-control d-flex flex-wrap gap-2 align-items-center justify-content-between mt-3">
+        <button [hidden]="userComeFirstTime" (click)="getStarted()" class="let-me-skip btn p-0">Let me skip</button>
+
+        <div class="d-flex gap-2 ms-auto">
+          <button *ngIf="!isFirstSlide"
+                  (click)="onCarouselSlide()"
+                  class="carousel-control-prev"
+                  type="button"
+                  data-bs-target="#carouselExampleIndicators"
+                  data-bs-slide="prev">Previous</button>
+
+          <button *ngIf="!isLastSlideReached"
+                  (click)="onCarouselSlide()"
+                  id="carouselNextBtn"
+                  class="carousel-control-next"
+                  type="button"
+                  data-bs-target="#carouselExampleIndicators"
+                  data-bs-slide="next">Next</button>
+
+          <button *ngIf="isLastSlideReached"
+                  (click)="getStarted()"
+                  class="btn-primary">Get started</button>
+        </div>
+      </div> -->
+      <!-- Controls -->
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <!-- Left: Skip -->
         <button
           [hidden]="userComeFirstTime"
           (click)="getStarted()"
-          class="let-me-skip btn"
-          type="button"
+          class="btn btn-link text-primary p-0"
         >
           Let me skip
         </button>
-        <button
-          *ngIf="!isFirstSlide"
-          (click)="onCarouselSlide()"
-          class="carousel-control-prev"
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide="prev"
-        >
-          Previous
-        </button>
-        <button
-          *ngIf="!isLastSlideReached"
-          (click)="onCarouselSlide()"
-          id="carouselNextBtn"
-          class="carousel-control-next"
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide="next"
-        >
-          Next
-        </button>
-        <button
-          *ngIf="isLastSlideReached"
-          (click)="getStarted()"
-          class="btn-primary"
-          type="button"
-        >
-          Get started
-        </button>
-        <!-- <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">      
-              Next
-            </button> -->
+
+        <!-- Right: Actions -->
+        <div class="d-flex gap-2">
+          <button
+            *ngIf="!isFirstSlide"
+            (click)="onCarouselSlide()"
+            type="button"
+            class="btn btn-outline-primary"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev"
+          >
+            Previous
+          </button>
+
+          <button
+            *ngIf="!isLastSlideReached"
+            (click)="onCarouselSlide()"
+            id="carouselNextBtn"
+            type="button"
+            class="btn btn-primary"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next"
+          >
+            Next
+          </button>
+
+          <button
+            *ngIf="isLastSlideReached"
+            (click)="getStarted()"
+            type="button"
+            class="btn btn-success"
+          >
+            Get started
+          </button>
+        </div>
       </div>
     </div>
   </div>
