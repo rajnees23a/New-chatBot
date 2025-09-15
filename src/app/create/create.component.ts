@@ -5,6 +5,8 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import * as bootstrap from 'bootstrap';
 import { Tooltip } from 'bootstrap';
+import { Field } from './field.model';
+import { APP_CONSTANTS } from '../constants';
 
 
 
@@ -47,19 +49,6 @@ export class CreateComponent implements OnDestroy, AfterViewChecked, AfterViewIn
   @ViewChild('chatContainerBox') chatContainerBox!: ElementRef;
   @ViewChild('tooltipRef', { static: false }) tooltipElement!: ElementRef;
   tooltipInstance: Tooltip | undefined;
-  data = {
-    session_id: "1234abcd",
-    botmessage: "Let’s start by understanding your idea. Give me a brief overview, covering the key challenge and what you want to achieve",
-    fieldText : "Problem Statement",
-    fieldValue : "",
-    fieldStatus : false,
-    guieText : ["What’s the problem? (What needs fixing or improving?)","What’s your goal? (What do you want to achieve?)",
-      "How will success be measured? (Think metrics or key results.)","Is there urgency? (Any deadlines, priorities, or risks?)"
-    ],
-    following : ["Text input (Type your response)","Attachment (Upload a PDF, Word, PPT or Excel file)",
-      "Voice input (Record your response)"
-    ]
-  };
   staticBotMsg = false;
   selectedFile: File | null = null;
   fileUploadFromAttachment: any;
@@ -79,34 +68,7 @@ export class CreateComponent implements OnDestroy, AfterViewChecked, AfterViewIn
   // chatHistory: { text: any, sender: string}[] = [];
   userInput: string = '';
   chatHistory: any[] = [];
-  fields = [
-    { label: 'Your idea title', value: '', valid: false, editing: false, image: "assets/images/title.svg", completed:false, tooltip: "Add static text here" },
-    { label: 'Problem statement', value: '', valid: false, editing: false, image: "assets/images/problem-statement.svg", completed:false },
-    { label: 'Objective', value: '', valid: false, editing: false, image: "assets/images/objective.svg", completed:false  },
-    { label: 'Key results', value: '', valid: false, editing: false, image: "assets/images/key-result.svg", completed:false  },
-    { label: 'Key features', value: '', valid: false, editing: false, image: "assets/images/key-feature.svg", completed:false  },
-    { label: 'Urgency', value: '', valid: false, editing: false, image: "assets/images/urgency.svg", completed:false  },
-    { label: 'Areas involved', value: '', valid: false, editing: false, image: "assets/images/area-involved.svg", completed:false },
-    { label: 'Destination 2027 alignment', value: '', valid: false, editing: false, image: "assets/images/destination.svg", completed:false },
-    { label: 'Risks', value: '', valid: false, editing: false, image: "assets/images/risk.svg", completed:false },
-    { label: 'KPIs', value: '', valid: false, editing: false, image: "assets/images/key-result.svg", completed:false },
-    { label: 'Data needed', value: '', valid: false, editing: false, image: "assets/images/data-needed.svg", completed:false },
-    { label: 'Impact', value: '', valid: false, editing: false, image: "assets/images/impact.svg", completed:false  },
-    { label: 'Implementation considerations', value: '', valid: false, editing: false, image: "assets/images/implementation.svg", completed:false  },
-    { label: 'Dependencies', value: '', valid: false, editing: false, image: "assets/images/dependencies.svg", completed:false  },
-    { label: 'Key dates', value: '', valid: false, editing: false, image: "assets/images/key-dates.svg", completed:false  },
-    { label: 'Timelines', value: '', valid: false, editing: false, image: "assets/images/timeline.svg", completed:false },
-    { label: 'Business sponsor', value: '', valid: false, editing: false, image: "assets/images/business-sponsor.svg", completed:false },
-    { label: 'Budget details', value: '', valid: false, editing: false, image: "assets/images/budget-details.svg", completed:false },
-    { label: 'Stakeholders', value: '', valid: false, editing: false, image: "assets/images/stakeholders.svg", completed:false },
-    { label: 'Out of scope', value: '', valid: false, editing: false, image: "assets/images/scope.svg", completed:false },
-    { label: 'Business case impacts', value: '', valid: false, editing: false, image: "assets/images/business-case-impact.svg", completed:false },
-    { label: 'Portfolio alignment', value: '', valid: false, editing: false, image: "assets/images/portfolio-alignment.svg", completed:false },
-    { label: 'IT sponsor', value: '', valid: false, editing: false, image: "assets/images/it-sponsor.svg", completed:false },
-    { label: 'Additional attachments', value: '', valid: false, editing: false, image: "assets/images/additional-attachments.svg", completed:false },
-    { label: 'Additional comments', value: '', valid: false, editing: false, image: "assets/images/additional-comments.svg", completed:false }
-    
-  ];
+  fields: Field[] = [...APP_CONSTANTS.FIELDS];
   bicFieldData : any;
   botChatMessage = "Hello";
   apiResponseData: any;
@@ -157,9 +119,9 @@ tooltipTitle = 'Collapse';
     }
     this.sessionId = this.generateSessionId();
     this.dataa.session_id = this.sessionId;
-    this.chatHistory.push({ text: this.data.botmessage, sender: 'bot' });
-    this.chatHistory.push({ text: { question: 'Let’s start with the basics! Share a brief description of your idea, covering', guidelines: this.data.guieText }, sender: 'bot', staticBotMessage: true });
-    this.chatHistory.push({ followingText: { question: 'You can provide your response in one of the following ways', hints: this.data.following }, sender: 'bot' });
+    this.chatHistory.push({ text: APP_CONSTANTS.CREATE.bot_default_message, sender: 'bot' });
+    this.chatHistory.push({ text: { question: 'Let’s start with the basics! Share a brief description of your idea, covering', guidelines: APP_CONSTANTS.CREATE.bot_default_guideText }, sender: 'bot', staticBotMessage: true });
+    this.chatHistory.push({ followingText: { question: 'You can provide your response in one of the following ways', hints: APP_CONSTANTS.CREATE.bot_default_following }, sender: 'bot' });
     // const textAreas = document.querySelectorAll('textarea');
     // textAreas.forEach((element: HTMLTextAreaElement) => {
     //   element.style.height = `${element.scrollHeight}px`;
@@ -391,10 +353,8 @@ tooltipTitle = 'Collapse';
     if(this.uploadFileName){
       this.fields[23].value = this.uploadFileName
     }
-    // let filled = this.fields.filter(field => (field.value.trim() !== '' && field.value !== this.ADAtext)).length
-    // this.progress = Math.round((filled/ this.fields.length) * 100);
     this.fields.forEach((field, index) => {
-      const isFilled = field.value.trim() !== '' && field.value !== this.ADAtext;
+      const isFilled = field.value.trim() !== '' && field.value !== APP_CONSTANTS.CREATE.ADA_STATIC_TEXT;
       if (isFilled) {
         if (this.groupA.includes(index)) {
           this.progress += 6;
@@ -529,21 +489,21 @@ tooltipTitle = 'Collapse';
 
     // Check file size
     if (file.size > maxSize) {
-      this.errorDivText = "You may not upload files larger than 20mb"
+      this.errorDivText = APP_CONSTANTS.CREATE.largerThan;
       this.errorDivCloseAfterSec();
       return;
     }
      // For now, set a default file icon based on extension
      if (localExt === '.doc' || localExt === '.docx') {
-       this.fileIcon = 'assets/images/docs.png'; // Replace with actual icon path
+       this.fileIcon = 'assets/images/docs.png';
      } else if (localExt === '.ppt' || localExt === '.pptx') {
-       this.fileIcon = "assets/images/ppt1.png"; // Replace with actual icon path
+       this.fileIcon = "assets/images/ppt1.png";
      } else if (localExt === '.pdf') {
-       this.fileIcon = "assets/images/download.png"; // Replace with actual icon path
+       this.fileIcon = "assets/images/download.png";
      } else if (localExt === '.xls' || localExt === '.xlsx') {
-      this.fileIcon = "assets/images/xl.png"; // Replace with actual icon path
+      this.fileIcon = "assets/images/xl.png";
      } else {
-       this.fileIcon = "assets/images/download(1)2.png"; // Replace with a default icon
+       this.fileIcon = "assets/images/download(1)2.png";
      }
     // this.fileValidation(event)
     this.fileUploadFromAttachment = file;
@@ -557,7 +517,7 @@ tooltipTitle = 'Collapse';
         next: (response) => {
           this.apiResponseData = response
           if(this.apiResponseData){
-            this.successDivText = "Successfully attach the file"
+            this.successDivText = APP_CONSTANTS.CREATE.attachFile;
             this.progress += 2;          
             this.progressPercentage = Math.min(this.progress, 100);
             this.successDivCloseAfterSec();
@@ -567,7 +527,7 @@ tooltipTitle = 'Collapse';
           }
         },
         error: (error) => { 
-          this.errorDivText = "There is some error while uploading the file, please try again"
+          this.errorDivText = APP_CONSTANTS.CREATE.errorDiv
           this.errorDivCloseAfterSec();},
         complete: () => console.log('Completed'),
       });    
@@ -577,12 +537,11 @@ tooltipTitle = 'Collapse';
   deleteAttachment() {
     this.fileUploadFromAttachment = null
     this.fileIcon = ""
-    this.successDivText = "Successfully delete the file"
+    this.successDivText = APP_CONSTANTS.CREATE.deleteFile;
     this.successDivCloseAfterSec();
     this.uploadFileFirstTime = false;
     this.showAttachmentDelete = false;
     this.fields[23].value = "";
-    // this.progressBarUpdate();
     this.progress -= 2;
     this.progressPercentage = Math.min(this.progress, 100);
   }
@@ -595,7 +554,6 @@ tooltipTitle = 'Collapse';
       link.click(); // Programmatically trigger the download
   }
   downloadFileFromAdditional() {
-    // Create an invisible download link and trigger the download
     const link = document.createElement('a');
     link.href = this.fileUrlForAttachmentUpload;
     link.download = this.fileUploadFromAttachment.name; // Set the name of the file for download
@@ -629,11 +587,10 @@ tooltipTitle = 'Collapse';
   formatObjectKeys(obj: { [key: string]: string }): { [key: string]: string } {
     const formattedObj: { [key: string]: string } = {};
     for (const key in obj) {
-      if (obj[key] === "NO INFORMATION PROVIDED") {
-        obj[key] = this.ADAtext;
+      if (obj[key] === APP_CONSTANTS.CREATE.noInformation) {
+        obj[key] = APP_CONSTANTS.CREATE.ADA_STATIC_TEXT;
       }
       if (obj.hasOwnProperty(key)) {
-        // const value = obj[key];  // this wil format the values of keys
         const words = key.split(' ');
         if (words.length > 1) {
           words[1] = words[1].toLowerCase();
@@ -646,16 +603,15 @@ tooltipTitle = 'Collapse';
 
   yesNoButton(value: any, index?:any){ 
     this.selectedIndexOfButton = index;
-    console.log("val",value);
-    if(value == 'Yes, everything looks good'){
-      this.chatHistory.push({ text: value, sender: 'user', isFile: false});
+    if(value == APP_CONSTANTS.CREATE.yesEverything){
+      this.chatHistory.push({ text: value, sender: APP_CONSTANTS.CREATE.senderUser, isFile: false});
       this.loader = true;
-        this.dataa = {session_id: this.sessionId,user_name:this.api.userName,user_message: value, edit_field: "", confirmation : "False"};
+        this.dataa = {session_id: this.sessionId,user_name:this.api.userName,user_message: value, edit_field: "", confirmation : APP_CONSTANTS.CREATE.false};
         this.api.sendData(this.dataa).subscribe({
           next: (response) => {
             this.loader = false;
             this.allLooksGoodCliced = true;
-            this.successDivText = "Successfully accepted the ADA-generated content"
+            this.successDivText = APP_CONSTANTS.CREATE.successADAContent;
             this.successDivCloseAfterSec();
             this.apiResponseData = response
             if(this.apiResponseData){
@@ -669,22 +625,18 @@ tooltipTitle = 'Collapse';
               if(this.apiResponseData.hasOwnProperty('button')){
                 this.botButtonResponse = this.apiResponseData.button;
               }
-              this.chatHistory.push({ text: this.botChatMessage, sender: 'bot', button: this.botButtonResponse});
+              this.chatHistory.push({ text: this.botChatMessage, sender: APP_CONSTANTS.CREATE.senderBot, button: this.botButtonResponse});
               this.staticBotMsg = false;
-              this.dataa.confirmation = "False"
-                // this.chatHistory.push({ text: this.botChatMessage, sender: 'bot'});
+              this.dataa.confirmation = APP_CONSTANTS.CREATE.false;
               this.fields = this.fields.map(field => ({
                 ...field,
                 value: this.bicFieldData[field.label] || ''
               }));
               this.fields.forEach(field => {
-                if (field.value !== '' && field.value !== this.ADAtext) {
+                if (field.value !== '' && field.value !== APP_CONSTANTS.CREATE.ADA_STATIC_TEXT) {
                   field.completed = true;
                 }
               }); 
-              // let filled = this.fields.filter(field => (field.value.trim() !== '' && field.value !== this.ADAtext)).length
-              // this.progress = Math.round((filled/ this.fields.length) * 100);
-  
               this.progressBarUpdate();
             }
           },
@@ -729,7 +681,7 @@ tooltipTitle = 'Collapse';
         });
         
         this.fields.forEach(field => {
-          if (field.value !== '' && field.value !== this.ADAtext) {
+          if (field.value !== '' && field.value !== APP_CONSTANTS.CREATE.ADA_STATIC_TEXT) {
             field.completed = true;
           }
         });
@@ -770,14 +722,10 @@ tooltipTitle = 'Collapse';
             }
             this.staticBotMsg = false;
             this.dataa.confirmation = "False"
-              // this.chatHistory.push({ text: this.botChatMessage, sender: 'bot'});
               this.fields = this.fields.map(field => ({
                 ...field,
                 value: this.bicFieldData[field.label] || ''
               }));
-              // let filled = this.fields.filter(field => (field.value.trim() !== '' && field.value !== this.ADAtext)).length
-              // this.progress = Math.round((filled/ this.fields.length) * 100);
-
               this.progressBarUpdate();
           }
         },
@@ -910,27 +858,13 @@ splitByDot(str: string): string[] {
           allCompleted = false;
           break;
         }
-  
-        // if (!field.completed) {
-  
-        //   allCompleted = false;
-  
-        //   break;  // Exit the loop early if any field is not completed
-  
-        // }
-  
       }
    
-      if (allCompleted) {
-  
-        console.log('All first 10 items have completed: true');
+      if (allCompleted) {  
         this.buttonDisabled = false;
   
       } else {
-  
-        console.log('Not all first 10 items have completed: true');
         this.buttonDisabled = true;
-  
       }
     }  
   
@@ -940,43 +874,43 @@ splitByDot(str: string): string[] {
   }
 
   checkButton(indexVal: any) {
-    this.successDivText = "Successfully accepted the ADA-generated content"
+    this.successDivText = APP_CONSTANTS.CREATE.successADAContent;
       this.successDivCloseAfterSec();
     this.fields[indexVal].completed = true;
   }
 
   editButton(indexVal: any) {
-    if(this.fields[indexVal].label == 'Areas involved'){
+    if(this.fields[indexVal].label == APP_CONSTANTS.CREATE.areaInvolvedText){
       this.addButton(indexVal);
       setTimeout(() => {
         this.confirmBtnOfAreaClk = false;
       }, 0);
-    }else if(this.fields[indexVal].label == 'Destination 2027 alignment'){
+    }else if(this.fields[indexVal].label == APP_CONSTANTS.CREATE.destinationText){
       this.addButton(indexVal);
       setTimeout(() => {
         this.confirmBtnOfDestClk = false;
       }, 0);
-    }else if(this.fields[indexVal].label == 'Business case impacts'){
+    }else if(this.fields[indexVal].label == APP_CONSTANTS.CREATE.bussinessImpactText){
       this.addButton(indexVal);
       setTimeout(() => {
         this.confirmBtnOfBussClk = false;
       }, 0);
-    }else if(this.fields[indexVal].label == 'Business sponsor'){
+    }else if(this.fields[indexVal].label == APP_CONSTANTS.CREATE.businessSponsorText){
       this.bussinessMappingButtonClicke = false;
       this.bussinessUserInputForMappingButtons="";
       this.addButton(indexVal);
-    }else if(this.fields[indexVal].label == 'IT sponsor'){
+    }else if(this.fields[indexVal].label == APP_CONSTANTS.CREATE.itSponsorText){
       this.itMappingButtonClicke = false;
       this.itUserInputForMappingButtons="";
       this.addButton(indexVal);
-    }else if(this.fields[indexVal].label == 'Timelines'){
+    }else if(this.fields[indexVal].label == APP_CONSTANTS.CREATE.timelinesText){
       this.addButton(indexVal);
-    }else if(this.fields[indexVal].label == 'Portfolio alignment'){
+    }else if(this.fields[indexVal].label == APP_CONSTANTS.CREATE.portfolioText){
       this.addButton(indexVal);
     }else {
       this.userInput = this.fields[indexVal].value;
       this.dataa.edit_field = this.fields[indexVal].label;
-      this.dataa.confirmation = "False"
+      this.dataa.confirmation = APP_CONSTANTS.CREATE.false;
       this.editButtonClicked = true;
       setTimeout(() => {
         const textArea = this.textarea.nativeElement;
@@ -988,10 +922,10 @@ splitByDot(str: string): string[] {
 
   AllGoodButton() {
     this.allLooksGoodCliced = true;    
-    this.chatHistory.push({ text: 'All details looks good to me', sender: 'user', isFile: false});
-      this.chatHistory.push({ text: this.botChatMessage, sender: 'bot', button: this.botButtonResponse});
+    this.chatHistory.push({ text: APP_CONSTANTS.CREATE.goodToMe, sender: APP_CONSTANTS.CREATE.senderUser, isFile: false});
+      this.chatHistory.push({ text: this.botChatMessage, sender: APP_CONSTANTS.CREATE.senderBot, button: this.botButtonResponse});
       this.fields.forEach(field => {
-        if (field.value !== '' && field.value !== this.ADAtext) {
+        if (field.value !== '' && field.value !== APP_CONSTANTS.CREATE.ADA_STATIC_TEXT) {
           field.completed = true;
         }
       });   
@@ -1006,12 +940,11 @@ splitByDot(str: string): string[] {
   }
   addButton(indexVal: any){
     this.editFieldVal = this.fields[indexVal].label;;
-    this.chatHistory.push({ text: this.fields[indexVal].label, sender: 'user', isFile: false});
+    this.chatHistory.push({ text: this.fields[indexVal].label, sender: APP_CONSTANTS.CREATE.senderUser, isFile: false});
     this.loader = true;
-    this.dataa = {session_id: this.sessionId,user_name:this.api.userName,user_message: "", edit_field: this.fields[indexVal].label, confirmation: "False"};      
+    this.dataa = {session_id: this.sessionId,user_name:this.api.userName,user_message: "", edit_field: this.fields[indexVal].label, confirmation: APP_CONSTANTS.CREATE.false};      
     this.api.sendData(this.dataa).subscribe({
       next: (response) => {
-        console.log("editresponse",response);
         this.loader = false;
         this.apiResponseData = response
         if(this.apiResponseData){
@@ -1020,9 +953,6 @@ splitByDot(str: string): string[] {
           }
           if(this.apiResponseData.hasOwnProperty('bot_message')){
             this.botChatMessage = this.apiResponseData.bot_message;
-            console.log("fdgfgfhfhgfhfg",typeof this.botChatMessage);
-            
-            
           }
           
           if(this.apiResponseData.hasOwnProperty('button')){
@@ -1031,34 +961,29 @@ splitByDot(str: string): string[] {
           if (typeof this.botChatMessage !== "string") {
             if(this.botButtonResponse !== null){
               if(this.botButtonResponse.length > 0 && this.apiResponseData.drop_down == true){
-                this.chatHistory.push({ text: {question: this.botChatMessage['Question'],guidelines: this.splitByDot(this.botChatMessage['Guidelines'])}, dropdown :this.botButtonResponse,  sender: 'bot', fieldName: this.fields[indexVal].label});
+                this.chatHistory.push({ text: {question: this.botChatMessage[APP_CONSTANTS.CREATE.question],guidelines: this.splitByDot(this.botChatMessage[APP_CONSTANTS.CREATE.guidelines])}, dropdown :this.botButtonResponse,  sender: APP_CONSTANTS.CREATE.senderBot, fieldName: this.fields[indexVal].label});
               }else if(this.botButtonResponse.length > 0 && this.apiResponseData.drop_down == false){
-                if(this.checkIfArray(this.botChatMessage['Question'])){
+                if(this.checkIfArray(this.botChatMessage[APP_CONSTANTS.CREATE.question])){
 
-                  this.chatHistory.push({ text: {question: this.botChatMessage['Question'],guidelines: this.splitByDot(this.botChatMessage['Guidelines'])}, mappingButton :this.botButtonResponse,  sender: 'bot', fieldName: this.fields[indexVal].label});
+                  this.chatHistory.push({ text: {question: this.botChatMessage[APP_CONSTANTS.CREATE.question],guidelines: this.splitByDot(this.botChatMessage[APP_CONSTANTS.CREATE.guidelines])}, mappingButton :this.botButtonResponse,  sender: APP_CONSTANTS.CREATE.senderBot, fieldName: this.fields[indexVal].label});
                 }else{
-                  this.chatHistory.push({ text: {question: this.botChatMessage['Question'],guidelines: this.splitByDot(this.botChatMessage['Guidelines'])}, button :this.botButtonResponse,  sender: 'bot', fieldName: this.fields[indexVal].label});
+                  this.chatHistory.push({ text: {question: this.botChatMessage[APP_CONSTANTS.CREATE.question],guidelines: this.splitByDot(this.botChatMessage[APP_CONSTANTS.CREATE.guidelines])}, button :this.botButtonResponse,  sender: APP_CONSTANTS.CREATE.senderBot, fieldName: this.fields[indexVal].label});
                 }
 
-                // this.dataa.edit_field = value;
               }else {
-                this.chatHistory.push({ text: {question: this.botChatMessage['Question'],guidelines: this.splitByDot(this.botChatMessage['Guidelines'])}, sender: 'bot'});
+                this.chatHistory.push({ text: {question: this.botChatMessage[APP_CONSTANTS.CREATE.question],guidelines: this.splitByDot(this.botChatMessage[APP_CONSTANTS.CREATE.guidelines])}, sender: APP_CONSTANTS.CREATE.senderBot});
               }
             }else {
-              this.chatHistory.push({ text: {question: this.botChatMessage['Question'],guidelines: this.splitByDot(this.botChatMessage['Guidelines'])}, sender: 'bot'});
+              this.chatHistory.push({ text: {question: this.botChatMessage[APP_CONSTANTS.CREATE.question],guidelines: this.splitByDot(this.botChatMessage[APP_CONSTANTS.CREATE.guidelines])}, sender: APP_CONSTANTS.CREATE.senderBot});
             }
             
           }
           this.staticBotMsg = false;
-          this.dataa.confirmation = "False"
-            // this.chatHistory.push({ text: this.botChatMessage, sender: 'bot'});
+          this.dataa.confirmation = APP_CONSTANTS.CREATE.false;
           this.fields = this.fields.map(field => ({
             ...field,
-            value: this.bicFieldData[field.label] || '' // Use mock data or default value
+            value: this.bicFieldData[field.label] || ''
           }));
-          // let filled = this.fields.filter(field => (field.value.trim() !== '' && field.value !== this.ADAtext)).length
-          // this.progress = Math.round((filled/ this.fields.length) * 100);
-
           this.progressBarUpdate();
           setTimeout(() => {
             this.initializeTooltips();
@@ -1071,14 +996,12 @@ splitByDot(str: string): string[] {
   }
 
   onKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
+    if (event.key === APP_CONSTANTS.CREATE.enter) {
       if (event.shiftKey) {
-        // Shift + Enter pressed: Insert a new line
-        return; // Do nothing to let the new line be created
+        return;
       } else {
-        // Enter pressed without Shift: Send the message
-        event.preventDefault();  // Prevent default Enter behavior (new line)
-        this.handleUserInput(this.userInput);       // Call your send message function
+        event.preventDefault();
+        this.handleUserInput(this.userInput);
       }
     }
   }
@@ -1091,7 +1014,7 @@ splitByDot(str: string): string[] {
 
   // Helper function to generate a random alphanumeric string of a given length
   generateRandomString(length: number): string {
-    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    const characters = APP_CONSTANTS.CREATE.char;
     let result = '';
     for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * characters.length));
@@ -1111,10 +1034,8 @@ splitByDot(str: string): string[] {
       user_name: this.api.userName,
       session_data: chatData
     }
-    console.log("Sumbit data", data);
     this.api.submitData(data).subscribe({
       next: (response) => {
-        console.log("Submit Button response", response);
         this.additionalDataForSubmit();
       },
       error: (err) => console.error('Error:', err),
@@ -1142,13 +1063,12 @@ splitByDot(str: string): string[] {
     const modalElement = document.getElementById('reviewModal') as HTMLElement;
     if (modalElement) {
       const myModal = new bootstrap.Modal(modalElement);
-      myModal.show(); // Show the modal correctly
-      console.log("modalShow======", myModal.show()); // Log to check if it's being triggered
+      myModal.show();
     }
   }
 
   additionalDataForSubmit(){
-    let filled = this.fields.filter(field => (field.value.trim() !== '' && field.value !== this.ADAtext)).length
+    let filled = this.fields.filter(field => (field.value.trim() !== '' && field.value !== APP_CONSTANTS.CREATE.ADA_STATIC_TEXT)).length
     let additionalData = { 
       user_name: this.api.userName,
       session_id: this.sessionId,
@@ -1156,18 +1076,16 @@ splitByDot(str: string): string[] {
         Additional_Comments: "",
         Additional_Files: "",
         Total_no_of_questions_completed: filled.toString(),
-        // Submitted_date: this.datePipe.transform(new Date(), 'yyyy-MM-dd HH:mm:ss'),
         Submitted_date: this.datePipe.transform(new Date(), 'dd-MMM-yyyy'),
-        Status: "Pending-review",
+        Status: APP_CONSTANTS.CREATE.statusPending,
         }
     }
-      if (this.fileUploadFromAttachment){
-        additionalData.update_data.Additional_Files = this.fileUploadFromAttachment
+    if (this.fileUploadFromAttachment) {
+      additionalData.update_data.Additional_Files = this.fileUploadFromAttachment
       }
       this.api.submitAdditionalData(additionalData).subscribe({
         next: (response) => {
-          console.log("additionalData  response", response);
-          this.api.triggerAction('New request grenerated');
+          this.api.triggerAction(APP_CONSTANTS.CREATE.generatedText);
           this.router.navigate(['/request'])
           setTimeout(() => {
             this.initializeTooltips();
@@ -1190,12 +1108,10 @@ splitByDot(str: string): string[] {
       session_data: chatData,
       timestamp:  new Date().toString()
     }
-    console.log("Sumbit data", data);
 
     this.api.submitData(data).subscribe({
       next: (response) => {
-        console.log("Submit Button response", response);
-        const data = { user_name: this.api.userName };  // Data to pass to the API
+        const data = { user_name: this.api.userName };
         this.api.retriveData(data);
         setTimeout(() => {
           this.initializeTooltips();
@@ -1209,10 +1125,10 @@ splitByDot(str: string): string[] {
   onConfirmAreas() {
     this.confirmBtnOfAreaClk = true;
     const selected = this.botButtonResponse.filter((area:any, i:any) => this.selectedAreas[i]);
-    this.chatHistory.push({ text: this.getSelectedRegions(), sender: 'user', isFile: false});
+    this.chatHistory.push({ text: this.getSelectedRegions(), sender: APP_CONSTANTS.CREATE.senderUser, isFile: false});
     this.loader = true;
     this.dataa.edit_field = this.editFieldVal;
-    this.dataa.confirmation = "True"
+    this.dataa.confirmation = APP_CONSTANTS.CREATE.true;
     this.staticBotMsg = true;
     this.responseDataMethod(this.getSelectedRegions());
   }
@@ -1220,10 +1136,10 @@ splitByDot(str: string): string[] {
   onConfirmDestination() {
     this.confirmBtnOfDestClk = true
     const selected = this.botButtonResponse.filter((area:any, i:any) => this.selectedDestination[i]);
-    this.chatHistory.push({ text: this.getSelectedDestination(), sender: 'user', isFile: false});
+    this.chatHistory.push({ text: this.getSelectedDestination(), sender: APP_CONSTANTS.CREATE.senderUser, isFile: false});
     this.loader = true;
     this.dataa.edit_field = this.editFieldVal;
-    this.dataa.confirmation = "True"
+    this.dataa.confirmation = APP_CONSTANTS.CREATE.true;
     this.staticBotMsg = true;
     this.responseDataMethod(this.getSelectedDestination());
   }
@@ -1231,10 +1147,10 @@ splitByDot(str: string): string[] {
   onConfirmBussiness() {
     this.confirmBtnOfBussClk = true
     const selected = this.botButtonResponse.filter((area:any, i:any) => this.selectedBussiness[i]);
-    this.chatHistory.push({ text: this.getSelectedBussiness(), sender: 'user', isFile: false});
+    this.chatHistory.push({ text: this.getSelectedBussiness(), sender: APP_CONSTANTS.CREATE.senderUser, isFile: false});
     this.loader = true;
     this.dataa.edit_field = this.editFieldVal;
-    this.dataa.confirmation = "True"
+    this.dataa.confirmation = APP_CONSTANTS.CREATE.true;
     this.staticBotMsg = true;
     this.responseDataMethod(this.getSelectedBussiness());
   }
@@ -1261,7 +1177,7 @@ splitByDot(str: string): string[] {
       );
       tooltipTriggerList.forEach((tooltipTriggerEl) => {
         const instance = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-        if (instance) instance.dispose(); // Clean up old instance
+        if (instance) instance.dispose();
         new bootstrap.Tooltip(tooltipTriggerEl);
       });
     }, 0);
@@ -1272,16 +1188,16 @@ splitByDot(str: string): string[] {
   }
 
   timeLiButton(value: any, index?:any){
-    this.chatHistory.push({ text: value, sender: 'user', isFile: false});
+    this.chatHistory.push({ text: value, sender: APP_CONSTANTS.CREATE.senderUser, isFile: false});
     this.loader = true;
     this.dataa.edit_field = this.editFieldVal;
-    this.dataa.confirmation = "True";
+    this.dataa.confirmation = APP_CONSTANTS.CREATE.true;
     this.staticBotMsg = true;
     this.responseDataMethod(value);
   }
 
   get isAdditionalCommentsEmpty(): boolean {
-    const additionalField = this.fields.find(field => field.label === 'Additional comments');
+    const additionalField = this.fields.find(field => field.label === APP_CONSTANTS.CREATE.additionalText);
     return additionalField ? additionalField.value === '' : false;
   }
 
@@ -1292,7 +1208,7 @@ splitByDot(str: string): string[] {
       if(this.botRespondedFirstTime == true){
 
         this.saveChatData();
-        this.api.triggerAction('The BIC should saved as a draft');
+        this.api.triggerAction(APP_CONSTANTS.CREATE.draftSaved);
       }
     }
   }
