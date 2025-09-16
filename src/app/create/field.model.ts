@@ -32,3 +32,11 @@ export interface SessionData {
   edit_field: string;
   confirmation: string;
 }
+
+export interface ApiResponseData {
+  BIC?: { [key: string]: string };
+  bot_message?: string | { [key: string]: any };
+  button?: any[];
+  drop_down?: boolean;
+  [key: string]: any; // for any additional dynamic properties
+}
