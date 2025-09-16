@@ -1,352 +1,367 @@
-<div class="container-fluid py-3 h-100" *ngIf="!userComeFirstTime">
-  <div class="row g-3 h-100" id="rowBox">
-    <!-- Left: Chat -->
-    <div id="leftBox" class="col-12 col-lg-6 d-flex flex-column">
-      <h1 class="h4 fw-light mb-2 headingClass">{{ staticText.covertional }}</h1>
+<div class="chatbot-wrap" *ngIf="!userComeFirstTime">
+  <div id="rowBox" class="row">
+    <!-- LEFT: Chat -->
+    <div id="leftBox" class="col-12 col-md-6">
+      <h1 class="headingClass">{{ staticText.covertional }}</h1>
 
-      <div class="position-relative flex-grow-1 chat-outer-wrap">
-        <div class="chat-container border bg-white rounded p-3 h-100 overflow-auto d-flex flex-column" #chatContainerBox>
+      <div class="chat-outer-wrap">
+        <div class="chat-container d-flex flex-column p-3 overflow-auto" #chatContainerBox>
           <ng-container *ngFor="let message of chatHistory; let i = index">
 
-            <!-- User message -->
-            <div *ngIf="message.sender === 'user'" class="mb-2">
-              <div *ngIf="message.isFile == true" class="file-info file-info-inside shadow-sm border rounded p-2 bg-light-subtle d-flex align-items-center gap-2">
-                <img [src]="fileIcon" alt="file icon" class="flex-shrink-0" width="28" height="28"/>
-                <div class="small">
-                  <div class="text-truncate fw-semibold" style="max-width:240px">{{ uploadFileName }}</div>
-                  <div class="text-secondary">{{ fileExtension }}</div>
+            <!-- USER -->
+            <div *ngIf="message.sender === 'user'">
+              <div *ngIf="message.isFile == true" class="file-info file-info-inside">
+                <div class="file-icon">
+                  <img [src]="fileIcon" alt="file icon"/>
+                </div>
+                <div class="file-name">
+                  <span>{{ uploadFileName }}</span>
+                  <p>{{ fileExtension }}</p>
                 </div>
               </div>
-              <div class="d-flex justify-content-end" *ngIf="message.isFile == false">
-                <span class="user-text shadow-sm">{{ message.text }}</span>
-              </div>
+              <span class="user-text" *ngIf="message.isFile == false">
+                <span>{{ message.text }}</span>
+              </span>
             </div>
 
-            <!-- Bot message -->
-            <div *ngIf="message.sender === 'bot'" class="mb-3">
-              <!-- Primary text -->
-              <div class="d-flex align-items-start gap-2 user-input" *ngIf="isString(message.text)">
+            <!-- BOT -->
+            <div *ngIf="message.sender === 'bot'">
+              <!-- Text-only -->
+              <div class="user-input" *ngIf="isString(message.text)">
                 <span><img src="../../assets/images/moji.svg" width="24" height="24" alt=""/> </span>
-                <p class="mb-0">{{ message.text }}</p>
+                <p>{{ message.text }}</p>
               </div>
 
               <!-- Q + guidelines block -->
               <div *ngIf="!isString(message.text) && !message.followingText">
-                <div class="d-flex align-items-start gap-2 user-input">
+                <div class="user-input">
                   <span><img src="../../assets/images/moji.svg" width="24" height="24" alt=""/></span>
-                  <p class="mb-0">{{ message.text.question }}</p>
+                  <p>{{ message.text.question }}</p>
                 </div>
-                <div class="guidance-box mt-2 ms-5">
-                  <button class="btn btn-sm btn-warning-subtle border-warning text-warning fw-semibold">{{ staticText.guidanceText }}</button>
-                  <p class="fw-semibold small mb-2" *ngIf="message.staticBotMessage">{{ message.text.question }}</p>
-                  <ul class="ps-3 mb-0" *ngFor="let text of message.text.guidelines">
-                    <li class="small" [innerHTML]="text"></li>
+                <div class="bg-white rounded p-2 mb-2 ms-5 shadow-sm">
+                  <button class="border bg-warning-subtle text-warning fw-semibold fs-6 rounded-1 px-2 py-1 mb-2" 
+     style="border-color:#FBD3A7; background:#FEF7EC; color:#FF7214; font-family:'Saans-Semibold'; font-size:12px;">
+   {{ staticText.guidanceText }} </button>
+                  <p *ngIf="message.staticBotMessage">{{ message.text.question }}</p>
+                  <ul *ngFor="let text of message.text.guidelines">
+                    <li [innerHTML]="text"></li>
                   </ul>
                 </div>
               </div>
 
               <!-- Following ways -->
-              <div class="following-ways ms-5 mt-2" *ngIf="message.followingText">
-                <p class="small fw-semibold mb-2">{{ message?.followingText?.question }}</p>
-                <ul class="ps-3 mb-0">
-                  <li class="d-flex align-items-center gap-2"><img src="../../assets/images/edit.svg" alt=""/><span>{{ message?.followingText?.hints[0]}}</span></li>
-                  <li class="d-flex align-items-center gap-2"><img src="../../assets/images/attach.svg" alt=""/><span>{{ message?.followingText?.hints[1]}}</span></li>
-                  <li class="d-flex align-items-center gap-2"><img src="../../assets/images/mic.svg" alt=""/><span>{{ message?.followingText?.hints[2]}}</span></li>
+              <div class="following-ways bg-white p-2 rounded mb-2 ms-5 shadow-sm" *ngIf="message.followingText">
+                <p>{{ message?.followingText?.question }}</p>
+                <ul>
+                  <li><i><img src="../../assets/images/edit.svg" alt=""/></i><span>{{ message?.followingText?.hints[0]}}</span></li>
+                  <li><i><img src="../../assets/images/attach.svg" alt=""/></i><span>{{ message?.followingText?.hints[1]}}</span></li>
+                  <li><i><img src="../../assets/images/mic.svg" alt=""/></i><span>{{ message?.followingText?.hints[2]}}</span></li>
                 </ul>
               </div>
 
               <!-- Buttons -->
-              <div class="user-order ms-5 mt-2" *ngIf="message?.button?.length > 0">
+              <div class="user-order" *ngIf="message?.button?.length > 0">
                 <ng-container *ngIf="message.fieldName === 'Timelines' || message.fieldName === 'Portfolio alignment'; else yesNo">
-                  <button *ngFor="let button of message.button; let j = index"
-                          class="btn btn-outline-secondary btn-sm me-2 mb-2"
-                          (click)="timeLiButton(message.button[j])">
-                    {{button}}
-                  </button>
+                  <div *ngFor="let button of message.button; let j = index">
+                    <button (click)="timeLiButton(message.button[j])">{{button}}</button>
+                  </div>
                 </ng-container>
                 <ng-template #yesNo>
-                  <button *ngFor="let button of message.button; let j = index"
-                          class="btn btn-outline-secondary btn-sm me-2 mb-2"
-                          [ngClass]="{'active-class': selectedIndexOfButton == j}"
-                          (click)="yesNoButton(message.button[j])">
-                    {{button}}
-                  </button>
+                  <div *ngFor="let button of message.button; let j = index">
+                    <button
+                      (click)="yesNoButton(message.button[j])"
+                      [ngClass]="{'active-class': selectedIndexOfButton == j}">
+                      {{button}}
+                    </button>
+                  </div>
                 </ng-template>
               </div>
 
-              <!-- Mapping Buttons -->
-              <div class="user-order ms-5 mt-2" *ngIf="message?.mappingButton?.length > 0">
+              <!-- Mapping buttons -->
+              <div class="user-order" *ngIf="message?.mappingButton?.length > 0">
                 <div *ngIf="message.fieldName == 'Business sponsor'">
-                  <div class="d-flex flex-wrap gap-2">
-                    <button *ngFor="let button of message.mappingButton; let j = index"
-                            class="btn btn-outline-secondary btn-sm"
-                            [ngClass]="{'active-class': selectedIndexOfButton == j}"
-                            (click)="businessMappingButtonClicked(message.mappingButton[j])">
+                  <div *ngFor="let button of message.mappingButton; let j = index">
+                    <button (click)="businessMappingButtonClicked(message.mappingButton[j])"
+                            [ngClass]="{'active-class': selectedIndexOfButton == j}">
                       {{button}}
                     </button>
                   </div>
-                  <div class="d-flex gap-2 mt-2" *ngIf="bussinessMappingButtonClicke">
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="bussinessUserInputForMappingButtons" placeholder="Enter user first and last name" aria-label="Business sponsor"/>
-                    <button class="btn btn-primary btn-sm" [disabled]="!bussinessUserInputForMappingButtons" (click)="businessConfirmButton()">{{ staticText.confirmText }}</button>
+                  <div *ngIf="bussinessMappingButtonClicke" class="mt-2">
+                    <input type="text" [(ngModel)]="bussinessUserInputForMappingButtons" placeholder="Enter user first and last name"/>
+                    <button class="btn btn-primary btn-sm ms-2"
+                            [disabled]="!bussinessUserInputForMappingButtons"
+                            (click)="businessConfirmButton()">
+                      {{ staticText.confirmText }}
+                    </button>
                   </div>
                 </div>
 
-                <div *ngIf="message.fieldName == 'IT sponsor'" class="mt-2">
-                  <div class="d-flex flex-wrap gap-2">
-                    <button *ngFor="let button of message.mappingButton; let j = index"
-                            class="btn btn-outline-secondary btn-sm"
-                            [ngClass]="{'active-class': selectedIndexOfButton == j}"
-                            (click)="itMappingButtonClicked(message.mappingButton[j])">
+                <div *ngIf="message.fieldName == 'IT sponsor'">
+                  <div *ngFor="let button of message.mappingButton; let j = index">
+                    <button (click)="itMappingButtonClicked(message.mappingButton[j])"
+                            [ngClass]="{'active-class': selectedIndexOfButton == j}">
                       {{button}}
                     </button>
                   </div>
-                  <div class="d-flex gap-2 mt-2" *ngIf="itMappingButtonClicke">
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="itUserInputForMappingButtons" placeholder="Enter user first and last name" aria-label="IT sponsor"/>
-                    <button class="btn btn-primary btn-sm" [disabled]="!itUserInputForMappingButtons" (click)="itConfirmButton()">{{ staticText.confirmText }}</button>
+                  <div *ngIf="itMappingButtonClicke" class="mt-2">
+                    <input type="text" [(ngModel)]="itUserInputForMappingButtons" placeholder="Enter user first and last name"/>
+                    <button class="btn btn-primary btn-sm ms-2"
+                            [disabled]="!itUserInputForMappingButtons"
+                            (click)="itConfirmButton()">
+                      {{ staticText.confirmText }}
+                    </button>
                   </div>
                 </div>
               </div>
 
-              <!-- Multi select blocks -->
-              <div class="multi-select-box ms-5 mt-2" *ngIf="message?.dropdown?.length > 0">
+              <!-- Multi-select blocks -->
+              <div class="multi-select-box" *ngIf="message?.dropdown?.length > 0">
                 <div *ngIf="message.fieldName == 'Areas involved'">
-                  <div class="d-flex flex-column gap-1">
-                    <mat-checkbox [disabled]="confirmBtnOfAreaClk" *ngFor="let region of message.dropdown; let j=index" [(ngModel)]="selectedAreas[j]">
-                      <span>{{ region }}</span>
-                    </mat-checkbox>
-                  </div>
-                  <button class="btn btn-primary btn-sm mt-2" [hidden]="confirmBtnOfAreaClk" (click)="onConfirmAreas()">{{ staticText.confirmText }}</button>
+                  <mat-checkbox [disabled]="confirmBtnOfAreaClk"
+                                *ngFor="let region of message.dropdown; let j=index"
+                                [(ngModel)]="selectedAreas[j]">
+                    <span>{{ region }}</span>
+                  </mat-checkbox>
+                  <button mat-raised-button color="primary" [hidden]="confirmBtnOfAreaClk" (click)="onConfirmAreas()">
+                    {{ staticText.confirmText }}
+                  </button>
                 </div>
 
-                <div *ngIf="message.fieldName == 'Destination 2027 alignment'" class="mt-2">
-                  <div class="d-flex flex-column gap-1">
-                    <mat-checkbox [disabled]="confirmBtnOfDestClk" *ngFor="let region of message.dropdown; let j=index" [(ngModel)]="selectedDestination[j]">
-                      {{ region }}
-                    </mat-checkbox>
-                  </div>
-                  <button class="btn btn-primary btn-sm mt-2" [hidden]="confirmBtnOfDestClk" (click)="onConfirmDestination()">{{ staticText.confirmText }}</button>
+                <div *ngIf="message.fieldName == 'Destination 2027 alignment'">
+                  <mat-checkbox [disabled]="confirmBtnOfDestClk"
+                                *ngFor="let region of message.dropdown; let j=index"
+                                [(ngModel)]="selectedDestination[j]">
+                    {{ region }}
+                  </mat-checkbox>
+                  <button mat-raised-button color="primary" [hidden]="confirmBtnOfDestClk" (click)="onConfirmDestination()">
+                    {{ staticText.confirmText }}
+                  </button>
                 </div>
 
-                <div *ngIf="message.fieldName == 'Business case impacts'" class="mt-2">
-                  <div class="d-flex flex-column gap-1">
-                    <mat-checkbox [disabled]="confirmBtnOfBussClk" *ngFor="let region of message.dropdown; let j=index" [(ngModel)]="selectedBussiness[j]">
-                      {{ region }}
-                    </mat-checkbox>
-                  </div>
-                  <button class="btn btn-primary btn-sm mt-2" [hidden]="confirmBtnOfBussClk" (click)="onConfirmBussiness()">{{ staticText.confirmText }}</button>
+                <div *ngIf="message.fieldName == 'Business case impacts'">
+                  <mat-checkbox [disabled]="confirmBtnOfBussClk"
+                                *ngFor="let region of message.dropdown; let j=index"
+                                [(ngModel)]="selectedBussiness[j]">
+                    {{ region }}
+                  </mat-checkbox>
+                  <button mat-raised-button color="primary" [hidden]="confirmBtnOfBussClk" (click)="onConfirmBussiness()">
+                    {{ staticText.confirmText }}
+                  </button>
                 </div>
               </div>
-
             </div>
           </ng-container>
 
-          <div *ngIf="loader" class="d-flex">
-            <div class="loader-wrap ms-auto border rounded bg-white p-1"><div class="loader"></div></div>
+          <!-- Loader -->
+          <div *ngIf="loader">
+            <div class="loader-wrap"><div class="loader"></div></div>
           </div>
         </div>
 
-        <!-- Composer -->
-        <div id="textArDiv" class="send-input-wrap border rounded bg-white d-flex align-items-start gap-2 mt-2 p-2">
-          <div *ngIf="selectedFile" class="file-info w-100">
+        <!-- Composer (kept old classes/structure so old CSS works) -->
+        <div id="textArDiv" class="send-input-wrap">
+          <div *ngIf="selectedFile" class="file-info">
             <div class="file-icon">
-              <img [src]="fileIcon" alt="file icon" width="28" height="28"/>
+              <img [src]="fileIcon" alt="file icon"/>
             </div>
-            <div class="file-name small">
-              <span class="text-truncate" style="max-width:220px">{{ selectedFile.name }}</span>
-              <p class="text-secondary mb-0">{{ fileExtension }}</p>
+            <div class="file-name">
+              <span>{{ selectedFile.name }}</span>
+              <p>{{ fileExtension }}</p>
             </div>
-            <button (click)="removeFile()" class="btn btn-link p-0 ms-auto" aria-label="Remove file">
-              <i class="bi bi-x fs-5"></i>
+            <button (click)="removeFile()" class="remove-btn" aria-label="Remove file">
+              <i class="bi bi-x"></i>
             </button>
           </div>
 
           <textarea #autoResizeTextarea
-                    class="form-control border-0 shadow-none"
-                    rows="1"
-                    [(ngModel)]="userInput"
-                    (keydown)="onKeyDown($event)"
-                    (blur)="onBlur()"
-                    (focus)="onFocus()"
-                    (input)="onInput()"
-                    placeholder="Reply to ADA"
-                    id="textAFie"
-                    aria-label="Reply to ADA"></textarea>
+                    (keydown)="onKeyDown($event)" (blur)="onBlur()" (focus)="onFocus()" (input)="onInput()"
+                    rows="1" [(ngModel)]="userInput" placeholder="Reply to ADA" id="textAFie"></textarea>
 
           <input type="file" (change)="onFileSelected($event)" #fileInput hidden>
 
-          <div class="d-flex gap-2">
-            <button class="btn btn-outline-primary" (click)="fileInput.click()" [disabled]="uploadFileFirstTime"
-                    data-bs-toggle="tooltip" data-bs-title="Upload files (max 20MB each)">
-              <i class="bi bi-paperclip"></i>
+          <div class="send-attach-btns">
+            <button class="btn" data-bs-toggle="tooltip" data-bs-placement="right"
+                    title="Upload files (max 20mb each)" (click)="fileInput.click()" [disabled]="uploadFileFirstTime">
+              <i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M14.1015 7.26634L8.09108 13.2768C6.72425 14.6436 4.50817 14.6436 3.14134 13.2768C1.7745 11.9099 1.7745 9.69384 3.14134 8.327L9.15174 2.3166C10.063 1.40537 11.5404 1.40537 12.4516 2.3166C13.3628 3.22782 13.3628 4.7052 12.4516 5.61643L6.67687 11.3911C6.22126 11.8467 5.48257 11.8467 5.02695 11.3911C4.57134 10.9355 4.57134 10.1968 5.02695 9.74122L10.0946 4.67362" stroke="#8F53F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </i>
             </button>
-            <button class="btn btn-outline-primary" (click)="startListening()" data-bs-toggle="tooltip" data-bs-title="Use voice mode">
-              <i class="bi bi-mic"></i>
+            <button class="btn" data-bs-toggle="tooltip" data-bs-placement="right" title="Use voice mode" (click)="startListening()">
+              <i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M12.6666 6.66659V7.99992C12.6666 10.5772 10.5773 12.6666 7.99998 12.6666M3.33331 6.66659V7.99992C3.33331 10.5772 5.42265 12.6666 7.99998 12.6666M7.99998 12.6666V14.6666M5.33331 14.6666H10.6666M7.99998 9.99992C6.89541 9.99992 5.99998 9.10449 5.99998 7.99992V3.33325C5.99998 2.22868 6.89541 1.33325 7.99998 1.33325C9.10455 1.33325 9.99998 2.22868 9.99998 3.33325V7.99992C9.99998 9.10449 9.10455 9.99992 7.99998 9.99992Z" stroke="#8F53F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </i>
             </button>
-            <button class="btn btn-primary" id="textAbut"
+            <button class="btn primaryeffect" id="textAbut"
                     [hidden]="!userInput && !selectedFile"
                     [disabled]="!userInput && !selectedFile"
-                    (click)="handleUserInput(userInput)"
-                    data-bs-toggle="tooltip" data-bs-title="Reply">
-              <i class="bi bi-send"></i>
+                    (click)="handleUserInput(userInput)" data-bs-toggle="tooltip" data-bs-placement="right" title="Reply">
+              <i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M7.00028 8.0001H3.33362M3.27718 8.19444L1.72057 12.8442C1.59828 13.2095 1.53713 13.3922 1.58101 13.5047C1.61912 13.6023 1.70096 13.6764 1.80195 13.7046C1.91824 13.737 2.09388 13.658 2.44517 13.4999L13.5862 8.48647C13.929 8.33217 14.1005 8.25502 14.1535 8.14784C14.1995 8.05473 14.1995 7.94548 14.1535 7.85237C14.1005 7.74519 13.929 7.66805 13.5862 7.51375L2.44129 2.49859C2.09106 2.34098 1.91595 2.26218 1.79977 2.29451C1.69888 2.32258 1.61704 2.39644 1.57881 2.49393C1.53478 2.6062 1.59527 2.78845 1.71625 3.15295L3.27761 7.85712C3.29839 7.91973 3.30878 7.95103 3.31288 7.98304C3.31652 8.01145 3.31649 8.04021 3.31277 8.06861C3.30859 8.10061 3.29812 8.13189 3.27718 8.19444Z" stroke="#fff" stroke-width="1.46667" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </i>
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Right: Fields panel -->
-    <div id="rightBox" class="col-12 col-lg-6">
-      <div class="fielsReq border bg-white rounded h-100 d-flex flex-column">
-        <div class="p-3 border-bottom">
-          <div class="row g-2 align-items-center">
-            <div class="col">
-              <button class="btn btn-link p-0 d-inline-flex align-items-center gap-2 text-decoration-none" (click)="toggleButton()">
-                <img src="../../assets/images/business.svg" alt="" width="20" height="20"/>
-                <span class="headingClass">{{ staticText.yourIdeaTitle }}</span>
-              </button>
+    <!-- RIGHT: Fields panel -->
+    <div id="rightBox" class="col-12 col-md-6 fielsReq">
+      <div class="fld-inner-wrap">
+        <div class="row mt-4">
+          <div class="col-md-8">
+            <p class="headingClass" (click)="toggleButton()">
+              <i class="business-idea-ic"><img src="../../assets/images/business.svg" alt="business"/></i>
+              <span>{{ staticText.yourIdeaTitle }}</span>
+            </p>
+          </div>
+          <div class="col-md-4 prg-out-wrap">
+            <div class="progress mt-2">
+              <div class="progress-bar bg-success" [style.width.%]="progressPercentage"></div>
             </div>
-            <div class="col-auto">
-              <div class="d-flex flex-column align-items-end">
-                <div class="progress" style="width:140px;height:10px;">
-                  <div class="progress-bar bg-success" [style.width.%]="progressPercentage"></div>
-                </div>
-                <div class="small text-secondary mt-1"><span class="fw-semibold">{{ staticText.Progress }}</span> {{progressPercentage}}% {{ staticText.complete }}</div>
-              </div>
-            </div>
+            <h6 class="progressBar"><span>{{ staticText.Progress }}</span> {{progressPercentage}}% <span>{{ staticText.complete }}</span></h6>
           </div>
         </div>
 
-        <div class="p-3 form-container flex-grow-1 overflow-auto">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="mb-0">{{ staticText.required }}</h6>
-            <button class="btn btn-outline-primary btn-sm" [hidden]="allFieldssLookGoodButton" (click)="AllGoodButton()">{{ staticText.AllGoodButton }}</button>
+        <div class="form-container  " style="height: calc(100vh - 212px);
+    overflow: auto">
+          <div class="req-fld-wrap">
+            <h6>{{ staticText.required }}</h6>
+            <button [hidden]="allFieldssLookGoodButton" (click)="AllGoodButton()" class="btn add-btn">{{ staticText.AllGoodButton }}</button>
           </div>
 
           <div *ngFor="let field of fields; let i = index"
-               class="field-container rounded mb-3 p-3"
-               [ngClass]="{'bg-light': field.value == '', 'risk-box': i === 8}">
-            <div class="d-flex align-items-start gap-3">
+               class="field-container"
+               [ngClass]="{'grey-bg': field.value == '', 'risk-box': i === 8}">
+            <div class="field-outer-box">
               <div class="iconNumbermargin">
                 <div *ngIf="field.value == '' || field.value == staticText.ADA_STATIC_TEXT" class="number-series">{{i+1}}</div>
-                <img *ngIf="field.completed" src="../../assets/images/step-badge2.svg" alt="step complete"/>
-                <img *ngIf="field.value !== '' && !field.completed && field.value !== staticText.ADA_STATIC_TEXT" src="../../assets/images/step-badge.svg" alt="step in progress"/>
+                <i *ngIf="field.completed"><img src="../../assets/images/step-badge2.svg" alt="step-badge2"/></i>
+                <i *ngIf="field.value !== '' && !field.completed && field.value !== staticText.ADA_STATIC_TEXT"><img src="../../assets/images/step-badge.svg" alt="step-badge"/></i>
               </div>
 
-              <div class="field-text-wrap w-100 position-relative">
-                <div class="d-flex align-items-start justify-content-between">
-                  <div class="d-flex align-items-center gap-2">
-                    <span class="fld-img-wrap"><img [src]="field.image" alt="" width="24" height="24"></span>
-                    <label class="fw-semibold small text-secondary mb-0">
+              <div class="field-head-wrap">
+                <span class="fld-img-wrap"><img [src]="field.image" alt="icon"></span>
+                <div class="field-text-wrap">
+                  <div>
+                    <label class="fw-bold ml-2 field_div">
                       {{field.label}}
-                      <i class="bi bi-info-circle ms-1" data-bs-toggle="tooltip" [title]="field.tooltip"></i>
+                      <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" [title]="field.tooltip"></i>
                     </label>
-                  </div>
-
-                  <div class="edit-fields d-flex align-items-center gap-2" *ngIf="field.value !== '' && field.value !== staticText.ADA_STATIC_TEXT && field.label !== 'Additional attachments'">
-                    <img *ngIf="field.completed" src="../../assets/images/history.svg" alt="history" role="button" (click)="checkButton(i)"/>
-                    <img src="../../assets/images/edit-btn.svg" alt="edit" role="button" (click)="editButton(i)"/>
-                    <img *ngIf="!field.completed" src="../../assets/images/chk-btn.svg" alt="confirm" role="button" (click)="checkButton(i)"/>
-                  </div>
-                </div>
-
-                <div class="mt-2">
-                  <p *ngIf="field.value == '' && field.label !== 'Additional attachments'" class="text-secondary small mb-1">{{ staticText.notFilled }}</p>
-                  <p *ngIf="field.value !== ''" class="filled mb-1" [ngClass]="{'text-danger small': field.value == staticText.ADA_STATIC_TEXT}">{{field.value}}</p>
-
-                  <!-- Attachments -->
-                  <input type="file" (change)="onFileAttach($event)" #fileInputAttach hidden>
-                  <button *ngIf="field.value == '' && field.label == 'Additional attachments' && !uploadFileFirstTime"
-                          class="btn btn-link p-0 text-secondary small"
-                          (click)="fileInputAttach.click()">
-                    {{ staticText.drag }} <span class="text-primary">{{ staticText.choose }}</span>
-                  </button>
-
-                  <div *ngIf="uploadFileName && field.label == 'Additional attachments'" class="file-info">
-                    <div class="file-icon"><img [src]="fileIcon" alt="" width="28" height="28"/></div>
-                    <div class="file-name small">
-                      <span class="text-truncate" style="max-width:280px" data-bs-toggle="tooltip" [title]="uploadFileName">{{ uploadFileName}}</span>
-                      <p class="mb-0 text-secondary">{{ fileExtension }}</p>
-                    </div>
-                    <div class="down-del-wrap ms-auto position-relative">
-                      <button class="btn btn-link p-0" (click)="showChatDeleteMethod()" aria-expanded="false" aria-haspopup="true">
-                        <i class="bi bi-three-dots-vertical"></i>
-                      </button>
-                      <ul *ngIf="showChatDelete" class="dropdown-menu show end-0 mt-1">
-                        <li><button class="dropdown-item d-flex align-items-center gap-2" (click)="downloadFileFromChat()"><img src="../../assets/images/down.svg" alt=""/>{{ staticText.download }}</button></li>
-                        <li><button class="dropdown-item d-flex align-items-center gap-2 disabled"><img src="../../assets/images/del.svg" alt=""/>{{ staticText.delete }}</button></li>
-                      </ul>
+                    <div *ngIf="field.value !== '' && field.value !== staticText.ADA_STATIC_TEXT && field.label !== 'Additional attachments'" class="edit-fields">
+                      <i *ngIf="field.completed == true"><img src="../../assets/images/history.svg" (click)="checkButton(i)" alt="history"/></i>
+                      <i data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><img src="../../assets/images/edit-btn.svg" (click)="editButton(i)" alt="edit-btn"/></i>
+                      <i data-bs-toggle="tooltip" data-bs-placement="top" title="Confirm" *ngIf="field.completed == false"><img src="../../assets/images/chk-btn.svg" (click)="checkButton(i)" alt="chk-btn"/></i>
                     </div>
                   </div>
 
-                  <div *ngIf="fileUploadFromAttachment && field.label == 'Additional attachments'" class="file-info">
-                    <div class="file-icon"><img [src]="fileIcon" alt="" width="28" height="28"/></div>
-                    <div class="file-name small">
-                      <span class="text-truncate" style="max-width:280px" data-bs-toggle="tooltip" [title]="fileUploadFromAttachment.name">{{ fileUploadFromAttachment.name }}</span>
-                      <p class="mb-0 text-secondary">{{ addfileExtension }}</p>
-                    </div>
-                    <div class="down-del-wrap ms-auto position-relative">
-                      <button class="btn btn-link p-0" (click)="showAttachmentDeleteMethod()">
-                        <i class="bi bi-three-dots-vertical"></i>
-                      </button>
-                      <ul *ngIf="showAttachmentDelete" class="dropdown-menu show end-0 mt-1">
-                        <li><button class="dropdown-item d-flex align-items-center gap-2" (click)="downloadFileFromAdditional()"><img src="../../assets/images/down.svg" alt=""/>{{ staticText.download }}</button></li>
-                        <li><button class="dropdown-item d-flex align-items-center gap-2" (click)="deleteAttachment()"><img src="../../assets/images/del.svg" alt=""/>{{ staticText.delete }}</button></li>
-                      </ul>
-                    </div>
-                  </div>
+                  <div>
+                    <p *ngIf="field.value == '' && field.label !== 'Additional attachments'" class="notFilledYet notFilledYetText mb-0">{{ staticText.notFilled }}</p>
+                    <p *ngIf="field.value !== ''" class="filled" [ngClass]="{'red-text': field.value == staticText.ADA_STATIC_TEXT}">{{field.value}}</p>
 
-                  <div *ngIf="field.value == staticText.ADA_STATIC_TEXT || (field.label == 'Additional comments' && isAdditionalCommentsEmpty && botRespondedFirstTime)">
-                    <button class="btn btn-outline-primary btn-sm mt-1" (click)="addButton(i)">{{ staticText.add }}</button>
-                  </div>
+                    <!-- Attachments -->
+                    <input type="file" (change)="onFileAttach($event)" #fileInputAttach hidden>
+                    <button [hidden]="uploadFileFirstTime"
+                            *ngIf="field.value == '' && field.label == 'Additional attachments'"
+                            (click)="fileInputAttach.click()"
+                            class="btn choose-file">
+                      {{ staticText.drag }} <span>{{ staticText.choose }}</span>
+                    </button>
 
-                  <span *ngIf="field.value !== '' && !field.completed && field.value !== staticText.ADA_STATIC_TEXT && field.label !== 'Areas involved' && field.label !== 'Additional attachments'
-                    && field.label !== 'Destination 2027 alignment' && field.label !== 'Timelines' && field.label !== 'Business sponsor'
-                    && field.label !== 'Additional comments' && field.label !== 'Business case impacts' && field.label !== 'Portfolio alignment' && field.label !== 'IT sponsor'"
-                    class="not-final-content">
-                    {{ staticText.finalContent }}
-                  </span>
+                    <div *ngIf="uploadFileName && field.label == 'Additional attachments'" class="file-info">
+                      <div class="file-icon"><img [src]="fileIcon" alt="file icon"/></div>
+                      <div class="file-name">
+                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ uploadFileName }}">{{ uploadFileName }}</span>
+                        <p>{{ fileExtension }}</p>
+                      </div>
+                      <div class="down-del-wrap">
+                        <i class="bi bi-three-dots-vertical" (click)="showChatDeleteMethod()"></i>
+                        <ul *ngIf="showChatDelete">
+                          <li (click)="downloadFileFromChat()"><i><img src="../../assets/images/down.svg" alt=""/></i>{{ staticText.download }}</li>
+                          <li class="disabled-delete"><i><img src="../../assets/images/del.svg" alt=""/></i>{{ staticText.delete }}</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div *ngIf="fileUploadFromAttachment && field.label == 'Additional attachments'" class="file-info">
+                      <div class="file-icon"><img [src]="fileIcon" alt="file icon"/></div>
+                      <div class="file-name">
+                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ fileUploadFromAttachment.name }}">{{ fileUploadFromAttachment.name }}</span>
+                        <p>{{ addfileExtension }}</p>
+                      </div>
+                      <div class="down-del-wrap">
+                        <i class="bi bi-three-dots-vertical" (click)="showAttachmentDeleteMethod()"></i>
+                        <ul *ngIf="showAttachmentDelete">
+                          <li (click)="downloadFileFromAdditional()"><i><img src="../../assets/images/down.svg" alt=""/></i>{{ staticText.download }}</li>
+                          <li (click)="deleteAttachment()"><i><img src="../../assets/images/del.svg" alt=""/></i>{{ staticText.delete }}</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div *ngIf="field.value == staticText.ADA_STATIC_TEXT || (field.label == 'Additional comments' && isAdditionalCommentsEmpty && botRespondedFirstTime)">
+                      <button class="btn add-btn" (click)="addButton(i)">{{ staticText.add }}</button>
+                    </div>
+
+                    <span *ngIf="field.value !== '' && !field.completed && field.value !== staticText.ADA_STATIC_TEXT
+                                  && field.label !== 'Areas involved' && field.label !== 'Additional attachments'
+                                  && field.label !== 'Destination 2027 alignment' && field.label !== 'Timelines'
+                                  && field.label !== 'Business sponsor' && field.label !== 'Additional comments'
+                                  && field.label !== 'Business case impacts' && field.label !== 'Portfolio alignment'
+                                  && field.label !== 'IT sponsor'"
+                          class="not-final-content">
+                      {{ staticText.finalContent }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div *ngIf="i === 8" class="static-content mt-3">
-              <p class="fw-semibold mb-0">{{ staticText.additional }}</p>
+            <div *ngIf="i === 8" class="static-content">
+              <p>{{ staticText.additional }}</p>
             </div>
           </div>
         </div>
 
-        <div class="subnit-btn border-top p-3">
-          <button class="btn btn-primary" [disabled]="buttonDisabled" (click)="submitButton()">{{ staticText.submit }}</button>
+        <!-- Submit bar (old absolute bar preserved) -->
+        <div class="subnit-btn border-top p-3 position-sticky bottom-0 bg-white">
+          <button class="btn btn-purple" [disabled]="buttonDisabled" (click)="submitButton()">{{ staticText.submit }}</button>
         </div>
 
-        <!-- toasts/alerts -->
-        <div *ngIf="errorDivVisible" class="validation-msg global-valid bg-danger text-white rounded d-flex align-items-center gap-2 px-3 py-2">
-          <i class="bi bi-exclamation-triangle"></i><span>{{ errorDivText }}</span>
-          <button type="button" class="btn-close btn-close-white ms-auto" aria-label="Close" (click)="errorDivCloseInstant()"></button>
+        <!-- Alerts (old classes preserved) -->
+        <div *ngIf="errorDivVisible" class="validation-msg warning">
+          <i class="bi bi-exclamation-triangle"></i>
+          <span>{{ errorDivText }}</span>
+          <button type="button" class="close-alert" (click)="errorDivCloseInstant()"><i class="bi bi-x"></i></button>
         </div>
-        <div *ngIf="successDivVisible" class="validation-msg global-valid bg-success text-white rounded d-flex align-items-center gap-2 px-3 py-2">
-          <i class="bi bi-check-circle"></i><span>{{ successDivText }}</span>
-          <button type="button" class="btn-close btn-close-white ms-auto" aria-label="Close" (click)="successDivCloseInstant()"></button>
+        <div *ngIf="successDivVisible" class="validation-msg success">
+          <i class="bi bi-check-circle"></i>
+          <span>{{ successDivText }}</span>
+          <button type="button" class="close-alert" (click)="successDivCloseInstant()"><i class="bi bi-x"></i></button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Review Modal -->
+  <!-- Review modal (old styles) -->
   <div class="modal fade confirm-dialoge" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true" #reviewModal>
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="modal-title fs-5" id="reviewModalLabel">{{ staticText.review }}</h2>
+          <h2 class="modal-title" id="reviewModalLabel">{{ staticText.review }}</h2>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           {{ staticText.reviewDetail }}
         </div>
-        <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close">{{ staticText.CANCEL }}</button>
-          <div class="d-flex gap-2">
-            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close">{{ staticText.edit }}</button>
+        <div class="modal-footer">
+          <div><button type="button" class="btn add-btn" data-bs-dismiss="modal" aria-label="Close">{{ staticText.CANCEL }}</button></div>
+          <div>
+            <button type="button" class="btn add-btn me-2" data-bs-dismiss="modal" aria-label="Close">{{ staticText.edit }}</button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" (click)="submitButtonPopup()">{{ staticText.submit }}</button>
           </div>
         </div>
@@ -355,5 +370,5 @@
   </div>
 </div>
 
-<!-- Carousel when first time -->
+<!-- First-time carousel -->
 <app-carousel *ngIf="userComeFirstTime" (hideParent)="hideCrousel()"></app-carousel>
