@@ -208,5 +208,17 @@ export const APP_CONSTANTS = {
   { label: 'IT sponsor', value: '', valid: false, editing: false, image: "assets/images/it-sponsor.svg", completed:false },
   { label: 'Additional attachments', value: '', valid: false, editing: false, image: "assets/images/additional-attachments.svg", completed:false },
   { label: 'Additional comments', value: '', valid: false, editing: false, image: "assets/images/additional-comments.svg", completed:false }
-]
+],
+  First_Time_User: {
+    welcomeMess: 'Hi! 👋 Good morning John Doe!',
+    filled: 'See what needs to be filled?',
+    INTRO_MESSAGES: [
+      "👋 Hi, I’m ADA (AI Digital Assistant)!",
+      "💡 I help shape and refine your Business Idea.",
+      "⚡ Based on your input, I generate key details instantly.",
+      "🎯 My goal? Clear, structured content to set you up for success!",
+      "🚀 Let’s bring your idea to life!"
+    ],
+    createNew: 'Create new business idea',
+  },
 };
