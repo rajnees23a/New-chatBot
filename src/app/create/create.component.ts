@@ -53,27 +53,27 @@ export class CreateComponent implements OnDestroy, AfterViewChecked, AfterViewIn
   selectedFile: File | null = null;
   fileUploadFromAttachment: any;
   fileIcon: string = '';
-  fileUrlForChatUpload: any;
-  fileUrlForAttachmentUpload: any;
-  uploadFileName: any;
+  fileUrlForChatUpload: string = '';
+  fileUrlForAttachmentUpload: string = '';
+  uploadFileName: string = '';
   uploadFileFirstTime = false;
   errorDivVisible = false;
   errorDivText = "";
   successDivVisible = false;
   successDivText = "";
-  fileUploadFromChatBot: any;
+  fileUploadFromChatBot: File | null = null;
   allLooksGoodCliced: boolean = false;
 
   userInput: string = '';
   chatHistory: any[] = [];
   fields: Field[] = [...APP_CONSTANTS.FIELDS];
-  bicFieldData: any;
+  bicFieldData: { [key: string]: string } = {};
   botChatMessage: string = '';
   apiResponseData: any;
   progress = 0;
   loader = false;
-  botButtonResponse: any;
-  editFieldVal = ""
+  botButtonResponse: string[] = [];
+  editFieldVal = "";
   buttonDisabled = true;
   editButtonClicked = false;
   sessionId = this.api.userName;
@@ -100,7 +100,7 @@ export class CreateComponent implements OnDestroy, AfterViewChecked, AfterViewIn
   groupA = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 9 fields 6%
   groupB = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]; // 10 fields 3%
   groupC = [19, 20, 21, 22, 23, 24, 25]; // 7 fields 2%
-  progressPercentage: any;
+  progressPercentage: number = 0;
   confirmBtnOfAreaClk = false;
   confirmBtnOfDestClk = false;
   confirmBtnOfBussClk = false;
