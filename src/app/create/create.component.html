@@ -2,7 +2,7 @@
   <div class="row g-3 h-100" id="rowBox">
     <!-- Left: Chat -->
     <div id="leftBox" class="col-12 col-lg-6 d-flex flex-column">
-      <h1 class="h4 fw-light mb-2 headingClass">Conversational assistant</h1>
+      <h1 class="h4 fw-light mb-2 headingClass">{{ staticText.covertional }}</h1>
 
       <div class="position-relative flex-grow-1 chat-outer-wrap">
         <div class="chat-container border bg-white rounded p-3 h-100 overflow-auto d-flex flex-column" #chatContainerBox>
@@ -37,7 +37,7 @@
                   <p class="mb-0">{{ message.text.question }}</p>
                 </div>
                 <div class="guidance-box mt-2 ms-5">
-                  <button class="btn btn-sm btn-warning-subtle border-warning text-warning fw-semibold">Guidance text</button>
+                  <button class="btn btn-sm btn-warning-subtle border-warning text-warning fw-semibold">{{ staticText.guidanceText }}</button>
                   <p class="fw-semibold small mb-2" *ngIf="message.staticBotMessage">{{ message.text.question }}</p>
                   <ul class="ps-3 mb-0" *ngFor="let text of message.text.guidelines">
                     <li class="small" [innerHTML]="text"></li>
@@ -87,7 +87,7 @@
                   </div>
                   <div class="d-flex gap-2 mt-2" *ngIf="bussinessMappingButtonClicke">
                     <input type="text" class="form-control form-control-sm" [(ngModel)]="bussinessUserInputForMappingButtons" placeholder="Enter user first and last name" aria-label="Business sponsor"/>
-                    <button class="btn btn-primary btn-sm" [disabled]="!bussinessUserInputForMappingButtons" (click)="businessConfirmButton()">Confirm</button>
+                    <button class="btn btn-primary btn-sm" [disabled]="!bussinessUserInputForMappingButtons" (click)="businessConfirmButton()">{{ staticText.confirmText }}</button>
                   </div>
                 </div>
 
@@ -102,7 +102,7 @@
                   </div>
                   <div class="d-flex gap-2 mt-2" *ngIf="itMappingButtonClicke">
                     <input type="text" class="form-control form-control-sm" [(ngModel)]="itUserInputForMappingButtons" placeholder="Enter user first and last name" aria-label="IT sponsor"/>
-                    <button class="btn btn-primary btn-sm" [disabled]="!itUserInputForMappingButtons" (click)="itConfirmButton()">Confirm</button>
+                    <button class="btn btn-primary btn-sm" [disabled]="!itUserInputForMappingButtons" (click)="itConfirmButton()">{{ staticText.confirmText }}</button>
                   </div>
                 </div>
               </div>
@@ -115,7 +115,7 @@
                       <span>{{ region }}</span>
                     </mat-checkbox>
                   </div>
-                  <button class="btn btn-primary btn-sm mt-2" [hidden]="confirmBtnOfAreaClk" (click)="onConfirmAreas()">Confirm</button>
+                  <button class="btn btn-primary btn-sm mt-2" [hidden]="confirmBtnOfAreaClk" (click)="onConfirmAreas()">{{ staticText.confirmText }}</button>
                 </div>
 
                 <div *ngIf="message.fieldName == 'Destination 2027 alignment'" class="mt-2">
@@ -124,7 +124,7 @@
                       {{ region }}
                     </mat-checkbox>
                   </div>
-                  <button class="btn btn-primary btn-sm mt-2" [hidden]="confirmBtnOfDestClk" (click)="onConfirmDestination()">Confirm</button>
+                  <button class="btn btn-primary btn-sm mt-2" [hidden]="confirmBtnOfDestClk" (click)="onConfirmDestination()">{{ staticText.confirmText }}</button>
                 </div>
 
                 <div *ngIf="message.fieldName == 'Business case impacts'" class="mt-2">
@@ -133,7 +133,7 @@
                       {{ region }}
                     </mat-checkbox>
                   </div>
-                  <button class="btn btn-primary btn-sm mt-2" [hidden]="confirmBtnOfBussClk" (click)="onConfirmBussiness()">Confirm</button>
+                  <button class="btn btn-primary btn-sm mt-2" [hidden]="confirmBtnOfBussClk" (click)="onConfirmBussiness()">{{ staticText.confirmText }}</button>
                 </div>
               </div>
 
@@ -202,7 +202,7 @@
             <div class="col">
               <button class="btn btn-link p-0 d-inline-flex align-items-center gap-2 text-decoration-none" (click)="toggleButton()">
                 <img src="../../assets/images/business.svg" alt="" width="20" height="20"/>
-                <span class="headingClass">Your business idea overview</span>
+                <span class="headingClass">{{ staticText.yourIdeaTitle }}</span>
               </button>
             </div>
             <div class="col-auto">
@@ -210,7 +210,7 @@
                 <div class="progress" style="width:140px;height:10px;">
                   <div class="progress-bar bg-success" [style.width.%]="progressPercentage"></div>
                 </div>
-                <div class="small text-secondary mt-1"><span class="fw-semibold">Progress</span> {{progressPercentage}}% completed</div>
+                <div class="small text-secondary mt-1"><span class="fw-semibold">{{ staticText.Progress }}</span> {{progressPercentage}}% {{ staticText.complete }}</div>
               </div>
             </div>
           </div>
@@ -218,8 +218,8 @@
 
         <div class="p-3 form-container flex-grow-1 overflow-auto">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="mb-0">Required key fields</h6>
-            <button class="btn btn-outline-primary btn-sm" [hidden]="allFieldssLookGoodButton" (click)="AllGoodButton()">All details look good</button>
+            <h6 class="mb-0">{{ staticText.required }}</h6>
+            <button class="btn btn-outline-primary btn-sm" [hidden]="allFieldssLookGoodButton" (click)="AllGoodButton()">{{ staticText.AllGoodButton }}</button>
           </div>
 
           <div *ngFor="let field of fields; let i = index"
@@ -227,9 +227,9 @@
                [ngClass]="{'bg-light': field.value == '', 'risk-box': i === 8}">
             <div class="d-flex align-items-start gap-3">
               <div class="iconNumbermargin">
-                <div *ngIf="field.value == '' || field.value == ADAtext" class="number-series">{{i+1}}</div>
+                <div *ngIf="field.value == '' || field.value == staticText.ADA_STATIC_TEXT" class="number-series">{{i+1}}</div>
                 <img *ngIf="field.completed" src="../../assets/images/step-badge2.svg" alt="step complete"/>
-                <img *ngIf="field.value !== '' && !field.completed && field.value !== ADAtext" src="../../assets/images/step-badge.svg" alt="step in progress"/>
+                <img *ngIf="field.value !== '' && !field.completed && field.value !== staticText.ADA_STATIC_TEXT" src="../../assets/images/step-badge.svg" alt="step in progress"/>
               </div>
 
               <div class="field-text-wrap w-100 position-relative">
@@ -242,7 +242,7 @@
                     </label>
                   </div>
 
-                  <div class="edit-fields d-flex align-items-center gap-2" *ngIf="field.value !== '' && field.value !== ADAtext && field.label !== 'Additional attachments'">
+                  <div class="edit-fields d-flex align-items-center gap-2" *ngIf="field.value !== '' && field.value !== staticText.ADA_STATIC_TEXT && field.label !== 'Additional attachments'">
                     <img *ngIf="field.completed" src="../../assets/images/history.svg" alt="history" role="button" (click)="checkButton(i)"/>
                     <img src="../../assets/images/edit-btn.svg" alt="edit" role="button" (click)="editButton(i)"/>
                     <img *ngIf="!field.completed" src="../../assets/images/chk-btn.svg" alt="confirm" role="button" (click)="checkButton(i)"/>
@@ -250,15 +250,15 @@
                 </div>
 
                 <div class="mt-2">
-                  <p *ngIf="field.value == '' && field.label !== 'Additional attachments'" class="text-secondary small mb-1">Not filled yet</p>
-                  <p *ngIf="field.value !== ''" class="filled mb-1" [ngClass]="{'text-danger small': field.value == ADAtext}">{{field.value}}</p>
+                  <p *ngIf="field.value == '' && field.label !== 'Additional attachments'" class="text-secondary small mb-1">{{ staticText.notFilled }}</p>
+                  <p *ngIf="field.value !== ''" class="filled mb-1" [ngClass]="{'text-danger small': field.value == staticText.ADA_STATIC_TEXT}">{{field.value}}</p>
 
                   <!-- Attachments -->
                   <input type="file" (change)="onFileAttach($event)" #fileInputAttach hidden>
                   <button *ngIf="field.value == '' && field.label == 'Additional attachments' && !uploadFileFirstTime"
                           class="btn btn-link p-0 text-secondary small"
                           (click)="fileInputAttach.click()">
-                    Drag & drop or <span class="text-primary">Choose files</span>
+                    {{ staticText.drag }} <span class="text-primary">{{ staticText.choose }}</span>
                   </button>
 
                   <div *ngIf="uploadFileName && field.label == 'Additional attachments'" class="file-info">
@@ -272,8 +272,8 @@
                         <i class="bi bi-three-dots-vertical"></i>
                       </button>
                       <ul *ngIf="showChatDelete" class="dropdown-menu show end-0 mt-1">
-                        <li><button class="dropdown-item d-flex align-items-center gap-2" (click)="downloadFileFromChat()"><img src="../../assets/images/down.svg" alt=""/>Download</button></li>
-                        <li><button class="dropdown-item d-flex align-items-center gap-2 disabled"><img src="../../assets/images/del.svg" alt=""/>Delete</button></li>
+                        <li><button class="dropdown-item d-flex align-items-center gap-2" (click)="downloadFileFromChat()"><img src="../../assets/images/down.svg" alt=""/>{{ staticText.download }}</button></li>
+                        <li><button class="dropdown-item d-flex align-items-center gap-2 disabled"><img src="../../assets/images/del.svg" alt=""/>{{ staticText.delete }}</button></li>
                       </ul>
                     </div>
                   </div>
@@ -289,34 +289,34 @@
                         <i class="bi bi-three-dots-vertical"></i>
                       </button>
                       <ul *ngIf="showAttachmentDelete" class="dropdown-menu show end-0 mt-1">
-                        <li><button class="dropdown-item d-flex align-items-center gap-2" (click)="downloadFileFromAdditional()"><img src="../../assets/images/down.svg" alt=""/>Download</button></li>
-                        <li><button class="dropdown-item d-flex align-items-center gap-2" (click)="deleteAttachment()"><img src="../../assets/images/del.svg" alt=""/>Delete</button></li>
+                        <li><button class="dropdown-item d-flex align-items-center gap-2" (click)="downloadFileFromAdditional()"><img src="../../assets/images/down.svg" alt=""/>{{ staticText.download }}</button></li>
+                        <li><button class="dropdown-item d-flex align-items-center gap-2" (click)="deleteAttachment()"><img src="../../assets/images/del.svg" alt=""/>{{ staticText.delete }}</button></li>
                       </ul>
                     </div>
                   </div>
 
-                  <div *ngIf="field.value == ADAtext || (field.label == 'Additional comments' && isAdditionalCommentsEmpty && botRespondedFirstTime)">
-                    <button class="btn btn-outline-primary btn-sm mt-1" (click)="addButton(i)">Add</button>
+                  <div *ngIf="field.value == staticText.ADA_STATIC_TEXT || (field.label == 'Additional comments' && isAdditionalCommentsEmpty && botRespondedFirstTime)">
+                    <button class="btn btn-outline-primary btn-sm mt-1" (click)="addButton(i)">{{ staticText.add }}</button>
                   </div>
 
-                  <span *ngIf="field.value !== '' && !field.completed && field.value !== ADAtext && field.label !== 'Areas involved' && field.label !== 'Additional attachments'
+                  <span *ngIf="field.value !== '' && !field.completed && field.value !== staticText.ADA_STATIC_TEXT && field.label !== 'Areas involved' && field.label !== 'Additional attachments'
                     && field.label !== 'Destination 2027 alignment' && field.label !== 'Timelines' && field.label !== 'Business sponsor'
                     && field.label !== 'Additional comments' && field.label !== 'Business case impacts' && field.label !== 'Portfolio alignment' && field.label !== 'IT sponsor'"
                     class="not-final-content">
-                    This is not the final content until you confirm it. Generated by AI.
+                    {{ staticText.finalContent }}
                   </span>
                 </div>
               </div>
             </div>
 
             <div *ngIf="i === 8" class="static-content mt-3">
-              <p class="fw-semibold mb-0">Additional fields</p>
+              <p class="fw-semibold mb-0">{{ staticText.additional }}</p>
             </div>
           </div>
         </div>
 
         <div class="subnit-btn border-top p-3">
-          <button class="btn btn-primary" [disabled]="buttonDisabled" (click)="submitButton()">Submit</button>
+          <button class="btn btn-primary" [disabled]="buttonDisabled" (click)="submitButton()">{{ staticText.submit }}</button>
         </div>
 
         <!-- toasts/alerts -->
@@ -337,17 +337,17 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="modal-title fs-5" id="reviewModalLabel">Please review your idea</h2>
+          <h2 class="modal-title fs-5" id="reviewModalLabel">{{ staticText.review }}</h2>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          Before submitting, please review the details you’ve provided and the fields we’ve auto-filled. Make sure everything looks correct and complete.
+          {{ staticText.reviewDetail }}
         </div>
         <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close">{{ staticText.CANCEL }}</button>
           <div class="d-flex gap-2">
-            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close">Let me edit</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" (click)="submitButtonPopup()">Submit</button>
+            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close">{{ staticText.edit }}</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" (click)="submitButtonPopup()">{{ staticText.submit }}</button>
           </div>
         </div>
       </div>
