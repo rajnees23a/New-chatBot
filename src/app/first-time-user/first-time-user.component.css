@@ -1,29 +1,14 @@
-
-.card { border-radius: 0.75rem; }
-
-
-.progress-bar { background-color: #8F53F0; }
-
-
-@media (min-width: 1200px) { .modal-lg { max-width: 760px; } }
-
-
-ul.ps-3 li { line-height: 1.2; }
-
-
-
-@media (min-width: 768px) {
-  .hero-row { min-height: 420px; } 
+.btn-custom {
+  border: 1px solid #8F53F0;  
+  background: #fff;           
+  color: #8F53F0;              
+  font-size: 12px;             
+  border-radius: 4px;          
+  transition: all 0.3s ease;   
 }
 
-
-.hero-img { max-width: 780px; }          
-@media (min-width: 992px) {
-  .hero-img { height: 420px; }           
-}
-@media (max-width: 991.98px) {
-  .hero-img { max-height: 320px; }       
-}
-@media (max-width: 575.98px) {
-  .hero-img { max-height: 260px; }      
+.btn-custom:hover {
+  background: #F1F5F9;         
+  color: #9747FF;             
+  border: 1px solid #9747FF; 
 }
