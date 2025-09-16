@@ -1,3 +1,5 @@
+import { Field } from '../app/create/field.model';
+
 export const APP_CONSTANTS = {
   HEADER: {
     APP_TITLE: 'AI Digital Assistant (ADA)',
@@ -27,6 +29,9 @@ export const APP_CONSTANTS = {
     DELETE: 'Delete',
     OPEN_TOOLTIP: 'Open',
     SUCCESS: 'Success',
+    DELETE_SUCCESS: 'Successfully delete the bic',
+    YOUR_IDEA_TITLE: 'Your Idea Title',
+    ADA_STATIC_TEXT: "ADA couldn't fill this field, please continue the conversation to fill it"
   },
   CAROUSEL: {
     FIRST_TITLE: 'Let’s create something amazing together🌟',
@@ -106,4 +111,74 @@ export const APP_CONSTANTS = {
        `When you're ready, click <b>Get started</b> to begin crafting your idea. Let’s make it amazing!'`
     ],
   },
+  CREATE: {
+    bot_default_message: "Let’s start by understanding your idea. Give me a brief overview, covering the key challenge and what you want to achieve",
+    bot_default_guideText : ["What’s the problem? (What needs fixing or improving?)","What’s your goal? (What do you want to achieve?)",
+      "How will success be measured? (Think metrics or key results.)","Is there urgency? (Any deadlines, priorities, or risks?)"
+    ],
+    bot_default_following : ["Text input (Type your response)","Attachment (Upload a PDF, Word, PPT or Excel file)",
+      "Voice input (Record your response)"
+    ],
+    draftSaved: "Your draft has been saved.",
+    additionalText: 'Additional comments',
+    generatedText: 'Generated text will appear here',
+    statusPending: 'Pending-review',
+    char: 'abcdefghijklmnopqrstuvwxyz0123456789',
+    enter: 'Enter',
+    true: 'True',
+    false: 'False',
+    senderUser: 'user',
+    senderBot: 'bot',
+    question: 'Question',
+    guidelines: 'Guidelines',
+    goodToMe: 'All looks good to me',
+    ADAtext: "This field was pre-filled by ADA based on your conversation. Please review and edit as needed.",
+    portfolioText: 'Portfolio alignment',
+    itSponsorText: 'IT sponsor',
+    timelinesText: 'Timelines',
+    areaInvolvedText: 'Areas involved',
+    destinationText: 'Destination 2027 alignment',
+    businessSponsorText: 'Business sponsor',
+    bussinessImpactText: 'Business case impacts',
+    kpisText: 'KPIs',
+    dataNeededText: 'Data needed',
+    additionalAttachmentsText: 'Additional attachments',
+    successADAContent: 'Successfully accepted the ADA-generated content',
+    successContent: 'Your idea has been successfully created!',
+    deleteFile: 'Successfully delete the file',
+    yesEverything: 'Yes, everything looks good',
+    attachFile: 'Successfully attached the file',
+    noInformation: 'NO INFORMATION PROVIDED',
+    largerThan: 'You may not upload files larger than 20mb',
+    nextSteps: 'Next steps',
+    errorDiv: 'There is some error while uploading the file, please try again',
+    ADA_STATIC_TEXT: "ADA couldn't fill this field, please continue the conversation to fill it"  
+  },
+  FIELDS: <Field[]>[
+  { label: 'Your idea title', value: '', valid: false, editing: false, image: "assets/images/title.svg", completed:false, tooltip: "Add static text here" },
+  { label: 'Problem statement', value: '', valid: false, editing: false, image: "assets/images/problem-statement.svg", completed:false },
+  { label: 'Objective', value: '', valid: false, editing: false, image: "assets/images/objective.svg", completed:false  },
+  { label: 'Key results', value: '', valid: false, editing: false, image: "assets/images/key-result.svg", completed:false  },
+  { label: 'Key features', value: '', valid: false, editing: false, image: "assets/images/key-feature.svg", completed:false  },
+  { label: 'Urgency', value: '', valid: false, editing: false, image: "assets/images/urgency.svg", completed:false  },
+  { label: 'Areas involved', value: '', valid: false, editing: false, image: "assets/images/area-involved.svg", completed:false },
+  { label: 'Destination 2027 alignment', value: '', valid: false, editing: false, image: "assets/images/destination.svg", completed:false },
+  { label: 'Risks', value: '', valid: false, editing: false, image: "assets/images/risk.svg", completed:false },
+  { label: 'KPIs', value: '', valid: false, editing: false, image: "assets/images/key-result.svg", completed:false },
+  { label: 'Data needed', value: '', valid: false, editing: false, image: "assets/images/data-needed.svg", completed:false },
+  { label: 'Impact', value: '', valid: false, editing: false, image: "assets/images/impact.svg", completed:false  },
+  { label: 'Implementation considerations', value: '', valid: false, editing: false, image: "assets/images/implementation.svg", completed:false  },
+  { label: 'Dependencies', value: '', valid: false, editing: false, image: "assets/images/dependencies.svg", completed:false  },
+  { label: 'Key dates', value: '', valid: false, editing: false, image: "assets/images/key-dates.svg", completed:false  },
+  { label: 'Timelines', value: '', valid: false, editing: false, image: "assets/images/timeline.svg", completed:false },
+  { label: 'Business sponsor', value: '', valid: false, editing: false, image: "assets/images/business-sponsor.svg", completed:false },
+  { label: 'Budget details', value: '', valid: false, editing: false, image: "assets/images/budget-details.svg", completed:false },
+  { label: 'Stakeholders', value: '', valid: false, editing: false, image: "assets/images/stakeholders.svg", completed:false },
+  { label: 'Out of scope', value: '', valid: false, editing: false, image: "assets/images/scope.svg", completed:false },
+  { label: 'Business case impacts', value: '', valid: false, editing: false, image: "assets/images/business-case-impact.svg", completed:false },
+  { label: 'Portfolio alignment', value: '', valid: false, editing: false, image: "assets/images/portfolio-alignment.svg", completed:false },
+  { label: 'IT sponsor', value: '', valid: false, editing: false, image: "assets/images/it-sponsor.svg", completed:false },
+  { label: 'Additional attachments', value: '', valid: false, editing: false, image: "assets/images/additional-attachments.svg", completed:false },
+  { label: 'Additional comments', value: '', valid: false, editing: false, image: "assets/images/additional-comments.svg", completed:false }
+]
 };

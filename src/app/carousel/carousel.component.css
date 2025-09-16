@@ -1,166 +1,94 @@
+/* Overlay */
 .popup-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;    
-    background: rgba(0, 0, 0, 0.3); 
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100%;
-  }
-  .guide-container {
-    margin-top: 40px;
-  }
-  .guide-container .popup-container {
-    background: #fff;
-    padding: 20px;
-    width: 600px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    height: calc(100vh - 100px);
-    position: relative;
-  }
-  .guide-title {
-    display: flex;
-    justify-content: flex-start;  
-    margin-bottom: 15px;
-  }
-  .guide-title span {
-    height: 28px;
-    width: 28px;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: 'Saans-Semibold';
-    color: #fff;
-    border-radius: 28px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #373737;
-    border: 1px solid #CBD5E1;
-    margin-right: 6px;
-  }
-  .guideimg {
-    margin-bottom: 24px;
-  }
-  .popup-container h2 {
-    margin-bottom: 20px;
-  }
-  .popup-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  .progress-container {
-    width: 100%;
-    margin: 10px 0;
-  }
-  
-  .progress {
-    height: 4px;
-    width: 100%;
-  }
-  .progress-bar {
-    background-color: #007bff;
-  }
-  .business-inner-wrap {
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-  }
-  .business-content {
-    margin-left: 16px;
-  }
-  .business-content p {
-    margin-bottom: 10px;
-  }
-  .guide-inner {
-    height: calc(85vh - 150px);
-    overflow-x: auto;
-  }
-  .guide-list {
-    list-style-type: disc;
-  }
-  .guide-list li {
-  line-height: 18px;
-  color: #373737;
-  margin-bottom: 5px;
-  }  
-  .carousel-control {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-  }
-  .carousel-control button {
-    position: static;
-    margin: 0 5px;
-  }
-  .carousel-indicators button {
-    background: #f6f6f6;
-    width: 40px;
-    height: 4px;
-    border-radius: 10px; 
-    border: 0;
-  }
-  .carousel-indicators button.active {
-    background: #8F53F0;
-  }
-  .carousel-control-next, 
-  .carousel-control-prev {
-    border: 1px solid #8F53F0;
-    width:auto;
-    padding: 10px 15px;
-    color: #8F53F0;
-    opacity: 1;
-    border-radius: 4px;
-  }
-  .carousel-control-next {
-    background: #8F53F0;
-    color: #fff;
-  }
-  .let-me-skip {
-    color: #8F53F0;
-    background: none;
-    border: 0;
-  }
-  .carousel-indicators {
-    position: absolute;
-    right: auto;
-    bottom: 45px; 
-    margin-right: 0;
-    margin-bottom: 1rem;
-    margin-left: 20px;
-  }
-  .category-box ul {
-    padding-left: 0;
-  }
-  .category-box li {
-    display: inline-block;
-    padding: 12px;
-    border:1px solid #EFEFEF;
-    border-radius: 5px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-  }
-  .category-box li span {
-    font-weight: 600;
-    color: #0C3145;
-    font-size: 12px;
-    text-transform: capitalize;
-  }
-  .part-wrap {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .part-inner strong {    
-    margin-bottom: 10px;
-    display: block;
-  }
-  .carousel-fade .carousel-item {
-    transition: opacity 0.5s ease 0s;
-  } 
-  .part-wrap .part-inner {
-    width: 50%;
-  }
+  background: rgba(0,0,0,.3);
+  z-index: 1080; /* above navbar/modals if any */
+}
+
+/* Popup box: responsive width & height */
+.popup-container{
+  background:#fff;
+  border-radius: .75rem;
+  box-shadow: 0 8px 28px rgba(0,0,0,.18);
+  width:min(100%, 680px);          /* mobile first */
+  max-height: min(92vh, 820px);    /* keep within viewport */
+}
+
+/* Step number chip */
+.guide-title span{
+  height:28px;width:28px;border-radius:50%;
+  font:600 12px/28px system-ui,-apple-system,Segoe UI,Roboto,'Saans-Semibold',sans-serif;
+  color:#fff;background:#373737;border:1px solid #CBD5E1;display:inline-block;text-align:center;
+}
+
+/* Scroll body while header/controls stay visible */
+.guide-inner{ overflow:hidden; }
+
+.btn-outline-primary {
+  border-color: #8F53F0;
+  color: #8F53F0;
+}
+
+.btn-outline-primary:hover {
+  background-color: #8F53F0;
+  color: #fff;
+}
+
+.btn-primary {
+  background-color: #8F53F0;
+  border-color: #8F53F0;
+}
+
+.btn-link.text-primary {
+  color: #8F53F0;
+  font-weight: 500;
+  text-decoration: none;
+}
+.btn-link.text-primary:hover {
+  text-decoration: underline;
+}
+
+
+/* Images: scale nicely at each breakpoint */
+.guide-hero{ max-height: 28vh; }             /* phones */
+@media (min-width:576px){ .guide-hero{ max-height: 32vh; } } /* sm */
+@media (min-width:768px){ .guide-hero{ max-height: 36vh; } } /* md */
+@media (min-width:992px){ .guide-hero{ max-height: 40vh; } } /* lg */
+@media (min-width:1200px){ .guide-hero{ max-height: 44vh; } }/* xl */
+
+/* Lists */
+.guide-list{ list-style:disc; }
+.guide-list li{ line-height:1.25rem; color:#373737; margin-bottom:.35rem; }
+
+/* Indicators */
+.carousel-indicators button{
+  background:#f6f6f6;width:40px;height:4px;border-radius:10px;border:0;
+}
+.carousel-indicators button.active{ background:#8F53F0; }
+
+/* Controls */
+.carousel-control{
+  position:static;
+}
+.carousel-control-prev,
+.carousel-control-next{
+  border:1px solid #8F53F0;
+  padding:.5rem .9rem;
+  color:#8F53F0; border-radius:.375rem; opacity:1;
+  background:#fff;
+}
+.carousel-control-next{
+  background:#8F53F0; color:#fff;
+}
+.btn-primary{ background:#8F53F0; border-color:#8F53F0; }
+.let-me-skip{ color:#8F53F0; background:none; border:0; }
+
+/* Category chips */
+.category-box ul{ padding-left:0; }
+.category-box li{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.6rem .75rem; border:1px solid #EFEFEF; border-radius:.5rem; margin:.25rem .5rem .5rem 0;
+}
+.category-box li span{ font-weight:600; color:#0C3145; font-size:.8rem; text-transform:capitalize; }
+
+/* Fade speed */
+.carousel-fade .carousel-item{ transition: opacity .5s ease; }
