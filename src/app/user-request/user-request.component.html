@@ -1,18 +1,14 @@
 
   <div class="myrequest-outer">
   <div class="my-requests-container">
-    <h1>My requests <span>{{requestData?.length || 0}}</span></h1>
+    <h1>{{ staticText.title }} <span>{{requestData.length || 0}}</span></h1>
     <ng-container *ngIf="requestData !== null && requestData !== undefined">  
       <table class="requests-table" *ngIf="requestData.length > 0">
         <thead>
           <tr>
-            <th>Request number</th>
-            <th>Idea title</th>
-            <th>Submitted date</th>
-            <th>Last updated</th>
-            <th>Total no questions completed</th>
-            <th>Comments</th>
-            <th>Status</th>
+            <th *ngFor="let header of tableHeaders">
+              {{ header }}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -39,7 +35,7 @@
     </ng-container>
     <div *ngIf="requestData.length === 0" class="no-req-wrap"> 
       <span><img src="../../assets/images/grey-logo.svg" alt=""/> </span>
-      <p>You have no request created</p>
+      <p>{{ staticText.noRequest }}</p>
   </div>
   </div>
 </div>

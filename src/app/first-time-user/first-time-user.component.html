@@ -5,7 +5,7 @@
      
       <div class="d-flex flex-column flex-sm-row align-items-start gap-3">
         <h1 class="mb-0 lh-base fs-4 fs-md-3 text-break hero-title">
-          Hi! 👋 Good morning John Doe!
+          {{ staticText.welcomeMess }}
         </h1>
 
         <button
@@ -14,7 +14,7 @@
           class="btn btn-custom px-2 py-1 px-xxl-3 py-xxl-2 mt-1 ms-sm-auto"
           (click)="openPopupOnClick()"
         >
-          See what needs to be filled?
+          {{ staticText.filled }}
         </button>
       </div>
 
@@ -33,15 +33,12 @@
         
           <div class="col-12 col-md-8 col-lg-10 col-xl-10 col-xxl-11 copy">
             <ul class="list-unstyled mb-3 mb-xxl-4">
-              <li class="mb-3">👋 Hi, I’m ADA (AI Digital Assistant)!</li>
-              <li class="mb-3">💡 I help shape and refine your Business Idea.</li>
-              <li class="mb-3">⚡ Based on your input, I generate key details instantly.</li>
-              <li class="mb-3">🎯 My goal? Clear, structured content to set you up for success!</li>
-              <li class="mb-3">🚀 Let’s bring your idea to life!</li>
+              <li *ngFor="let msg of staticText.INTRO_MESSAGES" class="mb-3">
+                {{ msg }}
+              </li>
             </ul>
-
             <button class="btn btn-primary px-4 py-2 px-xxl-4 py-xxl-3" (click)="openPopup()">
-              Create new business idea
+              {{ staticText.createNew }}
             </button>
           </div>
         </div>

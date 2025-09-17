@@ -1,8 +1,8 @@
 <div class="user-detail-wrapper"> 
 <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true" (click)="activeTab = 'summary'">Summary</button>
-    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false" (click)="activeTab = 'idea'; chatDetail()">Your idea</button>    
+    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true" (click)="activeTab = 'summary'">{{ staticText.summary }}</button>
+    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false" (click)="activeTab = 'idea'; chatDetail()">{{ staticText.idea }}</button>    
   </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
@@ -11,8 +11,8 @@
       <div class="user-detail-inner"> 
         <!-- Information Banner -->
         <div class="changes-guide">
-          <i class="bi bi-info-circle-fill"></i> If you wish to <strong><a href="#">make any changes</a></strong>, you can still update the information through 
-          <strong><a href="#">ADA conversations</a></strong>. The team will always consider the latest details provided.
+          <i class="bi bi-info-circle-fill"></i> {{ staticText.wish }} <strong><a href="#">{{ staticText.changes }}</a></strong>{{ staticText.updated }}
+          <strong><a href="#">{{ staticText.ada }}</a></strong>{{ staticText.team }}
         </div>  
         <!-- Request Details Section -->
         <div class="req-dtl-table">
@@ -20,34 +20,34 @@
             <div class="col-md-6">
               <div class="req-dtl-cont"> 
                 <i class="bi bi-check-circle-fill"></i>
-              <h5> Business Idea Canvas</h5>
+              <h5> {{ staticText.canvas }} </h5>
               <p class="text-muted">{{ requestDetails?.Ideatitle }}</p>
               </div>
               <div class="req-dtl-cont"> 
               <i><img src="../../assets/images/step-icon.svg" alt="step-icon"/> </i>
-              <h5> Pending review</h5>
-              <p class="text-muted">Your idea is pending view with SPPM team 07 Jan 2025</p>
+              <h5> {{ staticText.review }} </h5>
+              <p class="text-muted">{{ staticText.reviewText }}</p>
               </div>
               <div class="req-dtl-cont"> 
               <i><span class="number-series">3</span></i>
-              <h5> Feedback</h5>
-              <p class="text-muted">If it's not accepted, you might get feedback to revise the idea</p>
+              <h5> {{ staticText.feedback }} </h5>
+              <p class="text-muted">{{ staticText.feedbackText }}</p>
               </div>
               <div class="req-dtl-cont"> 
                 <i><span class="number-series">4</span></i>
-              <h5> Accepted</h5>
-              <p class="text-muted">If your idea is reviewed, it'll get accepted directly</p>
+              <h5> {{ staticText.accepted }} </h5>
+              <p class="text-muted">{{ staticText.acceptedText }}</p>
                 </div>
             </div>  
             <!-- Request Details Table -->
             <div class="col-md-6">         
               <table class="table">
                 <tr>
-                  <td><span>Request number</span></td>
+                  <td><span>{{ staticText.request }}</span></td>
                   <td><a href="#">{{ requestDetails?.Requestnumber }}</a></td>
                 </tr>
                 <tr>
-                  <td><span>Status</span></td>
+                  <td><span>{{ staticText.status }}</span></td>
                   <td>
                     <span class="badge" 
                       [ngClass]="{
@@ -60,19 +60,19 @@
                   </td>
                 </tr>
                 <tr>
-                  <td><span>Submitted date</span></td>
+                  <td><span>{{ staticText.date }}</span></td>
                   <td><strong>{{ requestDetails?.Submitteddate }}</strong></td>
                 </tr>
                 <tr>
-                  <td><span>Last updated</span></td>
+                  <td><span>{{ staticText.last }}</span></td>
                   <td><strong>{{ requestDetails?.Lastupdated }}</strong></td>
                 </tr>
                 <tr>
-                  <td><span>Total no questions completed</span></td>
+                  <td><span>{{ staticText.completedQuestions }}</span></td>
                   <td><strong>{{ requestDetails?.Totalnoofquestionscompleted }}</strong></td>
                 </tr>
                 <tr>
-                  <td><span>Comments</span></td>
+                  <td><span>{{ staticText.comments }}</span></td>
                   <td><strong>0</strong></td>
                 </tr>
               </table>

@@ -208,5 +208,53 @@ export const APP_CONSTANTS = {
   { label: 'IT sponsor', value: '', valid: false, editing: false, image: "assets/images/it-sponsor.svg", completed:false },
   { label: 'Additional attachments', value: '', valid: false, editing: false, image: "assets/images/additional-attachments.svg", completed:false },
   { label: 'Additional comments', value: '', valid: false, editing: false, image: "assets/images/additional-comments.svg", completed:false }
-]
+],
+  First_Time_User: {
+    welcomeMess: 'Hi! 👋 Good morning John Doe!',
+    filled: 'See what needs to be filled?',
+    INTRO_MESSAGES: [
+      "👋 Hi, I’m ADA (AI Digital Assistant)!",
+      "💡 I help shape and refine your Business Idea.",
+      "⚡ Based on your input, I generate key details instantly.",
+      "🎯 My goal? Clear, structured content to set you up for success!",
+      "🚀 Let’s bring your idea to life!"
+    ],
+    createNew: 'Create new business idea',
+  },
+  User_Request: {
+    title: 'My requests',
+    noRequest: 'You have no request created',
+    TABLE_HEADERS:  [
+  "Request number",
+  "Idea title",
+  "Submitted date",
+  "Last updated",
+  "Total no questions completed",
+  "Comments",
+  "Status"
+],
+    createNew: 'Create new business idea',
+  },
+  User_Request_Details: {
+    summary: 'Summary',
+    idea: 'Your idea',
+    wish: 'If you wish to',
+    changes: 'make any changes',
+    updated: ', you can still update the information through',
+    ada: 'ADA conversations',
+    team: '. The team will always consider the latest details provided.',
+    canvas: 'Business Idea Canvas',
+    review: 'Pending review',
+    reviewText: 'Your idea is pending view with SPPM team 07 Jan 2025',
+    feedback: 'Feedback',
+    feedbackText: "If it's not accepted, you might get feedback to revise the idea",
+    accepted: 'Accepted',
+    acceptedText: "If your idea is reviewed, it'll get accepted directly",
+    request: 'Request number',
+    status: 'Status',
+    date: 'Submitted date',
+    last: 'Last updated',
+    completedQuestions: 'Total no questions completed',
+    comments: 'Comments'
+  },
 };

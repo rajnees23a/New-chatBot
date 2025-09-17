@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 export class LayoutComponent implements OnInit {
 
 
-  isCollapsed = false; // Track navbar state
+  isCollapsed = false;
   successDivVisible = false;
   showSuccessMessage = false;
   private actionSubscription : Subscription = new Subscription;
@@ -22,7 +22,6 @@ export class LayoutComponent implements OnInit {
   constructor(private router: Router, private dataService: SerrviceService, private route: ActivatedRoute) {}
 
   ngOnInit(){
-    // Subscribe to action changes from the service
     this.actionSubscription = this.dataService.action$.subscribe(({ message, triggered }) => {
       this.message = message;
       this.showSuccessMessage = triggered;
@@ -30,27 +29,16 @@ export class LayoutComponent implements OnInit {
         this.showSuccessMessage = false;
       }, 5000);
     });
-
-    // Subscribe to route changes
-    // this.routeSubscription = this.router.events.subscribe(() => {
-    //   this.currentRoute = this.router.url;
-    //   this.showSuccessMessage = false; // Reset success message when route changes
-    // });
-  }
-
-  toggleNavbar(isCollapsed: boolean) {
-    this.isCollapsed = isCollapsed; // Update state when navbar toggles
   }  
-
-  ngOnDestroy(): void {
-    // Unsubscribe to avoid memory leaks
-    this.actionSubscription.unsubscribe();
-    this.routeSubscription.unsubscribe();
-  }
 
   successDivCloseInstant(): void {
     this.showSuccessMessage = false;
-    this.dataService.resetAction(); // Reset action after closing
+    this.dataService.resetAction();
+  }
+
+    ngOnDestroy(): void {
+    this.actionSubscription.unsubscribe();
+    this.routeSubscription.unsubscribe();
   }
 }
 
