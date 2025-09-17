@@ -1,45 +1,52 @@
-<div class="chatbot-wrap" *ngIf="!userComeFirstTime">
-  <div id="rowBox" class="row">
-    <!-- LEFT: Chat -->
-    <div id="leftBox" class="col-12 col-md-6">
-      <h1 class="headingClass">{{ staticText.covertional }}</h1>
+<div
+  class="container-fluid min-vh-95 d-flex flex-column py-2"
+  *ngIf="!userComeFirstTime"
+>
+  <div id="rowBox" class="row g-3 align-items-stretch">
+    <div id="leftBox" class="col-12 col-lg-6 d-flex flex-column">
+      <h1 class="headingClass px-2 px-sm-3">
+        {{ staticText.covertional }}
+      </h1>
 
-      <div class="chat-outer-wrap position-relative">
+      <div class="chat-outer-wrap position-relative d-flex flex-column">
         <div
-          class="chat-container d-flex flex-column p-3 overflow-auto h-vh-180"
+          class="chat-container d-flex flex-column p-sm-3 overflow-auto"
           #chatContainerBox
         >
           <ng-container *ngFor="let message of chatHistory; let i = index">
-            <!-- USER -->
-            <div *ngIf="message.sender === 'user'">
+            <div *ngIf="message.sender === 'user'" class="w-100">
               <div
                 *ngIf="message.isFile == true"
-                class="file-info file-info-inside d-flex align-items-center gap-2"
+                class="file-info file-info-inside d-flex align-items-center gap-2 ms-auto"
               >
                 <div class="file-icon">
                   <img [src]="fileIcon" alt="file icon" />
                 </div>
                 <div class="file-name">
-                  <span class="fw-semibold">{{ uploadFileName }}</span>
+                  <span class="fw-semibold text-truncate d-inline-block">{{
+                    uploadFileName
+                  }}</span>
                   <p class="mb-0 small">{{ fileExtension }}</p>
                 </div>
               </div>
 
               <span
-                class="user-text d-inline-block bg-white p-2 rounded-2 mb-2 shadow-xxs"
+                class="user-text d-inline-block bg-white p-2 rounded-2 mb-2 shadow-xxs float-end"
                 *ngIf="message.isFile == false"
               >
                 <span class="fw-semibold fs-12 text-dark text-wrap">{{
                   message.text
                 }}</span>
               </span>
+              <div class="clearfix"></div>
             </div>
 
-            <!-- BOT -->
-            <div *ngIf="message.sender === 'bot'">
-              <!-- Text-only -->
+            <div *ngIf="message.sender === 'bot'" class="w-100">
               <div class="user-input d-flex mb-2">
-                <span *ngIf="isString(message.text)" class="me-3">
+                <span
+                  *ngIf="isString(message.text)"
+                  class="me-3 d-none d-sm-inline"
+                >
                   <img
                     src="../../assets/images/moji.svg"
                     width="32"
@@ -50,47 +57,37 @@
                 <p
                   *ngIf="isString(message.text)"
                   class="bg-white p-2 rounded mb-0 fw-semibold w-100 shadow-sm lh-sm"
-                  style="
-                    font-family: 'Saans-Semibold';
-                    font-size: 14px;
-                    line-height: 18px;
-                  "
                 >
                   {{ message.text }}
                 </p>
               </div>
 
-              <!-- Q + guidelines block -->
               <div *ngIf="!isString(message.text) && !message.followingText">
                 <div class="user-input d-flex mb-2">
-                  <span class="me-3"
-                    ><img
+                  <span class="me-3 d-none d-sm-inline">
+                    <img
                       src="../../assets/images/moji.svg"
                       width="32"
                       height="54"
                       alt=""
-                  /></span>
+                    />
+                  </span>
                   <p
                     class="bg-white p-2 rounded mb-0 fw-semibold w-100 shadow-sm lh-sm"
-                    style="
-                      font-family: 'Saans-Semibold';
-                      font-size: 14px;
-                      line-height: 18px;
-                    "
                   >
                     {{ message.text.question }}
                   </p>
                 </div>
 
-                <div class="bg-white rounded p-2 mb-2 ms-5 shadow-sm">
+                <div
+                  class="bg-white rounded p-2 p-sm-3 mb-2 ms-0 ms-sm-5 shadow-sm"
+                >
                   <button
                     class="border rounded-1 px-2 py-1 mb-2 fw-semibold fs-12"
                     style="
                       border-color: #fbd3a7;
                       background: #fef7ec;
                       color: #ff7214;
-                      font-family: 'Saans-Semibold';
-                      padding: 2px 8px 4px;
                     "
                   >
                     {{ staticText.guidanceText }}
@@ -99,13 +96,12 @@
                   <p
                     *ngIf="message.staticBotMessage"
                     class="mb-3 fw-semibold fs-12"
-                    style="font-family: 'Saans-Semibold'"
                   >
                     {{ message.text.question }}
                   </p>
 
                   <ul
-                    class="mb-0 ps-4"
+                    class="mb-0 ps-3 ps-sm-4"
                     style="list-style: disc; list-style-position: outside"
                   >
                     <li
@@ -117,18 +113,17 @@
                 </div>
               </div>
 
-              <!-- Following ways -->
               <div
-                class="following-ways bg-white p-2 rounded mb-2 ms-5 shadow-xxs"
+                class="following-ways bg-white p-2 p-sm-3 rounded mb-2 ms-0 ms-sm-5 shadow-xxs"
                 *ngIf="message.followingText"
               >
                 <p class="mb-2">{{ message?.followingText?.question }}</p>
                 <ul class="list-unstyled mb-0">
-                  <li class="d-flex align-items-center gap-2">
+                  <li class="d-flex align-items-center gap-2 mb-2">
                     <i><img src="../../assets/images/edit.svg" alt="" /></i>
                     <span>{{ message?.followingText?.hints[0] }}</span>
                   </li>
-                  <li class="d-flex align-items-center gap-2">
+                  <li class="d-flex align-items-center gap-2 mb-2">
                     <i><img src="../../assets/images/attach.svg" alt="" /></i>
                     <span>{{ message?.followingText?.hints[1] }}</span>
                   </li>
@@ -139,9 +134,8 @@
                 </ul>
               </div>
 
-              <!-- Buttons -->
               <div
-                class="user-order d-flex flex-wrap gap-2 mb-2"
+                class="user-order d-flex flex-wrap gap-2 mb-2 ps-0 ps-sm-5"
                 *ngIf="message?.button?.length > 0"
               >
                 <ng-container
@@ -151,31 +145,28 @@
                     else yesNo
                   "
                 >
-                  <div *ngFor="let button of message.button; let j = index">
-                    <button
-                      class="btn btn-outline-secondary btn-sm"
-                      (click)="timeLiButton(message.button[j])"
-                    >
-                      {{ button }}
-                    </button>
-                  </div>
+                  <button
+                    class="btn btn-outline-secondary btn-sm"
+                    *ngFor="let button of message.button; let j = index"
+                    (click)="timeLiButton(message.button[j])"
+                  >
+                    {{ button }}
+                  </button>
                 </ng-container>
                 <ng-template #yesNo>
-                  <div *ngFor="let button of message.button; let j = index">
-                    <button
-                      class="btn btn-outline-secondary btn-sm"
-                      [ngClass]="{ 'active-class': selectedIndexOfButton == j }"
-                      (click)="yesNoButton(message.button[j])"
-                    >
-                      {{ button }}
-                    </button>
-                  </div>
+                  <button
+                    class="btn btn-outline-secondary btn-sm"
+                    *ngFor="let button of message.button; let j = index"
+                    [ngClass]="{ 'active-class': selectedIndexOfButton == j }"
+                    (click)="yesNoButton(message.button[j])"
+                  >
+                    {{ button }}
+                  </button>
                 </ng-template>
               </div>
 
-              <!-- Mapping buttons -->
               <div
-                class="user-order mb-2"
+                class="user-order mb-2 ps-0 ps-sm-5"
                 *ngIf="message?.mappingButton?.length > 0"
               >
                 <div *ngIf="message.fieldName == 'Business sponsor'">
@@ -196,7 +187,7 @@
                   </div>
                   <div
                     *ngIf="bussinessMappingButtonClicke"
-                    class="mt-2 d-flex align-items-center"
+                    class="mt-2 d-flex align-items-center gap-2 flex-wrap"
                   >
                     <input
                       type="text"
@@ -205,7 +196,7 @@
                       placeholder="Enter user first and last name"
                     />
                     <button
-                      class="btn btn-primary btn-sm ms-2"
+                      class="btn btn-primary btn-sm"
                       [disabled]="!bussinessUserInputForMappingButtons"
                       (click)="businessConfirmButton()"
                     >
@@ -230,7 +221,7 @@
                   </div>
                   <div
                     *ngIf="itMappingButtonClicke"
-                    class="mt-2 d-flex align-items-center"
+                    class="mt-2 d-flex align-items-center gap-2 flex-wrap"
                   >
                     <input
                       type="text"
@@ -239,7 +230,7 @@
                       placeholder="Enter user first and last name"
                     />
                     <button
-                      class="btn btn-primary btn-sm ms-2"
+                      class="btn btn-primary btn-sm"
                       [disabled]="!itUserInputForMappingButtons"
                       (click)="itConfirmButton()"
                     >
@@ -249,20 +240,21 @@
                 </div>
               </div>
 
-              <!-- Multi-select blocks -->
               <div
-                class="multi-select-box mb-2"
+                class="multi-select-box mb-2 ps-0 ps-sm-5"
                 *ngIf="message?.dropdown?.length > 0"
               >
                 <div *ngIf="message.fieldName == 'Areas involved'">
-                  <mat-checkbox
-                    class="me-3 mb-2"
-                    [disabled]="confirmBtnOfAreaClk"
-                    *ngFor="let region of message.dropdown; let j = index"
-                    [(ngModel)]="selectedAreas[j]"
-                  >
-                    <span>{{ region }}</span>
-                  </mat-checkbox>
+                  <div class="d-flex flex-wrap">
+                    <mat-checkbox
+                      class="me-3 mb-2"
+                      [disabled]="confirmBtnOfAreaClk"
+                      *ngFor="let region of message.dropdown; let j = index"
+                      [(ngModel)]="selectedAreas[j]"
+                    >
+                      <span>{{ region }}</span>
+                    </mat-checkbox>
+                  </div>
                   <button
                     mat-raised-button
                     color="primary"
@@ -274,14 +266,16 @@
                 </div>
 
                 <div *ngIf="message.fieldName == 'Destination 2027 alignment'">
-                  <mat-checkbox
-                    class="me-3 mb-2"
-                    [disabled]="confirmBtnOfDestClk"
-                    *ngFor="let region of message.dropdown; let j = index"
-                    [(ngModel)]="selectedDestination[j]"
-                  >
-                    {{ region }}
-                  </mat-checkbox>
+                  <div class="d-flex flex-wrap">
+                    <mat-checkbox
+                      class="me-3 mb-2"
+                      [disabled]="confirmBtnOfDestClk"
+                      *ngFor="let region of message.dropdown; let j = index"
+                      [(ngModel)]="selectedDestination[j]"
+                    >
+                      {{ region }}
+                    </mat-checkbox>
+                  </div>
                   <button
                     mat-raised-button
                     color="primary"
@@ -293,14 +287,16 @@
                 </div>
 
                 <div *ngIf="message.fieldName == 'Business case impacts'">
-                  <mat-checkbox
-                    class="me-3 mb-2"
-                    [disabled]="confirmBtnOfBussClk"
-                    *ngFor="let region of message.dropdown; let j = index"
-                    [(ngModel)]="selectedBussiness[j]"
-                  >
-                    {{ region }}
-                  </mat-checkbox>
+                  <div class="d-flex flex-wrap">
+                    <mat-checkbox
+                      class="me-3 mb-2"
+                      [disabled]="confirmBtnOfBussClk"
+                      *ngFor="let region of message.dropdown; let j = index"
+                      [(ngModel)]="selectedBussiness[j]"
+                    >
+                      {{ region }}
+                    </mat-checkbox>
+                  </div>
                   <button
                     mat-raised-button
                     color="primary"
@@ -314,154 +310,177 @@
             </div>
           </ng-container>
 
-          <!-- Loader -->
-          <div *ngIf="loader" class="loader-wrap">
+          <div *ngIf="loader" class="loader-wrap ms-auto">
             <div class="loader"></div>
           </div>
         </div>
 
-        <!-- Composer -->
-        <div id="textArDiv" class="send-input-wrap">
+        <div
+          id="textArDiv"
+          class="send-input-wrap border rounded mt-2 mb-5 mb-md-0 position-sticky bottom-0 z-3 bg-white"
+        >
           <div
             *ngIf="selectedFile"
-            class="file-info d-flex align-items-center gap-2"
+            class="file-info d-flex align-items-center gap-2 mb-2"
           >
             <div class="file-icon">
               <img [src]="fileIcon" alt="file icon" />
             </div>
             <div class="file-name">
-              <span class="fw-semibold">{{ selectedFile.name }}</span>
+              <span class="fw-semibold text-truncate d-inline-block">{{
+                selectedFile.name
+              }}</span>
               <p class="mb-0 small">{{ fileExtension }}</p>
             </div>
             <button
               (click)="removeFile()"
-              class="remove-btn btn btn-link p-0"
+              class="remove-btn btn btn-link p-0 ms-auto"
               aria-label="Remove file"
             >
               <i class="bi bi-x"></i>
             </button>
           </div>
 
-          <textarea
-            #autoResizeTextarea
-            (keydown)="onKeyDown($event)"
-            (blur)="onBlur()"
-            (focus)="onFocus()"
-            (input)="onInput()"
-            rows="1"
-            [(ngModel)]="userInput"
-            class="form-control"
-            placeholder="Reply to ADA"
-            id="textAFie"
-          ></textarea>
+          <div class="d-flex align-items-start gap-2">
+            <textarea
+              #autoResizeTextarea
+              (keydown)="onKeyDown($event)"
+              (blur)="onBlur()"
+              (focus)="onFocus()"
+              (input)="onInput()"
+              rows="1"
+              [(ngModel)]="userInput"
+              class="form-control flex-grow-1"
+              placeholder="Reply to ADA"
+              id="textAFie"
+            ></textarea>
 
-          <input
-            type="file"
-            (change)="onFileSelected($event)"
-            #fileInput
-            hidden
-          />
-
-          <div class="send-attach-btns d-flex gap-2">
-            <button
-              class="btn"
-              data-bs-toggle="tooltip"
-              data-bs-placement="right"
-              title="Upload files (max 20mb each)"
-              (click)="fileInput.click()"
-              [disabled]="uploadFileFirstTime"
-            >
-              <i
-                ><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                >
-                  <path
-                    d="M14.1015 7.26634L8.09108 13.2768C6.72425 14.6436 4.50817 14.6436 3.14134 13.2768C1.7745 11.9099 1.7745 9.69384 3.14134 8.327L9.15174 2.3166C10.063 1.40537 11.5404 1.40537 12.4516 2.3166C13.3628 3.22782 13.3628 4.7052 12.4516 5.61643L6.67687 11.3911C6.22126 11.8467 5.48257 11.8467 5.02695 11.3911C4.57134 10.9355 4.57134 10.1968 5.02695 9.74122L10.0946 4.67362"
-                    stroke="#8F53F0"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </i>
-            </button>
-            <button
-              class="btn"
-              data-bs-toggle="tooltip"
-              data-bs-placement="right"
-              title="Use voice mode"
-              (click)="startListening()"
-            >
-              <i>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                >
-                  <path
-                    d="M12.6666 6.66659V7.99992C12.6666 10.5772 10.5773 12.6666 7.99998 12.6666M3.33331 6.66659V7.99992C3.33331 10.5772 5.42265 12.6666 7.99998 12.6666M7.99998 12.6666V14.6666M5.33331 14.6666H10.6666M7.99998 9.99992C6.89541 9.99992 5.99998 9.10449 5.99998 7.99992V3.33325C5.99998 2.22868 6.89541 1.33325 7.99998 1.33325C9.10455 1.33325 9.99998 2.22868 9.99998 3.33325V7.99992C9.99998 9.10449 9.10455 9.99992 7.99998 9.99992Z"
-                    stroke="#8F53F0"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </i>
-            </button>
-            <button
-              class="btn primaryeffect"
-              id="textAbut"
-              [hidden]="!userInput && !selectedFile"
-              [disabled]="!userInput && !selectedFile"
-              (click)="handleUserInput(userInput)"
-              data-bs-toggle="tooltip"
-              data-bs-placement="right"
-              title="Reply"
-            >
-              <i>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                >
-                  <path
-                    d="M7.00028 8.0001H3.33362M3.27718 8.19444L1.72057 12.8442C1.59828 13.2095 1.53713 13.3922 1.58101 13.5047C1.61912 13.6023 1.70096 13.6764 1.80195 13.7046C1.91824 13.737 2.09388 13.658 2.44517 13.4999L13.5862 8.48647C13.929 8.33217 14.1005 8.25502 14.1535 8.14784C14.1995 8.05473 14.1995 7.94548 14.1535 7.85237C14.1005 7.74519 13.929 7.66805 13.5862 7.51375L2.44129 2.49859C2.09106 2.34098 1.91595 2.26218 1.79977 2.29451C1.69888 2.32258 1.61704 2.39644 1.57881 2.49393C1.53478 2.6062 1.59527 2.78845 1.71625 3.15295L3.27761 7.85712C3.29839 7.91973 3.30878 7.95103 3.31288 7.98304C3.31652 8.01145 3.31649 8.04021 3.31277 8.06861C3.30859 8.10061 3.29812 8.13189 3.27718 8.19444Z"
-                    stroke="#8F53F0"
-                    stroke-width="1.46667"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </i>
-            </button>
+            <input
+              type="file"
+              (change)="onFileSelected($event)"
+              #fileInput
+              hidden
+            />
+            <div class="send-attach-btns d-flex gap-2 ms-auto">
+              <button
+                class="btn"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                title="Upload files (max 20mb each)"
+                (click)="fileInput.click()"
+                [disabled]="uploadFileFirstTime"
+              >
+                <i
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M14.1015 7.26634L8.09108 13.2768C6.72425 14.6436 4.50817 14.6436 3.14134 13.2768C1.7745 11.9099 1.7745 9.69384 3.14134 8.327L9.15174 2.3166C10.063 1.40537 11.5404 1.40537 12.4516 2.3166C13.3628 3.22782 13.3628 4.7052 12.4516 5.61643L6.67687 11.3911C6.22126 11.8467 5.48257 11.8467 5.02695 11.3911C4.57134 10.9355 4.57134 10.1968 5.02695 9.74122L10.0946 4.67362"
+                      stroke="#8F53F0"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </i>
+              </button>
+              <button
+                class="btn"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                title="Use voice mode"
+                (click)="startListening()"
+              >
+                <i>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M12.6666 6.66659V7.99992C12.6666 10.5772 10.5773 12.6666 7.99998 12.6666M3.33331 6.66659V7.99992C3.33331 10.5772 5.42265 12.6666 7.99998 12.6666M7.99998 12.6666V14.6666M5.33331 14.6666H10.6666M7.99998 9.99992C6.89541 9.99992 5.99998 9.10449 5.99998 7.99992V3.33325C5.99998 2.22868 6.89541 1.33325 7.99998 1.33325C9.10455 1.33325 9.99998 2.22868 9.99998 3.33325V7.99992C9.99998 9.10449 9.10455 9.99992 7.99998 9.99992Z"
+                      stroke="#8F53F0"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </i>
+              </button>
+              <button
+                class="btn primaryeffect"
+                id="textAbut"
+                [hidden]="!userInput && !selectedFile"
+                [disabled]="!userInput && !selectedFile"
+                (click)="handleUserInput(userInput)"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                title="Reply"
+              >
+                <i>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M7.00028 8.0001H3.33362M3.27718 8.19444L1.72057 12.8442C1.59828 13.2095 1.53713 13.3922 1.58101 13.5047C1.61912 13.6023 1.70096 13.6764 1.80195 13.7046C1.91824 13.737 2.09388 13.658 2.44517 13.4999L13.5862 8.48647C13.929 8.33217 14.1005 8.25502 14.1535 8.14784C14.1995 8.05473 14.1995 7.94548 14.1535 7.85237C14.1005 7.74519 13.929 7.66805 13.5862 7.51375L2.44129 2.49859C2.09106 2.34098 1.91595 2.26218 1.79977 2.29451C1.69888 2.32258 1.61704 2.39644 1.57881 2.49393C1.53478 2.6062 1.59527 2.78845 1.71625 3.15295L3.27761 7.85712C3.29839 7.91973 3.30878 7.95103 3.31288 7.98304C3.31652 8.01145 3.31649 8.04021 3.31277 8.06861C3.30859 8.10061 3.29812 8.13189 3.27718 8.19444Z"
+                      stroke="#8F53F0"
+                      stroke-width="1.46667"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT: Fields panel -->
-    <div id="rightBox" class="col-12 col-md-6 fielsReq">
-      <div class="fld-inner-wrap">
-        <div class="row mt-4">
-          <div class="col-md-8">
-            <p class="headingClass" (click)="toggleButton()">
-              <i class="business-idea-ic"
-                ><img src="../../assets/images/business.svg" alt="business"
-              /></i>
+    <div id="rightBox" class="col-12 col-lg-6 d-flex flex-column">
+      <div class="fielsReq d-flex flex-column p-3">
+        <div class="row g-2 align-items-center">
+          <div class="col-12 col-md-8">
+            <p
+              class="headingClass d-flex align-items-center gap-2 mb-0"
+              (click)="toggleButton()"
+            >
+              <i class="business-idea-ic">
+                <img src="../../assets/images/business.svg" alt="business" />
+              </i>
               <span>{{ staticText.yourIdeaTitle }}</span>
             </p>
           </div>
-          <div class="col-md-4 prg-out-wrap">
+
+          <div
+            class="col-12 col-md-4 d-flex flex-column align-items-start align-items-md-end mt-2 mt-md-0"
+          >
             <div
-              class="progress mt-2 mb-1"
+              class="progress w-100 mt-1 mb-1 d-md-none"
+              style="--bs-progress-bg: #e1d7fd; --bs-progress-height: 8px"
+            >
+              <div
+                class="progress-bar bg-success"
+                role="progressbar"
+                [style.width.%]="progressPercentage"
+                [attr.aria-valuenow]="progressPercentage"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+
+            <div
+              class="progress mt-1 mb-1 d-none d-md-block"
               style="
                 --bs-progress-bg: #e1d7fd;
                 --bs-progress-height: 8px;
@@ -477,19 +496,19 @@
                 aria-valuemax="100"
               ></div>
             </div>
-            <h6 class="fw-semibold fs-12 lh-1362 mb-0">
+
+            <h6 class="fw-semibold fs-12 lh-1362 mb-0 text-start text-md-end">
               <span>{{ staticText.Progress }}</span> {{ progressPercentage }}%
               <span>{{ staticText.complete }}</span>
             </h6>
           </div>
         </div>
 
-        <div
-          class="form-container"
-          style="height: calc(100vh - 212px); overflow: auto"
-        >
-          <div class="req-fld-wrap">
-            <h6>{{ staticText.required }}</h6>
+        <div class="form-container mt-3 overflow-auto form-height">
+          <div
+            class="req-fld-wrap d-flex justify-content-between align-items-center"
+          >
+            <h6 class="mb-0">{{ staticText.required }}</h6>
             <button
               [hidden]="allFieldssLookGoodButton"
               (click)="AllGoodButton()"
@@ -505,7 +524,7 @@
             [ngClass]="{ 'grey-bg': field.value == '', 'risk-box': i === 8 }"
           >
             <div class="field-outer-box">
-              <div class="iconNumbermargin">
+              <div class="iconNumbermargin me-2 me-sm-3">
                 <div
                   *ngIf="
                     field.value == '' ||
@@ -532,13 +551,13 @@
                 /></i>
               </div>
 
-              <div class="field-head-wrap">
+              <div class="field-head-wrap w-100">
                 <span class="fld-img-wrap"
                   ><img [src]="field.image" alt="icon"
                 /></span>
-                <div class="field-text-wrap">
+                <div class="field-text-wrap w-100 position-relative">
                   <div>
-                    <label class="fw-bold ml-2 field_div">
+                    <label class="fw-bold ms-1 field_div">
                       {{ field.label }}
                       <i
                         class="bi bi-info-circle"
@@ -553,7 +572,7 @@
                         field.value !== staticText.ADA_STATIC_TEXT &&
                         field.label !== 'Additional attachments'
                       "
-                      class="edit-fields"
+                      class="edit-fields position-absolute top-0 end-0"
                     >
                       <i *ngIf="field.completed == true"
                         ><img
@@ -593,6 +612,7 @@
                     >
                       {{ staticText.notFilled }}
                     </p>
+
                     <p
                       *ngIf="field.value !== ''"
                       class="filled"
@@ -603,7 +623,6 @@
                       {{ field.value }}
                     </p>
 
-                    <!-- Attachments -->
                     <input
                       type="file"
                       (change)="onFileAttach($event)"
@@ -634,32 +653,40 @@
                       </div>
                       <div class="file-name">
                         <span
-                          data-bs-toggle="tooltip"
-                          data-bs-placement="top"
-                          title="{{ uploadFileName }}"
+                          class="text-truncate d-inline-block"
+                          [title]="uploadFileName"
                           >{{ uploadFileName }}</span
                         >
                         <p>{{ fileExtension }}</p>
                       </div>
-                      <div class="down-del-wrap">
+                      <div class="down-del-wrap dropdown ms-auto">
                         <i
                           class="bi bi-three-dots-vertical"
-                          (click)="showChatDeleteMethod()"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                          role="button"
                         ></i>
-                        <ul *ngIf="showChatDelete">
-                          <li (click)="downloadFileFromChat()">
-                            <i
-                              ><img
+                        <ul class="dropdown-menu dropdown-menu-end">
+                          <li>
+                            <button
+                              class="dropdown-item d-flex align-items-center gap-2"
+                              (click)="downloadFileFromChat()"
+                            >
+                              <img
                                 src="../../assets/images/down.svg"
-                                alt="" /></i
-                            >{{ staticText.download }}
+                                alt=""
+                              />{{ staticText.download }}
+                            </button>
                           </li>
                           <li class="disabled-delete">
-                            <i
-                              ><img
-                                src="../../assets/images/del.svg"
-                                alt="" /></i
-                            >{{ staticText.delete }}
+                            <button
+                              class="dropdown-item d-flex align-items-center gap-2"
+                              disabled
+                            >
+                              <img src="../../assets/images/del.svg" alt="" />{{
+                                staticText.delete
+                              }}
+                            </button>
                           </li>
                         </ul>
                       </div>
@@ -677,32 +704,41 @@
                       </div>
                       <div class="file-name">
                         <span
-                          data-bs-toggle="tooltip"
-                          data-bs-placement="top"
-                          title="{{ fileUploadFromAttachment.name }}"
-                          >{{ fileUploadFromAttachment.name }}</span
+                          class="text-truncate d-inline-block"
+                          [title]="fileUploadFromAttachment.name"
                         >
+                          {{ fileUploadFromAttachment.name }}
+                        </span>
                         <p>{{ addfileExtension }}</p>
                       </div>
-                      <div class="down-del-wrap">
+                      <div class="down-del-wrap dropdown ms-auto">
                         <i
                           class="bi bi-three-dots-vertical"
-                          (click)="showAttachmentDeleteMethod()"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                          role="button"
                         ></i>
-                        <ul *ngIf="showAttachmentDelete">
-                          <li (click)="downloadFileFromAdditional()">
-                            <i
-                              ><img
+                        <ul class="dropdown-menu dropdown-menu-end">
+                          <li>
+                            <button
+                              class="dropdown-item d-flex align-items-center gap-2"
+                              (click)="downloadFileFromAdditional()"
+                            >
+                              <img
                                 src="../../assets/images/down.svg"
-                                alt="" /></i
-                            >{{ staticText.download }}
+                                alt=""
+                              />{{ staticText.download }}
+                            </button>
                           </li>
-                          <li (click)="deleteAttachment()">
-                            <i
-                              ><img
-                                src="../../assets/images/del.svg"
-                                alt="" /></i
-                            >{{ staticText.delete }}
+                          <li>
+                            <button
+                              class="dropdown-item d-flex align-items-center gap-2"
+                              (click)="deleteAttachment()"
+                            >
+                              <img src="../../assets/images/del.svg" alt="" />{{
+                                staticText.delete
+                              }}
+                            </button>
                           </li>
                         </ul>
                       </div>
@@ -736,7 +772,7 @@
                         field.label !== 'Portfolio alignment' &&
                         field.label !== 'IT sponsor'
                       "
-                      class="not-final-content"
+                      class="not-final-content d-block"
                     >
                       {{ staticText.finalContent }}
                     </span>
@@ -751,10 +787,8 @@
           </div>
         </div>
 
-        <!-- Submit bar (old absolute bar preserved) -->
-        <div
-          class="subnit-btn border-top p-3 position-sticky bottom-0 bg-white"
-        >
+        <!-- Submit bar -->
+        <div class="subnit-btn p-2 bg-white">
           <button
             class="btn btn-purple"
             [disabled]="buttonDisabled"
@@ -764,7 +798,6 @@
           </button>
         </div>
 
-        <!-- Alerts (old classes preserved) -->
         <div *ngIf="errorDivVisible" class="validation-msg warning">
           <i class="bi bi-exclamation-triangle"></i>
           <span>{{ errorDivText }}</span>
@@ -791,7 +824,6 @@
     </div>
   </div>
 
-  <!-- Review modal (old styles) -->
   <div
     class="modal fade confirm-dialoge"
     id="reviewModal"
@@ -800,7 +832,7 @@
     aria-hidden="true"
     #reviewModal
   >
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h2 class="modal-title" id="reviewModalLabel">
@@ -813,24 +845,20 @@
             aria-label="Close"
           ></button>
         </div>
-        <div class="modal-body">
-          {{ staticText.reviewDetail }}
-        </div>
-        <div class="modal-footer">
-          <div>
+        <div class="modal-body">{{ staticText.reviewDetail }}</div>
+        <div class="modal-footer justify-content-between">
+          <button
+            type="button"
+            class="btn add-btn"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            {{ staticText.CANCEL }}
+          </button>
+          <div class="d-flex gap-2">
             <button
               type="button"
               class="btn add-btn"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            >
-              {{ staticText.CANCEL }}
-            </button>
-          </div>
-          <div>
-            <button
-              type="button"
-              class="btn add-btn me-2"
               data-bs-dismiss="modal"
               aria-label="Close"
             >
@@ -852,7 +880,6 @@
   </div>
 </div>
 
-<!-- First-time carousel -->
 <app-carousel
   *ngIf="userComeFirstTime"
   (hideParent)="hideCrousel()"
