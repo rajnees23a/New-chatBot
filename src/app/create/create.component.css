@@ -1,11 +1,10 @@
 .popup-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3); 
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-  }
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.3);
+  display: flex; justify-content: center; align-items: flex-start;
+}
+
+
+.fs-12 { font-size: 12px !important; line-height: 13.62px !important; }
+.shadow-xxs { box-shadow: 0 4px 16px rgba(0,0,0,.05) !important; }
+.lh-1362 { line-height: 13.62px !important; }
