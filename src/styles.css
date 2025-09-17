@@ -123,10 +123,10 @@ p { line-height: 20px; }
   margin-left: 20px;
   padding-bottom: 10px;
 }
-.chat-outer-wrap { position: relative; }
+/* .chat-outer-wrap { position: relative; }
 .chat-container {
   padding: 16px;
-  height: calc(100vh - 180px); /* keeps old viewport logic */
+  height: calc(100vh - 180px); 
   overflow: auto;
   box-shadow: 0 4px 16px rgba(0,0,0,0.05);
   background: #fff;
@@ -136,7 +136,7 @@ p { line-height: 20px; }
   border-radius: 10px;
   margin-bottom: 10px;
   max-width: 80%;
-}
+} */
 .user-text {
   background: #D1D1D1;
   color: #373737;
