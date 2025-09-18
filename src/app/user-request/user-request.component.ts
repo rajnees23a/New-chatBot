@@ -14,12 +14,36 @@ export class UserRequestComponent implements OnInit {
   tableHeaders = this.staticText.TABLE_HEADERS;
   requestData: RequestData[] = [];
 
+
   constructor(private api: SerrviceService, private router: Router) {
 
   }
 
   ngOnInit(): void {
     this.fetchData();
+  }
+
+  getStatusStyle(status: string) {
+    const base = {
+      display: 'inline-block',
+      padding: '6px 12px',
+      'border-radius': '8px',
+      'font-size': '0.85rem',
+      'font-weight': '600'
+    } as any;
+
+    if (status === 'Approved') {
+      return { ...base, 'background-color': '#198754', color: '#fff' }; // green
+    }
+    if (status === 'Feedback') {
+      return { ...base, 'background-color': '#ffc107', color: '#212529' }; // yellow
+    }
+    // Pending (use light blue bg + blue text)
+    if (status === 'Pending_review' || status === 'Pending-review') {
+      return { ...base, 'background-color': '#E6F0FF', color: '#2B63C9' };
+    }
+    // default neutral
+    return { ...base, 'background-color': '#f0f0f0', color: '#333' };
   }
 
   fetchData() {
