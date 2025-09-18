@@ -1,14 +1,22 @@
-<div class="screen-wrap"> 
-<app-left-nav></app-left-nav>
-<div class="layout"> 
-  <app-header></app-header>
-  <div class="content">
-    <router-outlet></router-outlet>
-    <div *ngIf="showSuccessMessage" class="validation-msg global-valid success">
-      <i class="bi bi-check-circle"></i> 
-      <span>{{ message }}</span>      
-      <button type="button" class="close-alert" (click)="successDivCloseInstant()"><i class="bi bi-x"></i></button>
-    </div>
+<div class="d-flex min-vh-100 bg-light">
+  <!-- Sidebar -->
+  <div class="flex-shrink-0">
+    <app-left-nav></app-left-nav>
   </div>
-</div>
+  <!-- Main Layout -->
+  <div class="flex-grow-1 d-flex flex-column min-vh-100">
+    <app-header></app-header>
+    <main class="flex-grow-1 d-flex flex-column position-relative">
+      <div class="flex-grow-1 p-0">
+        <router-outlet></router-outlet>
+      </div>
+      <div *ngIf="showSuccessMessage" class="position-fixed bottom-0 start-50 translate-middle-x mb-3 z-3">
+        <div class="alert alert-success d-flex align-items-center shadow-sm mb-0 px-3 py-2 rounded-3" style="min-width:320px;max-width:90vw;">
+          <i class="bi bi-check-circle me-2"></i>
+          <span class="flex-grow-1">{{ message }}</span>
+          <button type="button" class="btn-close ms-2" aria-label="Close" (click)="successDivCloseInstant()"></button>
+        </div>
+      </div>
+    </main>
+  </div>
 </div>
