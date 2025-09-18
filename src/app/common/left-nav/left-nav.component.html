@@ -1,104 +1,295 @@
-<div class="sidebar collapsed" [ngClass]="{'collapsed': isCollapsed}">
-<div class="logo-toggle-wrap"> 
-  <div class="logo">
-    <a href="#">
-      <img src="assets/IconWrapper.svg" alt="Logo">
-      <span>{{ navText.LOGO_TEXT }}</span>
-    </a>   
-   </div>
-   <button class="toggle-btn toggle-btn2" aria-label="Toggle btn" role="button" (click)="toggleSidebar()">
-     <span><img src="../../../assets/images/hamburger.svg" alt="hamburger"/> </span>
+<div
+  class="sidebar d-flex flex-column vh-100 bg-white border-end overflow-auto p-2"
+  [ngClass]="{ collapsed: isCollapsed }"
+>
+  <div
+    class="logo-toggle-wrap d-flex align-items-center justify-content-center gap-2 mb-4 ps-0 ps-md-1"
+  >
+    <div class="logo d-flex align-items-center">
+      <a href="#" class="d-flex align-items-center text-decoration-none">
+        <img
+          src="assets/IconWrapper.svg"
+          alt="Logo"
+          class="img-fluid"
+          style="max-height: 36px"
+        />
+        <span
+          class="ms-2 fw-semibold text-nowrap"
+          [class.d-none]="!isCollapsed"
+          >{{ navText.LOGO_TEXT }}</span
+        >
+      </a>
+    </div>
+
+    <button
+      class="toggle-btn2 btn p-2 d-none"
+      [class.d-block]="isCollapsed"
+      aria-label="Toggle btn"
+      role="button"
+      (click)="toggleSidebar()"
+    >
+      <span
+        ><img src="../../../assets/images/hamburger.svg" alt="hamburger"
+      /></span>
+    </button>
+  </div>
+
+  <button
+    class="toggle-btn btn p-0 w-100 bg-transparent border-0 text-center"
+    [class.d-none]="isCollapsed"
+    aria-label="Togglle btn right"
+    role="button"
+    (click)="toggleSidebar()"
+  >
+    <span
+      data-bs-toggle="tooltip"
+      data-bs-placement="right"
+      [title]="navText.OPEN_TOOLTIP"
+    >
+      <img src="../../../assets/images/hamburger.svg" alt="hamburger" />
+    </span>
   </button>
-</div>
-  <button class="toggle-btn" aria-label="Togglle btn right" role="button" (click)="toggleSidebar()">
-     <span data-bs-toggle="tooltip" data-bs-placement="right" [title]="navText.OPEN_TOOLTIP"><img src="../../../assets/images/hamburger.svg" alt="hamburger"/> </span>
-  </button>
-  <div class="page-tabs"> 
-  <ul class="nav-list">
-    <li routerLink="/create"  data-bs-toggle="tooltip" data-placement="right" [title]="navText.CREATE_TOOLTIP" class="nav-item" (click)="navigateTo('/create','create')"> 
-      <i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M8.00065 3.33337V12.6667M3.33398 8.00004H12.6673" stroke="#334155" stroke-width="1.46667" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </i>
-      <span *ngIf="isCollapsed">{{ navText.CREATE }}</span>
-    </li>
-    <li routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" data-bs-toggle="tooltip" data-bs-placement="right" [title]="navText.HOME_TOOLTIP" class="nav-item" (click)="navigateTo('/home','home')"> 
-      <i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M8.65487 1.84267C8.42065 1.6605 8.30354 1.56941 8.17423 1.5344C8.06013 1.50351 7.93987 1.50351 7.82577 1.5344C7.69646 1.56941 7.57935 1.6605 7.34513 1.84267L2.82359 5.35942C2.52135 5.5945 2.37022 5.71204 2.26135 5.85924C2.16491 5.98963 2.09307 6.13652 2.04935 6.2927C2 6.46901 2 6.66046 2 7.04337V11.8667C2 12.6134 2 12.9868 2.14532 13.272C2.27316 13.5229 2.47713 13.7268 2.72801 13.8547C3.01323 14 3.3866 14 4.13333 14H5.46667C5.65335 14 5.74669 14 5.818 13.9637C5.88072 13.9317 5.93171 13.8807 5.96367 13.818C6 13.7467 6 13.6533 6 13.4667V9.06666C6 8.69329 6 8.5066 6.07266 8.364C6.13658 8.23855 6.23857 8.13657 6.36401 8.07265C6.50661 7.99999 6.6933 7.99999 7.06667 7.99999H8.93333C9.3067 7.99999 9.49339 7.99999 9.63599 8.07265C9.76144 8.13657 9.86342 8.23855 9.92734 8.364C10 8.5066 10 8.69329 10 9.06666V13.4667C10 13.6533 10 13.7467 10.0363 13.818C10.0683 13.8807 10.1193 13.9317 10.182 13.9637C10.2533 14 10.3466 14 10.5333 14H11.8667C12.6134 14 12.9868 14 13.272 13.8547C13.5229 13.7268 13.7268 13.5229 13.8547 13.272C14 12.9868 14 12.6134 14 11.8667V7.04337C14 6.66046 14 6.46901 13.9506 6.2927C13.9069 6.13652 13.8351 5.98963 13.7386 5.85924C13.6298 5.71204 13.4787 5.5945 13.1764 5.35942L8.65487 1.84267Z" stroke="#334155" stroke-width="1.46667" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </i>
-      <span *ngIf="isCollapsed">{{ navText.HOME }}</span>
-    </li>
-    <li routerLink="/request" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" data-bs-toggle="tooltip" data-bs-placement="right" [title]="navText.REQUEST_TOOLTIP" class="nav-item" (click)="navigateTo('/request','request')"> 
-      <i> 
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <g clip-path="url(#clip0_4946_21711)">
-          <path d="M8.66643 7.33327L2.33309 13.6666M9.34537 2.35892C10.1574 2.89772 10.9379 3.53294 11.6672 4.26227C12.4028 4.99788 13.0427 5.78554 13.5845 6.60511M6.16974 5.26403L4.25316 4.62517C4.03243 4.5516 3.78932 4.59842 3.61171 4.7487L1.70694 6.36043C1.31699 6.69039 1.42777 7.31833 1.90709 7.49492L3.71189 8.15985M7.78712 12.235L8.45205 14.0398C8.62864 14.5191 9.25658 14.6299 9.58654 14.2399L11.1983 12.3351C11.3486 12.1575 11.3954 11.9144 11.3218 11.6937L10.6829 9.77711M12.8988 1.51376L9.62783 2.05892C9.27463 2.11779 8.95067 2.29139 8.70605 2.55288L4.29734 7.26564C3.15456 8.48723 3.18635 10.3949 4.36918 11.5778C5.55202 12.7606 7.45974 12.7924 8.68132 11.6496L13.3941 7.24091C13.6556 6.99629 13.8292 6.67233 13.888 6.31913L14.4332 3.04815C14.5836 2.14572 13.8012 1.36335 12.8988 1.51376Z" stroke="#334155" stroke-width="1.46667" stroke-linecap="round" stroke-linejoin="round"/>
-          </g>
-          <defs>
-          <clipPath id="clip0_4946_21711">
-          <rect width="16" height="16" fill="white"/>
-          </clipPath>
-          </defs>
+
+  <div class="page-tabs px-1">
+    <ul class="nav-list list-unstyled mb-0">
+      <li
+        class="nav-item d-flex align-items-center py-3 px-3 mb-2 fw-semibold text-secondary rounded cursor-pointer"
+        routerLink="/create"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right"
+        [title]="navText.CREATE_TOOLTIP"
+        (click)="navigateTo('/create', 'create')"
+      >
+        <i class="me-2 d-flex align-items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="none"
+          >
+            <path
+              d="M8.00065 3.33337V12.6667M3.33398 8.00004H12.6673"
+              stroke="#334155"
+              stroke-width="1.46667"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
-      </i>      
-      <span *ngIf="isCollapsed">{{ navText.REQUEST }}</span>
-    </li>
-  </ul>
-</div>
-  <div class="recent-tabs"> 
-    <h2>{{ navText.DRAFTS }}</h2>
-    <ul class="nav-list" *ngFor="let item of modifiedData; let i = index">
-      <li [ngClass]="{'active': isItemSelected && selectedItem === i}" class="nav-item" (click)="onItemClick(item.session_data,item.session_id,item.user_name,i)"> 
-       <span data-bs-toggle="tooltip" data-placement="bottom" [title]="item?.displayTitle"> {{ item?.displayTitle}}</span>
-        <i class="bi bi-three-dots-vertical" (click)="showHideDraft(i, $event)"></i>
-        <ul *ngIf="openedDropdownIndex === i">
-          <li (click)="deleteConfirmationBox(item.user_name,item.session_id, item.displayTitle); $event.stopPropagation()"><i class="bi bi-trash"></i>{{ navText.DELETE }}</li>
-          <!-- <li><i class="bi bi-share"></i>Share</li> -->
-        </ul>
+        </i>
+        <span *ngIf="isCollapsed" class="ms-2">{{ navText.CREATE }}</span>
       </li>
-    </ul>
-    <ul class="nav-list" *ngIf="!modifiedData || modifiedData.length == 0">
-      <li> 
-       <span>{{ navText.NO_DRAFTS }}</span>
+
+      <li
+        class="nav-item d-flex align-items-center py-3 px-3 mb-2 fw-semibold text-secondary rounded cursor-pointer"
+        routerLink="/home"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right"
+        [title]="navText.HOME_TOOLTIP"
+        (click)="navigateTo('/home', 'home')"
+      >
+        <i class="me-2 d-flex align-items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="none"
+          >
+            <path
+              d="M8.65487 1.84267C8.42065 1.6605 8.30354 1.56941 8.17423 1.5344C8.06013 1.50351 7.93987 1.50351 7.82577 1.5344C7.69646 1.56941 7.57935 1.6605 7.34513 1.84267L2.82359 5.35942C2.52135 5.5945 2.37022 5.71204 2.26135 5.85924C2.16491 5.98963 2.09307 6.13652 2.04935 6.2927C2 6.46901 2 6.66046 2 7.04337V11.8667C2 12.6134 2 12.9868 2.14532 13.272C2.27316 13.5229 2.47713 13.7268 2.72801 13.8547C3.01323 14 3.3866 14 4.13333 14H5.46667C5.65335 14 5.74669 14 5.818 13.9637C5.88072 13.9317 5.93171 13.8807 5.96367 13.818C6 13.7467 6 13.6533 6 13.4667V9.06666C6 8.69329 6 8.5066 6.07266 8.364C6.13658 8.23855 6.23857 8.13657 6.36401 8.07265C6.50661 7.99999 6.6933 7.99999 7.06667 7.99999H8.93333C9.3067 7.99999 9.49339 7.99999 9.63599 8.07265C9.76144 8.13657 9.86342 8.23855 9.92734 8.364C10 8.5066 10 8.69329 10 9.06666V13.4667C10 13.6533 10 13.7467 10.0363 13.818C10.0683 13.8807 10.1193 13.9317 10.182 13.9637C10.2533 14 10.3466 14 10.5333 14H11.8667C12.6134 14 12.9868 14 13.272 13.8547C13.5229 13.7268 13.7268 13.5229 13.8547 13.272C14 12.9868 14 12.6134 14 11.8667V7.04337C14 6.66046 14 6.46901 13.9506 6.2927C13.9069 6.13652 13.8351 5.98963 13.7386 5.85924C13.6298 5.71204 13.4787 5.5945 13.1764 5.35942L8.65487 1.84267Z"
+              stroke="#334155"
+              stroke-width="1.46667"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </i>
+        <span *ngIf="isCollapsed" class="ms-2">{{ navText.HOME }}</span>
+      </li>
+
+      <li
+        class="nav-item d-flex align-items-center py-3 px-3 mb-2 fw-semibold text-secondary rounded cursor-pointer"
+        routerLink="/request"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right"
+        [title]="navText.REQUEST_TOOLTIP"
+        (click)="navigateTo('/request', 'request')"
+      >
+        <i class="me-2 d-flex align-items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="none"
+            viewBox="0 0 16 16"
+          >
+            <g clip-path="url(#clip0_4946_21711)">
+              <path
+                d="M8.66643 7.33327L2.33309 13.6666M9.34537 2.35892C10.1574 2.89772 10.9379 3.53294 11.6672 4.26227C12.4028 4.99788 13.0427 5.78554 13.5845 6.60511M6.16974 5.26403L4.25316 4.62517C4.03243 4.5516 3.78932 4.59842 3.61171 4.7487L1.70694 6.36043C1.31699 6.69039 1.42777 7.31833 1.90709 7.49492L3.71189 8.15985M7.78712 12.235L8.45205 14.0398C8.62864 14.5191 9.25658 14.6299 9.58654 14.2399L11.1983 12.3351C11.3486 12.1575 11.3954 11.9144 11.3218 11.6937L10.6829 9.77711M12.8988 1.51376L9.62783 2.05892C9.27463 2.11779 8.95067 2.29139 8.70605 2.55288L4.29734 7.26564C3.15456 8.48723 3.18635 10.3949 4.36918 11.5778C5.55202 12.7606 7.45974 12.7924 8.68132 11.6496L13.3941 7.24091C13.6556 6.99629 13.8292 6.67233 13.888 6.31913L14.4332 3.04815C14.5836 2.14572 13.8012 1.36335 12.8988 1.51376Z"
+                stroke="#334155"
+                stroke-width="1.46667"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_4946_21711">
+                <rect width="16" height="16" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        </i>
+        <span *ngIf="isCollapsed" class="ms-2">{{ navText.REQUEST }}</span>
       </li>
     </ul>
   </div>
-  <div class="modal fade confirm-dialoge" id="reviewModalDraft" tabindex="-1" aria-labelledby="reviewModalDraft" aria-hidden="true" #reviewModalDraft>
+
+  <div class="recent-tabs d-none px-3" [class.d-block]="isCollapsed">
+    <h2 class="fs-6 fw-semibold text-secondary border-top pt-4 mb-3">
+      {{ navText.DRAFTS }}
+    </h2>
+
+    <ul
+      class="nav-list list-unstyled"
+      *ngFor="let item of modifiedData; let i = index"
+    >
+      <li
+        class="nav-item position-relative d-flex align-items-center py-2 px-3 fw-semibold rounded cursor-pointer"
+        [ngClass]="{ active: isItemSelected && selectedItem === i }"
+        (click)="
+          onItemClick(item.session_data, item.session_id, item.user_name, i)
+        "
+      >
+        <span
+          class="text-truncate"
+          style="max-width: 226px"
+          data-bs-toggle="tooltip"
+          data-bs-placement="bottom"
+          [title]="item?.displayTitle"
+        >
+          {{ item?.displayTitle }}
+        </span>
+
+        <i
+          class="bi bi-three-dots-vertical position-absolute top-0 end-0 pe-2 pt-2 fs-6"
+          (click)="showHideDraft(i, $event)"
+        ></i>
+
+        <ul
+          *ngIf="openedDropdownIndex === i"
+          class="position-absolute end-0 mt-2 list-unstyled border bg-white shadow-sm p-0"
+          style="top: 32px; width: 166px"
+        >
+          <li
+            class="d-flex align-items-center gap-2 py-2 px-3"
+            (click)="
+              deleteConfirmationBox(
+                item.user_name,
+                item.session_id,
+                item.displayTitle
+              );
+              $event.stopPropagation()
+            "
+          >
+            <i class="bi bi-trash fs-6"></i>{{ navText.DELETE }}
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <ul
+      class="nav-list list-unstyled"
+      *ngIf="!modifiedData || modifiedData.length == 0"
+    >
+      <li
+        class="nav-item d-flex align-items-center py-2 px-3 fw-semibold rounded"
+      >
+        <span>{{ navText.NO_DRAFTS }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <div
+    class="modal fade"
+    id="reviewModalDraft"
+    tabindex="-1"
+    aria-labelledby="reviewModalDraft"
+    aria-hidden="true"
+    #reviewModalDraft
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="modal-title" id="reviewModalLabel">{{ deleteConfirmTitle }}</h2>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" role="button"></button>
+          <h2 class="modal-title fs-5" id="reviewModalLabel">
+            {{ deleteConfirmTitle }}
+          </h2>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            role="button"
+          ></button>
         </div>
         <div class="modal-body">
-          <!-- <h1>
-            Are you sure you want to delete {{deletingTitle}} draft ?
-          </h1>  -->
-          <ul>
-            <li>
-              {{ navText.DELETE_CONFIRM_BODY_1 }}
-
-            </li>
-            <li>
-              {{ navText.DELETE_CONFIRM_BODY_2 }}
-            </li>        
+          <ul class="mb-2 ps-3">
+            <li>{{ navText.DELETE_CONFIRM_BODY_1 }}</li>
+            <li>{{ navText.DELETE_CONFIRM_BODY_2 }}</li>
           </ul>
-          <p>{{ navText.DELETE_CONFIRM_FOOTER }}</p>
+          <p class="mb-0">{{ navText.DELETE_CONFIRM_FOOTER }}</p>
         </div>
-        <div class="modal-footer">
-          <div><button type="button" class="btn add-btn" data-bs-dismiss="modal" aria-label="Close" role="button">{{ navText.CANCEL }}</button></div>
-          <div>
-          <button type="button" class="btn add-btn me-2" data-bs-dismiss="modal" aria-label="Close" role="button">{{ navText.LET_ME_EDIT }}</button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close" (click)="deleteDraft()" role="button">{{ navText.DELETE }}</button>
+        <div class="modal-footer justify-content-between">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-bs-dismiss="modal"
+            role="button"
+          >
+            {{ navText.CANCEL }}
+          </button>
+          <div class="d-flex gap-2">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+              role="button"
+            >
+              {{ navText.LET_ME_EDIT }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+              (click)="deleteDraft()"
+              role="button"
+            >
+              {{ navText.DELETE }}
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div *ngIf="successDivVisible" class="validation-msg success">
-    <i class="bi bi-check-circle"></i> 
-    <span>{{ successDivText }}</span>      
-    <button type="button" class="close-alert" (click)="successDivCloseInstant()" aria-label="close alert" role="button"><i class="bi bi-x"></i></button>
+
+  <div
+    *ngIf="successDivVisible"
+    class="validation-msg alert alert-success d-flex align-items-center justify-content-between mt-2 mb-0"
+  >
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-check-circle"></i>
+      <span>{{ successDivText }}</span>
+    </div>
+    <button
+      type="button"
+      class="btn btn-link p-0 text-reset"
+      (click)="successDivCloseInstant()"
+      aria-label="close alert"
+      role="button"
+    >
+      <i class="bi bi-x fs-5"></i>
+    </button>
   </div>
 </div>
