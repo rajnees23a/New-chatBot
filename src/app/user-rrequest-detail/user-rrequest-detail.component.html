@@ -1,91 +1,182 @@
-<div class="user-detail-wrapper"> 
-<nav>
-  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true" (click)="activeTab = 'summary'">{{ staticText.summary }}</button>
-    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false" (click)="activeTab = 'idea'; chatDetail()">{{ staticText.idea }}</button>    
-  </div>
-</nav>
-<div class="tab-content" id="nav-tabContent">
-  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
-    
-      <div class="user-detail-inner"> 
-        <!-- Information Banner -->
-        <div class="changes-guide">
-          <i class="bi bi-info-circle-fill"></i> {{ staticText.wish }} <strong><a href="#">{{ staticText.changes }}</a></strong>{{ staticText.updated }}
-          <strong><a href="#">{{ staticText.ada }}</a></strong>{{ staticText.team }}
-        </div>  
-        <!-- Request Details Section -->
-        <div class="req-dtl-table">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="req-dtl-cont"> 
-                <i class="bi bi-check-circle-fill"></i>
-              <h5> {{ staticText.canvas }} </h5>
-              <p class="text-muted">{{ requestDetails?.Ideatitle }}</p>
-              </div>
-              <div class="req-dtl-cont"> 
-              <i><img src="../../assets/images/step-icon.svg" alt="step-icon"/> </i>
-              <h5> {{ staticText.review }} </h5>
-              <p class="text-muted">{{ staticText.reviewText }}</p>
-              </div>
-              <div class="req-dtl-cont"> 
-              <i><span class="number-series">3</span></i>
-              <h5> {{ staticText.feedback }} </h5>
-              <p class="text-muted">{{ staticText.feedbackText }}</p>
-              </div>
-              <div class="req-dtl-cont"> 
-                <i><span class="number-series">4</span></i>
-              <h5> {{ staticText.accepted }} </h5>
-              <p class="text-muted">{{ staticText.acceptedText }}</p>
-                </div>
-            </div>  
-            <!-- Request Details Table -->
-            <div class="col-md-6">         
-              <table class="table">
-                <tr>
-                  <td><span>{{ staticText.request }}</span></td>
-                  <td><a href="#">{{ requestDetails?.Requestnumber }}</a></td>
-                </tr>
-                <tr>
-                  <td><span>{{ staticText.status }}</span></td>
-                  <td>
-                    <span class="badge" 
-                      [ngClass]="{
-                        'bg-primary': requestDetails?.Status === 'Pending_review' || requestDetails?.Status === 'Pending-review',
-                        'bg-warning': requestDetails?.Status === 'Feedback',
-                        'bg-success': requestDetails?.Status === 'Approved'
-                      }">
-                      {{ requestDetails?.Status }}
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td><span>{{ staticText.date }}</span></td>
-                  <td><strong>{{ requestDetails?.Submitteddate }}</strong></td>
-                </tr>
-                <tr>
-                  <td><span>{{ staticText.last }}</span></td>
-                  <td><strong>{{ requestDetails?.Lastupdated }}</strong></td>
-                </tr>
-                <tr>
-                  <td><span>{{ staticText.completedQuestions }}</span></td>
-                  <td><strong>{{ requestDetails?.Totalnoofquestionscompleted }}</strong></td>
-                </tr>
-                <tr>
-                  <td><span>{{ staticText.comments }}</span></td>
-                  <td><strong>0</strong></td>
-                </tr>
-              </table>
-            </div>
-          </div>
+<div class="user-detail-wrapper container-fluid p-3 p-md-4">
+  <nav>
+    <ul
+      class="nav nav-underline mb-2 pb-2 flex-nowrap overflow-auto gap-4 align-items-center" 
+      id="nav-tab"
+      role="tablist"
+      style="
+        --bs-nav-link-color:#64748B;
+        --bs-nav-link-hover-color:#64748B;
+        --bs-nav-underline-link-active-color:#8F53F0;
+      "
+    >
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link active fw-semibold px-0 py-3"
+          id="nav-home-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#nav-home"
+          type="button"
+          role="tab"
+          aria-controls="nav-home"
+          aria-selected="true"
+          (click)="activeTab = 'summary'"
+        >
+          {{ staticText.summary }}
+        </button>
+      </li>
+
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link px-0 py-3"
+          id="nav-profile-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#nav-profile"
+          type="button"
+          role="tab"
+          aria-controls="nav-profile"
+          aria-selected="false"
+          (click)="activeTab = 'idea'; chatDetail()"
+        >
+          {{ staticText.idea }}
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+
+      <div class="user-detail-inner bg-white p-3 p-md-4 pb-0 rounded-3 shadow-sm">
+       
+        <div class="changes-guide p-2 rounded d-flex align-items-center gap-2" style="background:#E3F2FD; color:#175EA1">
+          <i class="bi bi-info-circle-fill"></i>
+          <span class="small"> 
+            {{ staticText.wish }}
+            <strong><a href="#" class=" fs-6 link-underline link-underline-opacity-0" style="color:#175EA1">{{ staticText.changes }}</a></strong>{{ staticText.updated }}
+            <strong><a href="#" class="fs-6 link-underline link-underline-opacity-0" style="color:#175EA1">{{ staticText.ada }}</a></strong>{{ staticText.team }}
+          </span>
         </div>
-      </div>
+
+        
+        <div class="req-dtl-table p-3 p-md-4">
+          <div class="row g-4">
+            
+            <div class="col-12 col-md-6">
+              
+              <div class="req-dtl-cont d-flex align-items-start gap-3 mb-3 position-relative">
+                <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                <div class="min-w-0">
+                  <span class="fw-semibold text-dark d-block letter-spacing-1 small">
+                    {{ staticText.canvas }}
+                  </span>
+                  <p class="text-muted small mb-1 mt-2 text-truncate" title="{{ requestDetails?.Ideatitle }}">
+                    {{ requestDetails?.Ideatitle }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Item 2 -->
+              <div class="req-dtl-cont d-flex align-items-start gap-3 mb-3 position-relative">
+                <i><img src="../../assets/images/step-icon.svg" alt="step-icon" class="img-fluid" style="width:20px;height:20px"/></i>
+                <div class="min-w-0">
+                  <span class="fw-semibold text-dark d-block  small">
+                    {{ staticText.review }}
+                  </span>
+                  <p class="text-muted small mb-1 mt-2">
+                    {{ staticText.reviewText }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Item 3 -->
+              <div class="req-dtl-cont d-flex align-items-start gap-3 mb-3 position-relative">
+                <i><span class="number-badge">3</span></i>
+                <div class="min-w-0">
+                  <span class="fw-semibold text-dark d-block small">
+                    {{ staticText.feedback }}
+                  </span>
+                  <p class="text-muted small mb-1 mt-2">
+                    {{ staticText.feedbackText }}
+                  </p>
+                </div>
+              </div>
+
+              
+              <div class="req-dtl-cont d-flex align-items-start gap-3 mb-0 position-relative">
+                <i><span class="number-badge">4</span></i>
+                <div class="min-w-0">
+                  <span class="fw-semibold text-dark d-block  small">
+                    {{ staticText.accepted }}
+                  </span>
+                  <p class="text-muted small mb-1 mt-2">
+                    {{ staticText.acceptedText }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+           
+            <div class="col-12 col-md-6">
+              <div class="table-responsive">
+                <table class="table table-borderless align-middle mb-0 table-sm">
+                  <tbody>
+                    <tr>
+                      <td class="text-secondary small px-2 py-3"><span>{{ staticText.request }}</span></td>
+                      <td class="py-3">
+                        <a href="#" class="link-primary text-uppercase fw-semibold px-2 py-2 text-truncate d-inline-block" style="max-width:100%" title="{{ requestDetails?.Requestnumber }}">
+                          {{ requestDetails?.Requestnumber }}
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-secondary small px-2 py-3"><span>{{ staticText.status }}</span></td>
+                      <td class="py-3">
+                        <span
+                          class="badge d-inline-flex align-items-center px-2 py-2 small"  
+                          [ngClass]="{
+                            'text-bg-primary': requestDetails?.Status === 'Pending_review' || requestDetails?.Status === 'Pending-review',
+                            'text-bg-warning': requestDetails?.Status === 'Feedback',
+                            'text-bg-success': requestDetails?.Status === 'Approved'
+                          }"
+                        >
+                          {{ requestDetails?.Status }}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-secondary small px-2 py-3"><span>{{ staticText.date }}</span></td>
+                      <td class="fw-semibold px-2 py-3 text-nowrap">
+                        {{ requestDetails?.Submitteddate }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-secondary small px-2 py-3"><span>{{ staticText.last }}</span></td>
+                      <td class="fw-semibold px-2 py-3 text-nowrap">
+                        {{ requestDetails?.Lastupdated }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-secondary small px-2 py-3"><span>{{ staticText.completedQuestions }}</span></td>
+                      <td class="fw-semibold px-2 py-3">
+                        {{ requestDetails?.Totalnoofquestionscompleted }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-secondary small px-2 py-3"><span>{{ staticText.comments }}</span></td>
+                      <td class="fw-semibold px-2 py-3">0</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div> 
+          </div> 
+        </div> 
+      </div> 
+    </div>
+
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+      <app-history *ngIf="activeTab === 'idea'"></app-history>
     </div>
   </div>
-  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
-    <app-history  *ngIf="activeTab === 'idea'"></app-history>
-  </div>
-  
 </div>
-
-
