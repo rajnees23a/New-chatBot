@@ -12,38 +12,7 @@ import { RequestData } from './user-request.model';
 export class UserRequestComponent implements OnInit {
   staticText = APP_CONSTANTS.User_Request;
   tableHeaders = this.staticText.TABLE_HEADERS;
-  requestData = [
-  {
-    SessionID: "S001",
-    Username: "john_doe",
-    Requestnumber: "REQ-1001",
-    Ideatitle: "AI Chatbot Integration",
-    Submitteddate: "2025-09-01",
-    Lastupdated: "2025-09-10",
-    Totalnoofquestionscompleted: 18,
-    Status: "Pending_review"
-  },
-  {
-    SessionID: "S002",
-    Username: "jane_smith",
-    Requestnumber: "REQ-1002",
-    Ideatitle: "Cloud Migration Strategy",
-    Submitteddate: "2025-08-28",
-    Lastupdated: "2025-09-05",
-    Totalnoofquestionscompleted: 25,
-    Status: "Approved"
-  },
-  {
-    SessionID: "S003",
-    Username: "mike_ross",
-    Requestnumber: "REQ-1003",
-    Ideatitle: "Data Security Enhancement",
-    Submitteddate: "2025-09-03",
-    Lastupdated: "2025-09-12",
-    Totalnoofquestionscompleted: 12,
-    Status: "Feedback"
-  }
-];
+  requestData: RequestData[] = [];
 
 
   constructor(private api: SerrviceService, private router: Router) {

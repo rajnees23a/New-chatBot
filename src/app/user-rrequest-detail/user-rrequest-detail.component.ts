@@ -13,15 +13,7 @@ import { RequestDetails } from './user-request-detail.model';
 export class UserRRequestDetailComponent implements OnInit {
   staticText = APP_CONSTANTS.User_Request_Details;
   requestNumber: string | null = null;
-  requestDetails = {
-  Requestnumber: "RITM1226001",
-  Ideatitle: "Add AI chatbot support",
-  Submitteddate: "2025-09-05",
-  Lastupdated: "2025-09-12",
-  Totalnoofquestionscompleted: 5,
-  Status: "Pending_review",
-  Comments: 2
-};
+  requestDetails: RequestDetails | null = null;
   activeTab: string = 'summary';
   requestData: RequestDetails[] = [];
   RequestDetailFromRequestPAge: any;
@@ -55,7 +47,7 @@ export class UserRRequestDetailComponent implements OnInit {
       this.requestData.forEach((item: { Submitteddate: string | any[]; }) => {
         item.Submitteddate = item.Submitteddate.slice(0, 10);  // Extract the date part (YYYY-MM-DD)
       });
-      // this.requestDetails = this.requestData.find((req: { Requestnumber: string | null; }) => req.Requestnumber == this.requestNumber) ?? null;
+      this.requestDetails = this.requestData.find((req: { Requestnumber: string | null; }) => req.Requestnumber == this.requestNumber) ?? null;
     });
   }
   fetchRequestChat() {
