@@ -1,14 +1,9 @@
 <div class="user-detail-wrapper container-fluid p-3 p-md-4">
   <nav>
     <ul
-      class="nav nav-underline mb-2 pb-2 flex-nowrap overflow-auto gap-4 align-items-center" 
+      class="nav nav-underline mb-2 pb-2 flex-nowrap overflow-auto gap-4 align-items-center user-tab-list"
       id="nav-tab"
       role="tablist"
-      style="
-        --bs-nav-link-color:#64748B;
-        --bs-nav-link-hover-color:#64748B;
-        --bs-nav-underline-link-active-color:#8F53F0;
-      "
     >
       <li class="nav-item" role="presentation">
         <button
@@ -45,42 +40,73 @@
   </nav>
 
   <div class="tab-content" id="nav-tabContent">
-    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
-
-      <div class="user-detail-inner bg-white p-3 p-md-4 pb-0 rounded-3 shadow-sm">
-       
-        <div class="changes-guide p-2 rounded d-flex align-items-center gap-2" style="background:#E3F2FD; color:#175EA1">
+    <div
+      class="tab-pane fade show active"
+      id="nav-home"
+      role="tabpanel"
+      aria-labelledby="nav-home-tab"
+      tabindex="0"
+    >
+      <div
+        class="user-detail-inner bg-white p-3 p-md-4 pb-0 rounded-3 shadow-sm"
+      >
+        <div
+          class="changes-guide p-2 rounded d-flex align-items-center gap-2 user-detail-inner-text"
+        >
           <i class="bi bi-info-circle-fill"></i>
-          <span class="small"> 
+          <span class="small">
             {{ staticText.wish }}
-            <strong><a href="#" class=" fs-6 link-underline link-underline-opacity-0" style="color:#175EA1">{{ staticText.changes }}</a></strong>{{ staticText.updated }}
-            <strong><a href="#" class="fs-6 link-underline link-underline-opacity-0" style="color:#175EA1">{{ staticText.ada }}</a></strong>{{ staticText.team }}
+            <strong
+              ><a
+                href="#"
+                class="fs-6 link-underline link-underline-opacity-0 user-detail-inner-text-bg"
+                >{{ staticText.changes }}</a
+              ></strong
+            >{{ staticText.updated }}
+            <strong
+              ><a
+                href="#"
+                class="fs-6 link-underline link-underline-opacity-0 user-detail-inner-text-bg"
+                >{{ staticText.ada }}</a
+              ></strong
+            >{{ staticText.team }}
           </span>
         </div>
 
-        
         <div class="req-dtl-table p-3 p-md-4">
           <div class="row g-4">
-            
             <div class="col-12 col-md-6">
-              
-              <div class="req-dtl-cont d-flex align-items-start gap-3 mb-3 position-relative">
+              <div
+                class="req-dtl-cont d-flex align-items-start gap-3 mb-3 position-relative"
+              >
                 <i class="bi bi-check-circle-fill text-success fs-4"></i>
                 <div class="min-w-0">
-                  <span class="fw-semibold text-dark d-block letter-spacing-1 small">
+                  <span
+                    class="fw-semibold text-dark d-block letter-spacing-1 small"
+                  >
                     {{ staticText.canvas }}
                   </span>
-                  <p class="text-muted small mb-1 mt-2 text-truncate" title="{{ requestDetails?.Ideatitle }}">
+                  <p
+                    class="text-muted small mb-1 mt-2 text-truncate"
+                    title="{{ requestDetails?.Ideatitle }}"
+                  >
                     {{ requestDetails?.Ideatitle }}
                   </p>
                 </div>
               </div>
 
               <!-- Item 2 -->
-              <div class="req-dtl-cont d-flex align-items-start gap-3 mb-3 position-relative">
-                <i><img src="../../assets/images/step-icon.svg" alt="step-icon" class="img-fluid" style="width:20px;height:20px"/></i>
+              <div
+                class="req-dtl-cont d-flex align-items-start gap-3 mb-3 position-relative"
+              >
+                <i
+                  ><img
+                    src="../../assets/images/step-icon.svg"
+                    alt="step-icon"
+                    class="img-fluid user-detail-inner-img"
+                /></i>
                 <div class="min-w-0">
-                  <span class="fw-semibold text-dark d-block  small">
+                  <span class="fw-semibold text-dark d-block small">
                     {{ staticText.review }}
                   </span>
                   <p class="text-muted small mb-1 mt-2">
@@ -90,7 +116,9 @@
               </div>
 
               <!-- Item 3 -->
-              <div class="req-dtl-cont d-flex align-items-start gap-3 mb-3 position-relative">
+              <div
+                class="req-dtl-cont d-flex align-items-start gap-3 mb-3 position-relative"
+              >
                 <i><span class="number-badge">3</span></i>
                 <div class="min-w-0">
                   <span class="fw-semibold text-dark d-block small">
@@ -102,11 +130,12 @@
                 </div>
               </div>
 
-              
-              <div class="req-dtl-cont d-flex align-items-start gap-3 mb-0 position-relative">
+              <div
+                class="req-dtl-cont d-flex align-items-start gap-3 mb-0 position-relative"
+              >
                 <i><span class="number-badge">4</span></i>
                 <div class="min-w-0">
-                  <span class="fw-semibold text-dark d-block  small">
+                  <span class="fw-semibold text-dark d-block small">
                     {{ staticText.accepted }}
                   </span>
                   <p class="text-muted small mb-1 mt-2">
@@ -116,28 +145,41 @@
               </div>
             </div>
 
-           
             <div class="col-12 col-md-6">
               <div class="table-responsive">
-                <table class="table table-borderless align-middle mb-0 table-sm">
+                <table
+                  class="table table-borderless align-middle mb-0 table-sm"
+                >
                   <tbody>
                     <tr>
-                      <td class="text-secondary small px-2 py-3"><span>{{ staticText.request }}</span></td>
+                      <td class="text-secondary small px-2 py-3">
+                        <span>{{ staticText.request }}</span>
+                      </td>
                       <td class="py-3">
-                        <a href="#" class="link-primary text-uppercase fw-semibold px-2 py-2 text-truncate d-inline-block" style="max-width:100%" title="{{ requestDetails?.Requestnumber }}">
+                        <a
+                          href="#"
+                          class="link-primary text-uppercase fw-semibold px-2 py-2 text-truncate d-inline-block user-request-detail-text"
+                          title="{{ requestDetails?.Requestnumber }}"
+                        >
                           {{ requestDetails?.Requestnumber }}
                         </a>
                       </td>
                     </tr>
                     <tr>
-                      <td class="text-secondary small px-2 py-3"><span>{{ staticText.status }}</span></td>
+                      <td class="text-secondary small px-2 py-3">
+                        <span>{{ staticText.status }}</span>
+                      </td>
                       <td class="py-3">
                         <span
-                          class="badge d-inline-flex align-items-center px-2 py-2 small"  
+                          class="badge d-inline-flex align-items-center px-2 py-2 small"
                           [ngClass]="{
-                            'text-bg-primary': requestDetails?.Status === 'Pending_review' || requestDetails?.Status === 'Pending-review',
-                            'text-bg-warning': requestDetails?.Status === 'Feedback',
-                            'text-bg-success': requestDetails?.Status === 'Approved'
+                            'text-bg-primary':
+                              requestDetails?.Status === 'Pending_review' ||
+                              requestDetails?.Status === 'Pending-review',
+                            'text-bg-warning':
+                              requestDetails?.Status === 'Feedback',
+                            'text-bg-success':
+                              requestDetails?.Status === 'Approved'
                           }"
                         >
                           {{ requestDetails?.Status }}
@@ -145,37 +187,51 @@
                       </td>
                     </tr>
                     <tr>
-                      <td class="text-secondary small px-2 py-3"><span>{{ staticText.date }}</span></td>
+                      <td class="text-secondary small px-2 py-3">
+                        <span>{{ staticText.date }}</span>
+                      </td>
                       <td class="fw-semibold px-2 py-3 text-nowrap">
                         {{ requestDetails?.Submitteddate }}
                       </td>
                     </tr>
                     <tr>
-                      <td class="text-secondary small px-2 py-3"><span>{{ staticText.last }}</span></td>
+                      <td class="text-secondary small px-2 py-3">
+                        <span>{{ staticText.last }}</span>
+                      </td>
                       <td class="fw-semibold px-2 py-3 text-nowrap">
                         {{ requestDetails?.Lastupdated }}
                       </td>
                     </tr>
                     <tr>
-                      <td class="text-secondary small px-2 py-3"><span>{{ staticText.completedQuestions }}</span></td>
+                      <td class="text-secondary small px-2 py-3">
+                        <span>{{ staticText.completedQuestions }}</span>
+                      </td>
                       <td class="fw-semibold px-2 py-3">
                         {{ requestDetails?.Totalnoofquestionscompleted }}
                       </td>
                     </tr>
                     <tr>
-                      <td class="text-secondary small px-2 py-3"><span>{{ staticText.comments }}</span></td>
+                      <td class="text-secondary small px-2 py-3">
+                        <span>{{ staticText.comments }}</span>
+                      </td>
                       <td class="fw-semibold px-2 py-3">0</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-            </div> 
-          </div> 
-        </div> 
-      </div> 
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+    <div
+      class="tab-pane fade"
+      id="nav-profile"
+      role="tabpanel"
+      aria-labelledby="nav-profile-tab"
+      tabindex="0"
+    >
       <app-history *ngIf="activeTab === 'idea'"></app-history>
     </div>
   </div>

@@ -1,10 +1,38 @@
 .popup-overlay {
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,.3);
-  display: flex; justify-content: center; align-items: flex-start;
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
+.fs-12 {
+  font-size: 12px !important;
+  line-height: 13.62px !important;
+}
+.shadow-xxs {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+}
+.lh-1362 {
+  line-height: 13.62px !important;
+}
 
-.fs-12 { font-size: 12px !important; line-height: 13.62px !important; }
-.shadow-xxs { box-shadow: 0 4px 16px rgba(0,0,0,.05) !important; }
-.lh-1362 { line-height: 13.62px !important; }
+.guidance-text {
+  border-color: #fbd3a7 !important;
+  background: #fef7ec;
+  color: #ff7214;
+}
+.guideline-message {
+  list-style: disc;
+  list-style-position: outside;
+}
+.progress-bar-level {
+  --bs-progress-bg: #e1d7fd;
+  --bs-progress-height: 8px;
+}
+.progress-inner-bar {
+  --bs-progress-bg: #e1d7fd;
+  --bs-progress-height: 8px;
+  width: 131px;
+}

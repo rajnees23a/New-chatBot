@@ -1,110 +1,164 @@
+.myrequest-outer {
+  padding: 20px;
+}
+.my-requests-container {
+  background-color: #fff;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+}
+.no-req-wrap {
+  text-align: center;
+}
+.no-req-wrap p {
+  color: rgba(109, 109, 109, 1);
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.my-requests-container h1 {
+  margin-bottom: 15px;
+}
+.my-requests-container h1 span {
+  background: #e2e8f0;
+  height: 18px;
+  width: 18px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 12px;
+  color: #334155;
+  display: inline-block;
+  text-align: center;
+  padding: 2px;
+  vertical-align: middle;
+}
+/* Table Styles */
+.requests-table {
+  width: 100%;
+  border: 1px solid #d1d1d1;
+}
+.requests-table thead {
+  background-color: #f4f4f4;
+}
+.requests-table th {
+  text-align: left;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+  font-family: "Saans-Semibold";
+  border-bottom: 1px solid #ddd;
+}
+.requests-table td {
+  padding: 10px;
+  font-size: 14px;
+  color: #334155;
+  border-bottom: 1px solid #eee;
+}
+.chat-num {
+  background: #e2e8f0;
+  height: 18px;
+  width: 18px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 12px;
+  color: #334155;
+  display: inline-block;
+  text-align: center;
+  padding: 2px;
+  vertical-align: middle;
+}
+.requests-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+/* Link Styling */
+.requests-table .req-link {
+  color: #6d28d9;
+  text-decoration: none;
+  cursor: pointer;
+}
+.requests-table a:hover {
+  text-decoration: underline;
+}
+/* Status Styling */
+.status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
 
-  .myrequest-outer {
-    padding: 20px;
-  }
-  .my-requests-container {   
-    background-color: #fff;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 20px;
-  }
-  .no-req-wrap {
-    text-align: center;
-  }
-  .no-req-wrap p {
-    color: rgba(109, 109, 109, 1);
-    margin-top: 10px;
-    margin-bottom: 0;
-  }
-  .my-requests-container h1 {
-    margin-bottom: 15px;
-  }
-  .my-requests-container h1 span {
-    background: #E2E8F0;
-    height: 18px;
-    width: 18px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 12px;
-    color: #334155;
-    display: inline-block;
-    text-align: center;
-    padding: 2px;
-    vertical-align: middle;
-  } 
-  /* Table Styles */
-  .requests-table {
-    width: 100%;
-    border: 1px solid #D1D1D1;
-  }  
-  .requests-table thead {
-    background-color: #f4f4f4;
-  }  
-  .requests-table th {
-    text-align: left;
-    padding: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #334155;
-    font-family: 'Saans-Semibold';
-    border-bottom: 1px solid #ddd;
-  }  
-  .requests-table td {
-    padding: 10px;
-    font-size: 14px;
-    color: #334155;    
-    border-bottom: 1px solid #eee;
-  }
-  .chat-num {
-    background: #E2E8F0;
-    height: 18px;
-    width: 18px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 12px;
-    color: #334155;
-    display: inline-block;
-    text-align: center;
-    padding: 2px;
-    vertical-align: middle;
-  }
-  .requests-table tbody tr:hover {
-    background-color: #f9f9f9;
-  }  
-  /* Link Styling */
-  .requests-table .req-link {
-    color: #6D28D9;
-    text-decoration: none;
-    cursor: pointer;
-  }  
-  .requests-table a:hover {
-    text-decoration: underline;
-  }  
-  /* Status Styling */
-  .status {
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 13px;
-    font-weight: bold;
-    text-transform: capitalize;
-  }
-  
-  .status.pending {
-    background-color: #fef3c7;
-    color: #d97706;
-  }
-  
-  /* Icon Styling */
-  .comments-icon {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    background-color: #ccc;
-    border-radius: 50%;
-    margin-right: 5px;
-  }
+.status.pending {
+  background-color: #fef3c7;
+  color: #d97706;
+}
 
-  .th-bg-f4 {
+/* Icon Styling */
+.comments-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: #ccc;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.th-bg-f4 {
   background-color: #f4f4f4 !important;
 }
-  
+
+.request-title {
+  font-family: "Saans-Light", sans-serif;
+  color: #373737 !important;
+}
+.request-circular-badge {
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  color: #334155;
+  background: #e2e8f0;
+}
+.request-heading {
+  background: #fafafa;
+}
+.request-heading-text {
+  font-size: 14px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e6e6e6;
+}
+.request-row-text {
+  font-size: 14px;
+  padding: 12px 16px;
+  color: #1d1d1f;
+}
+.request-row-text-link {
+  color: #6d2adf;
+  font-weight: 500;
+}
+.request-td-text {
+  font-size: 14px;
+  padding: 12px 16px;
+  color: #1d1d1f;
+}
+.request-td-text-color {
+  font-size: 14px;
+  padding: 12px 16px;
+  color: #4d4d4d;
+}
+.request-td-text-size {
+  font-size: 14px;
+  padding: 12px 16px;
+}
+.request-img-chat {
+  width: 18px;
+  height: 18px;
+}
+.request-circular-count {
+  background: #eff1f4;
+  color: #6b6f76;
+  font-size: 12px;
+}
+.request-img-logo {
+  width: 40px;
+  height: auto;
+}
