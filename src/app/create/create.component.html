@@ -83,12 +83,7 @@
                   class="bg-white rounded p-2 p-sm-3 mb-2 ms-0 ms-sm-5 shadow-sm"
                 >
                   <button
-                    class="border rounded-1 px-2 py-1 mb-2 fw-semibold fs-12"
-                    style="
-                      border-color: #fbd3a7;
-                      background: #fef7ec;
-                      color: #ff7214;
-                    "
+                    class="border rounded-1 px-2 py-1 mb-2 fw-semibold fs-12 guidance-text"
                   >
                     {{ staticText.guidanceText }}
                   </button>
@@ -100,10 +95,7 @@
                     {{ message.text.question }}
                   </p>
 
-                  <ul
-                    class="mb-0 ps-3 ps-sm-4"
-                    style="list-style: disc; list-style-position: outside"
-                  >
+                  <ul class="mb-0 ps-3 ps-sm-4 guideline-message">
                     <li
                       *ngFor="let text of message.text.guidelines"
                       class="mb-1 fs-12 lh-sm text-dark"
@@ -465,10 +457,7 @@
           <div
             class="col-12 col-md-4 d-flex flex-column align-items-start align-items-md-end mt-2 mt-md-0"
           >
-            <div
-              class="progress w-100 mt-1 mb-1 d-md-none"
-              style="--bs-progress-bg: #e1d7fd; --bs-progress-height: 8px"
-            >
+            <div class="progress w-100 mt-1 mb-1 d-md-none progress-bar-level">
               <div
                 class="progress-bar bg-success"
                 role="progressbar"
@@ -480,12 +469,7 @@
             </div>
 
             <div
-              class="progress mt-1 mb-1 d-none d-md-block"
-              style="
-                --bs-progress-bg: #e1d7fd;
-                --bs-progress-height: 8px;
-                width: 131px;
-              "
+              class="progress mt-1 mb-1 d-none d-md-block progress-inner-bar"
             >
               <div
                 class="progress-bar bg-success"

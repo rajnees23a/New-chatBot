@@ -1,8 +1,40 @@
-.number-badge{
-  display:inline-flex;justify-content:center;align-items:center;
-  width:20px;height:20px;border:1px solid #CBD5E1;border-radius:50%;
-  font-weight:600;font-size:12px;line-height:1;vertical-align:middle;
+.number-badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #cbd5e1;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
+  vertical-align: middle;
 }
 
-.letter-spacing-1{ letter-spacing:.04em; } 
-.min-w-0{ min-width:0; } 
+.letter-spacing-1 {
+  letter-spacing: 0.04em;
+}
+.min-w-0 {
+  min-width: 0;
+}
+
+.user-tab-list {
+  --bs-nav-link-color: #64748b;
+  --bs-nav-link-hover-color: #64748b;
+  --bs-nav-underline-link-active-color: #8f53f0;
+}
+.user-detail-inner-text {
+  background: #e3f2fd;
+  color: #175ea1;
+}
+.user-detail-inner-text-bg {
+  color: #175ea1;
+}
+.user-detail-inner-img {
+  width: 20px;
+  height: 20px;
+}
+.user-request-detail-text {
+  max-width: 100%;
+}

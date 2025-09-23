@@ -1,80 +1,95 @@
 <div class="container-fluid px-4 my-4">
   <div class="bg-white rounded-3 shadow-sm p-4">
-    
     <!-- Title + count (circle count) -->
     <div class="d-flex align-items-center mb-3">
-  <!-- Title -->
-  <h1 class="fs-4 fw-light mb-0 text-dark" style="font-family: 'Saans-Light', sans-serif; color:#373737;">
-  {{ staticText.title }}
-</h1>
+      <!-- Title -->
+      <h1 class="fs-4 fw-light mb-0 text-dark request-title">
+        {{ staticText.title }}
+      </h1>
       <!-- circular badge -->
       <span
-  class="ms-2 d-inline-flex align-items-center justify-content-center rounded-pill fw-semibold"
-  style="width:18px; height:18px; font-size:12px; color:#334155; background:#E2E8F0;">
-  {{ requestData?.length || 0 }}
-</span>
+        class="ms-2 d-inline-flex align-items-center justify-content-center rounded-pill fw-semibold request-circular-badge"
+      >
+        {{ requestData?.length || 0 }}
+      </span>
     </div>
 
     <!-- Table wrapper -->
     <div class="border overflow-hidden">
-  <div class="table-responsive">
-    <table class="table mb-0 align-middle">
-      <thead style="background:#fafafa;">
-        <tr>
-          <th *ngFor="let header of tableHeaders"
-              class="text-dark fw-semibold th-bg-f4"
-              style="font-size:14px; padding:12px 16px; border-bottom:1px solid #e6e6e6;">
-            {{ header }}
-          </th>
-        </tr>
-      </thead>
+      <div class="table-responsive">
+        <table class="table mb-0 align-middle">
+          <thead class="request-heading">
+            <tr>
+              <th
+                *ngFor="let header of tableHeaders"
+                class="text-dark fw-semibold th-bg-f4 request-heading-text"
+              >
+                {{ header }}
+              </th>
+            </tr>
+          </thead>
 
-      <tbody>
-        <tr *ngFor="let request of requestData" class="align-middle">
-          <td style="font-size:14px; padding:12px 16px; color:#1d1d1f;">
-            <a class="text-decoration-none"
-               (click)="onClickRequestID(request.SessionID, request.Username, request.Requestnumber)"
-               style="color:#6d2adf; font-weight:500;">
-              {{ request.Requestnumber }}
-            </a>
-          </td>
-          <td style="font-size:14px; padding:12px 16px; color:#1d1d1f;">
-            {{ request.Ideatitle }}
-          </td>
-          <td style="font-size:14px; padding:12px 16px; color:#4d4d4d;">
-            {{ request.Submitteddate }}
-          </td>
-          <td style="font-size:14px; padding:12px 16px; color:#4d4d4d;">
-            {{ request.Lastupdated }}
-          </td>
-          <td style="font-size:14px; padding:12px 16px; color:#1d1d1f;">
-            {{ request.Totalnoofquestionscompleted }}/25
-          </td>
-          <td style="font-size:14px; padding:12px 16px;">
-            <div class="d-flex align-items-center">
-              <img src="../../assets/images/message-chat-square.svg"
-                   alt="msg" class="me-2" style="width:18px; height:18px;">
-              <span class="rounded-pill px-2"
-                    style="background:#eff1f4; color:#6b6f76; font-size:12px;">
-                0
-              </span>
-            </div>
-          </td>
-          <td style="font-size:14px; padding:12px 16px;">
-            <span [ngStyle]="getStatusStyle(request.Status)">
-              {{ request.Status }}
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
+          <tbody>
+            <tr *ngFor="let request of requestData" class="align-middle">
+              <td class="request-row-text">
+                <a
+                  class="text-decoration-none request-row-text-link"
+                  (click)="
+                    onClickRequestID(
+                      request.SessionID,
+                      request.Username,
+                      request.Requestnumber
+                    )
+                  "
+                >
+                  {{ request.Requestnumber }}
+                </a>
+              </td>
+              <td class="request-td-text">
+                {{ request.Ideatitle }}
+              </td>
+              <td class="request-td-text-color">
+                {{ request.Submitteddate }}
+              </td>
+              <td class="request-td-text-color">
+                {{ request.Lastupdated }}
+              </td>
+              <td class="request-td-text">
+                {{ request.Totalnoofquestionscompleted }}/25
+              </td>
+              <td class="request-td-text-size">
+                <div class="d-flex align-items-center">
+                  <img
+                    src="../../assets/images/message-chat-square.svg"
+                    alt="msg"
+                    class="me-2 request-img-chat"
+                  />
+                  <span class="rounded-pill px-2 request-circular-count">
+                    0
+                  </span>
+                </div>
+              </td>
+              <td class="request-td-text-size">
+                <span [ngStyle]="getStatusStyle(request.Status)">
+                  {{ request.Status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
     <!-- Empty state -->
-    <div *ngIf="!requestData || requestData.length === 0" class="text-center py-4">
-      <img src="../../assets/images/grey-logo.svg" alt="" class="mb-2" style="width:40px; height:auto;">
+    <div
+      *ngIf="!requestData || requestData.length === 0"
+      class="text-center py-4"
+    >
+      <img
+        src="../../assets/images/grey-logo.svg"
+        alt=""
+        class="mb-2 request-img-logo"
+      />
       <p class="text-muted mb-0">{{ staticText.noRequest }}</p>
     </div>
   </div>
