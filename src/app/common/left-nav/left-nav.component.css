@@ -1,40 +1,60 @@
-
 .sidebar {
   width: 68px;
-  transition: width .3s ease-in-out;
+  transition: width 0.3s ease-in-out;
 }
-.sidebar.collapsed { 
+.sidebar.collapsed {
   width: 260px;
 }
 
-
 .sidebar .nav-item {
   color: #334155;
-  font-family: 'Saans-SemiBold', system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: "Saans-SemiBold", system-ui, -apple-system, Segoe UI, Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
   font-weight: 600;
   font-size: 14px;
   line-height: 1;
   cursor: pointer;
 }
 .sidebar .nav-item:hover {
-  background: #F1F5F9;
+  background: #f1f5f9;
 }
-
 
 .sidebar .nav-item.active,
 .recent-tabs li.active {
-  background: #EEEAFD !important;
-  color: #6D28D9 !important;
+  background: #eeeafd !important;
+  color: #6d28d9 !important;
 }
 .nav-item.active i svg path {
-  stroke: #6D28D9;
+  stroke: #6d28d9;
 }
 
+.logo span {
+  display: none;
+  color: #8f53f0;
+}
+.sidebar.collapsed .logo span {
+  display: inline-block;
+}
 
-.logo span { display: none; color: #8F53F0; }
-.sidebar.collapsed .logo span { display: inline-block; }
-
-.toggle-btn2 { display: none; width: 60px; }
-.sidebar.collapsed .toggle-btn2 { display: block; }
-.toggle-btn { display: block; }
-.sidebar.collapsed .toggle-btn { display: none; }
+.toggle-btn2 {
+  display: none;
+  width: 60px;
+}
+.sidebar.collapsed .toggle-btn2 {
+  display: block;
+}
+.toggle-btn {
+  display: block;
+}
+.sidebar.collapsed .toggle-btn {
+  display: none;
+}
+.logo-icon {
+  max-height: 36px;
+}
+.display-title{
+  max-width: 226px;
+}
+.delete-ul{
+  top: 32px; width: 166px
+}

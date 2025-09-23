@@ -3,8 +3,7 @@
 >
  
   <span
-    class="fw-semibold text-dark"
-    style="font-family: 'Saans-SemiBold', sans-serif; font-size: 16px"
+    class="fw-semibold text-dark app-title"
   >
     {{ appTitle }}
   </span>
@@ -20,18 +19,7 @@
     >
       <i class="bi bi-bell fs-5"></i>
       <span
-        class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-white fw-semibold"
-        style="
-          font-family: 'Saans-SemiBold', sans-serif;
-          font-size: 12px;
-          height: 15px;
-          width: 15px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background:#8F53F0;
-          border-radius: 20px !important;
-        "
+        class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-white fw-semibold notify-count"
       >
         3
       </span>
@@ -39,13 +27,7 @@
 
   
     <div
-      class="d-flex justify-content-center align-items-center rounded-circle bg-dark text-white fw-semibold ms-3"
-      style="
-        width: 28px;
-        height: 28px;
-        font-family: 'Saans-SemiBold', sans-serif;
-        font-size: 12px;
-      "
+      class="d-flex justify-content-center align-items-center rounded-circle bg-dark text-white fw-semibold ms-3 user-initials"
       data-bs-toggle="tooltip"
       data-bs-placement="bottom"
       title="{{ myAccountTooltip }}"

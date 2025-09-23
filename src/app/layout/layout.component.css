@@ -1,12 +1,5 @@
-.screen-wrap {
-  display: flex;
+
+.show-success {
+  min-width: 320px;
+  max-width: 90vw;
 }
-.layout {   
-    height: 100vh;
-    width: 100%;
-}  
-.content {
-    flex: 1;   
-    transition: margin-left 0.3s ease;
-    background-color: #f8f8f8;     
-  }

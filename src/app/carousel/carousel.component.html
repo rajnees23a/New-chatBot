@@ -1,61 +1,94 @@
 <div
-  class="popup-overlay position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+  class="position-fixed top-0 start-0 w-100 min-vh-100 d-flex align-items-start justify-content-center bg-dark bg-opacity-25"
+  style="z-index: 1055"
 >
-  <div class="guide-container w-100 px-3 px-sm-4">
+  <div
+    class="bg-white rounded-3 shadow p-3 p-sm-4 mt-4 mt-sm-5 w-100 d-flex flex-column theme-purple"
+    style="max-width: 600px; height: calc(100vh - 100px); --bs-primary: #8f53f0; margin: 5px;"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="guideTitle"
+  >
+    <h2 id="guideTitle" class="h5 mb-3 text-center text-sm-start">
+      {{ firstTitle }}
+    </h2>
+
     <div
       id="carouselExampleIndicators"
-      class="carousel slide carousel-fade popup-container mx-auto d-flex flex-column p-3 p-sm-4"
+      class="carousel slide carousel-fade d-flex flex-column flex-grow-1 overflow-auto"
+      data-bs-ride="false"
+      data-bs-interval="false"
     >
-      <!-- Header -->
-      <h2 class="h5 h-sm4 mb-3 text-center text-sm-start">{{ firstTitle }}</h2>
-
-      <!-- Slides -->
-      <div class="carousel-inner flex-grow-1 overflow-y-scroll overflow-x-hidden">
+      <div
+        class="carousel-inner d-flex flex-column overflow-auto overflow-x-hidden"
+      >
         <!-- Slide 1 -->
         <div class="carousel-item active h-100">
-          <div class="guide-inner h-100 d-flex flex-column">
-            <div class="guideimg mb-3 text-center">
+          <div class="d-flex flex-column h-100">
+            <div class="mb-4">
               <img
                 src="../../assets/images/guide-1.svg"
                 alt="guide-1"
-                class="img-fluid d-block mx-auto w-100 guide-hero object-fit-contain"
+                class="img-fluid d-block w-30"
+                style="object-fit: contain"
               />
             </div>
 
-            <div class="guide-title d-flex align-items-center mb-2">
-              <span>{{ firstTitleNo }}</span>
-              <h1 class="h6 mb-0 ms-2">{{ firstGuideTitle }}</h1>
+            <div class="d-flex align-items-center mb-3">
+              <span
+                class="d-inline-flex justify-content-center align-items-center rounded-circle bg-dark text-white border border-1 border-light fw-semibold me-2"
+                style="width: 28px; height: 28px; font-size: 12px"
+              >
+                {{ firstTitleNo }}
+              </span>
+              <h1 class="fs-3 fw-light text-dark mb-0">
+                {{ firstGuideTitle }}
+              </h1>
             </div>
-
-            <ul class="guide-list ps-3 flex-grow-1 overflow-auto">
-              <li *ngFor="let item of carouselItems" [innerHTML]="item"></li>
+            <ul
+              class="ms-3 ps-3 mb-2"
+              style="list-style: disc; list-style-position: outside"
+            >
+              <li
+                class="mb-2"
+                *ngFor="let item of carouselItems"
+                [innerHTML]="item"
+              ></li>
             </ul>
           </div>
         </div>
 
         <!-- Slide 2 -->
         <div class="carousel-item h-100">
-          <div class="guide-inner h-100 d-flex flex-column">
-            <div class="guideimg mb-3 text-center">
+          <div class="d-flex flex-column h-100">
+            <div class="mb-4">
               <img
                 src="../../assets/images/guide-2.svg"
                 alt="guide-2"
-                class="img-fluid d-block mx-auto w-100 guide-hero object-fit-contain"
+                class="img-fluid d-block w-30"
+                style="object-fit: contain"
               />
             </div>
 
-            <div class="guide-title d-flex align-items-center mb-2">
-              <span>{{ secondTitleNo }}</span>
-              <h1 class="h6 mb-0 ms-2">{{ secondGuideTitle }}</h1>
+            <div class="d-flex align-items-start mb-2">
+              <span
+                class="d-inline-flex justify-content-center align-items-center rounded-circle bg-dark text-white border border-1 border-light fw-semibold me-2"
+                style="width: 28px; height: 28px; font-size: 12px"
+              >
+                {{ secondTitleNo }}
+              </span>
+              <h1 class="fs-3 fw-light text-dark mb-0">
+                {{ secondGuideTitle }}
+              </h1>
             </div>
 
             <p class="mb-2">{{ secondGuideDescription }}</p>
 
-            <div class="category-box">
-              <ul class="guide-list d-flex flex-wrap gap-2 ps-0">
+            <div class="w-100">
+              <ul class="d-flex flex-wrap gap-2 ps-0 mb-0 list-unstyled">
                 <li
                   *ngFor="let img of secondListImages; let i = index"
-                  class="d-inline-flex align-items-center gap-2"
+                  class="d-inline-flex align-items-center gap-2 border rounded p-2"
                 >
                   <i class="d-inline-flex">
                     <img
@@ -64,7 +97,9 @@
                       class="img-fluid"
                     />
                   </i>
-                  <span>{{ secondListItems[i] }}</span>
+                  <span class="fw-semibold text-capitalize small">{{
+                    secondListItems[i]
+                  }}</span>
                 </li>
               </ul>
             </div>
@@ -73,54 +108,78 @@
 
         <!-- Slide 3 -->
         <div class="carousel-item h-100">
-          <div class="guide-inner h-100 d-flex flex-column">
-            <div class="guideimg mb-3 text-center">
+          <div class="d-flex flex-column h-100">
+            <div class="mb-4">
               <img
                 src="../../assets/images/guide-3.svg"
                 alt="guide-3"
-                class="img-fluid d-block mx-auto w-100 guide-hero object-fit-contain"
+                class="img-fluid d-block w-30"
+                style="object-fit: contain"
               />
             </div>
 
-            <div class="guide-title d-flex align-items-center mb-2">
-              <span>{{ thirdTitleNo }}</span>
-              <h1 class="h6 mb-0 ms-2">{{ thirdGuideTitle }}</h1>
+            <div class="d-flex align-items-center mb-2">
+              <span
+                class="d-inline-flex justify-content-center align-items-center rounded-circle bg-dark text-white border border-1 border-light fw-semibold me-2"
+                style="width: 28px; height: 28px; font-size: 12px"
+              >
+                {{ thirdTitleNo }}
+              </span>
+              <h1 class="fs-3 fw-light text-dark mb-0">
+                {{ thirdGuideTitle }}
+              </h1>
             </div>
 
             <p class="mb-2">{{ thirdGuideDescription }}</p>
 
-            <div class="part-wrap row g-3">
-              <div class="part-inner col-12 col-sm-6" *ngIf="thirdPartOne">
-                <strong>{{ thirdPartOne }}</strong>
-                <ul class="guide-list ps-3">
+            <div class="row g-3">
+              <div class="col-6" *ngIf="thirdPartOne">
+                <strong class="d-block mb-2">{{ thirdPartOne }}</strong>
+                <ul
+                  class="ms-3 ps-3 mb-0"
+                  style="list-style: disc; list-style-position: outside"
+                >
                   <li
+                    class="mb-1"
                     *ngFor="let item of thirdPartOneList"
                     [innerHTML]="item"
                   ></li>
                 </ul>
               </div>
-              <div class="part-inner col-12 col-sm-6" *ngIf="thirdPartTwo">
-                <strong>{{ thirdPartTwo }}</strong>
-                <ul class="guide-list ps-3">
+              <div class="col-6" *ngIf="thirdPartTwo">
+                <strong class="d-block mb-2">{{ thirdPartTwo }}</strong>
+                <ul
+                  class="ms-3 ps-3 mb-0"
+                  style="list-style: disc; list-style-position: outside"
+                >
                   <li
+                    class="mb-1"
                     *ngFor="let item of thirdPartTwoList"
                     [innerHTML]="item"
                   ></li>
                 </ul>
               </div>
-              <div class="part-inner col-12 col-sm-6" *ngIf="thirdPartThree">
-                <strong>{{ thirdPartThree }}</strong>
-                <ul class="guide-list ps-3">
+              <div class="col-6" *ngIf="thirdPartThree">
+                <strong class="d-block mb-2">{{ thirdPartThree }}</strong>
+                <ul
+                  class="ms-3 ps-3 mb-0"
+                  style="list-style: disc; list-style-position: outside"
+                >
                   <li
+                    class="mb-1"
                     *ngFor="let item of thirdPartThreeList"
                     [innerHTML]="item"
                   ></li>
                 </ul>
               </div>
-              <div class="part-inner col-12 col-sm-6" *ngIf="thirdPartFour">
-                <strong>{{ thirdPartFour }}</strong>
-                <ul class="guide-list ps-3">
+              <div class="col-6" *ngIf="thirdPartFour">
+                <strong class="d-block mb-2">{{ thirdPartFour }}</strong>
+                <ul
+                  class="ms-3 ps-3 mb-0"
+                  style="list-style: disc; list-style-position: outside"
+                >
                   <li
+                    class="mb-1"
                     *ngFor="let item of thirdPartFourList"
                     [innerHTML]="item"
                   ></li>
@@ -132,111 +191,121 @@
 
         <!-- Slide 4 -->
         <div class="carousel-item h-100">
-          <div class="guide-inner h-100 d-flex flex-column">
-            <div class="guideimg mb-3 text-center">
+          <div class="d-flex flex-column h-100">
+            <div class="mb-4">
               <img
                 src="../../assets/images/guide-4.svg"
                 alt="guide-4"
-                class="img-fluid d-block mx-auto w-100 guide-hero object-fit-contain"
+                class="img-fluid d-block w-30"
+                style="object-fit: contain"
               />
             </div>
 
-            <div class="guide-title d-flex align-items-center mb-2">
-              <span>{{ fourthTitleNo }}</span>
-              <h1 class="h6 mb-0 ms-2">{{ fourthGuideTitle }}</h1>
+            <div class="d-flex align-items-center mb-2">
+              <span
+                class="d-inline-flex justify-content-center align-items-center rounded-circle bg-dark text-white border border-1 border-light fw-semibold me-2"
+                style="width: 28px; height: 28px; font-size: 12px"
+              >
+                {{ fourthTitleNo }}
+              </span>
+              <h1 class="fs-3 fw-light text-dark mb-0">
+                {{ fourthGuideTitle }}
+              </h1>
             </div>
 
-            <ul class="guide-list ps-3">
-              <li *ngFor="let item of fourthListOne" [innerHTML]="item"></li>
+            <ul
+              class="ms-3 ps-3 mb-2"
+              style="list-style: disc; list-style-position: outside"
+            >
+              <li
+                class="mb-1"
+                *ngFor="let item of fourthListOne"
+                [innerHTML]="item"
+              ></li>
             </ul>
 
-            <div class="part-inner mt-2">
-              <strong>{{ fourthDontWorry }}</strong>
-              <ul class="guide-list ps-3">
-                <li *ngFor="let item of fourthListTwo" [innerHTML]="item"></li>
+            <div>
+              <strong class="d-block mb-2">{{ fourthDontWorry }}</strong>
+              <ul
+                class="ms-3 ps-3 mb-2"
+                style="list-style: disc; list-style-position: outside"
+              >
+                <li
+                  class="mb-1"
+                  *ngFor="let item of fourthListTwo"
+                  [innerHTML]="item"
+                ></li>
               </ul>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Indicators -->
       <div
-        class="carousel-indicators m-0 mt-3 position-static justify-content-center"
+        class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-auto pt-3 flex-shrink-0"
       >
-        <button
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide-to="0"
-          class="active"
-          aria-current="true"
-          aria-label="Slide 1"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide-to="1"
-          aria-label="Slide 2"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide-to="2"
-          aria-label="Slide 3"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide-to="3"
-          aria-label="Slide 4"
-        ></button>
-      </div>
-
-      <!-- Controls -->
-      <!-- <div class="carousel-control d-flex flex-wrap gap-2 align-items-center justify-content-between mt-3">
-        <button [hidden]="userComeFirstTime" (click)="getStarted()" class="let-me-skip btn p-0">Let me skip</button>
-
-        <div class="d-flex gap-2 ms-auto">
-          <button *ngIf="!isFirstSlide"
-                  (click)="onCarouselSlide()"
-                  class="carousel-control-prev"
-                  type="button"
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide="prev">Previous</button>
-
-          <button *ngIf="!isLastSlideReached"
-                  (click)="onCarouselSlide()"
-                  id="carouselNextBtn"
-                  class="carousel-control-next"
-                  type="button"
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide="next">Next</button>
-
-          <button *ngIf="isLastSlideReached"
-                  (click)="getStarted()"
-                  class="btn-primary">Get started</button>
-        </div>
-      </div> -->
-      <!-- Controls -->
-      <div class="d-flex justify-content-between align-items-center mt-4">
-        <!-- Left: Skip -->
-        <button
-          [hidden]="userComeFirstTime"
-          (click)="getStarted()"
-          class="btn btn-link text-primary p-0"
+        <!-- Indicators -->
+        <div
+          id="carouselExampleIndicators"
+          class="carousel slide"
+          style="
+            --bs-carousel-indicator-width: 40px;
+            --bs-carousel-indicator-height: 4px;
+            --bs-carousel-indicator-hit-area-height: 12px;
+            --bs-carousel-indicator-border-radius: 10px;
+            --bs-carousel-indicator-bg: #f6f6f6;
+            --bs-carousel-indicator-opacity: 1;
+            --bs-carousel-indicator-active-bg: #8f53f0;
+          "
         >
-          Let me skip
-        </button>
+          <div class="carousel-indicators position-static m-0 gap-2 d-flex">
+            <button
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide-to="0"
+              class="active"
+              aria-current="true"
+              aria-label="Slide 1"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide-to="1"
+              aria-label="Slide 2"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide-to="2"
+              aria-label="Slide 3"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide-to="3"
+              aria-label="Slide 4"
+            ></button>
+          </div>
+        </div>
 
-        <!-- Right: Actions -->
-        <div class="d-flex gap-2">
+        <!-- Actions -->
+        <div class="d-flex align-items-center gap-2 flex-shrink-0">
           <button
-            *ngIf="!isFirstSlide"
-            (click)="onCarouselSlide()"
-            type="button"
+            [hidden]="userComeFirstTime"
+            (click)="getStarted()"
+            class="btn btn-link p-0 text-decoration-none text-purple"
+          
+          >
+            Let me skip
+          </button>
+          <button
+          *ngIf="!isFirstSlide"
+            id="carouselPrevBtn"
             class="btn btn-outline-primary"
             data-bs-target="#carouselExampleIndicators"
             data-bs-slide="prev"
+            (click)="onCarouselSlide()"
+            style="--bs-btn-border-color: #8f53f0; --bs-btn-color: #8f53f0"
           >
             Previous
           </button>
@@ -245,10 +314,10 @@
             *ngIf="!isLastSlideReached"
             (click)="onCarouselSlide()"
             id="carouselNextBtn"
-            type="button"
             class="btn btn-primary"
             data-bs-target="#carouselExampleIndicators"
             data-bs-slide="next"
+            style="--bs-btn-bg: #8f53f0; --bs-btn-border-color: #8f53f0"
           >
             Next
           </button>
@@ -256,13 +325,17 @@
           <button
             *ngIf="isLastSlideReached"
             (click)="getStarted()"
-            type="button"
-            class="btn btn-success"
+            class="btn btn-primary"
+            style="--bs-btn-bg: #8f53f0; --bs-btn-border-color: #8f53f0"
           >
             Get started
           </button>
         </div>
       </div>
+      <!-- /Bottom controls -->
     </div>
   </div>
 </div>
+
+
+
