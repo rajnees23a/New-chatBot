@@ -10,8 +10,8 @@
         <img
           src="assets/IconWrapper.svg"
           alt="Logo"
-          class="img-fluid"
-          style="max-height: 36px"
+          class="img-fluid logo-icon"
+         
         />
         <span
           class="ms-2 fw-semibold text-nowrap"
@@ -164,8 +164,7 @@
         "
       >
         <span
-          class="text-truncate"
-          style="max-width: 226px"
+          class="text-truncate display-title"
           data-bs-toggle="tooltip"
           data-bs-placement="bottom"
           [title]="item?.displayTitle"
@@ -180,8 +179,8 @@
 
         <ul
           *ngIf="openedDropdownIndex === i"
-          class="position-absolute end-0 mt-2 list-unstyled border bg-white shadow-sm p-0"
-          style="top: 32px; width: 166px"
+          class="position-absolute end-0 mt-2 list-unstyled border bg-white shadow-sm p-0 delete-ul"
+          
         >
           <li
             class="d-flex align-items-center gap-2 py-2 px-3"

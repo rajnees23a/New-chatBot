@@ -1,0 +1,21 @@
+.app-title {
+  font-family: "Saans-SemiBold", sans-serif;
+  font-size: 16px;
+}
+.notify-count {
+  font-family: "Saans-SemiBold", sans-serif !important;
+  font-size: 12px !important;
+  height: 15px;
+  width: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #8f53f0;
+  border-radius: 20px !important;
+}
+.user-initials {
+  width: 28px;
+  height: 28px;
+  font-family: "Saans-SemiBold", sans-serif;
+  font-size: 12px;
+}
