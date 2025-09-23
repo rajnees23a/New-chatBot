@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import * as bootstrap from 'bootstrap';
 import { Subscription } from 'rxjs';
 import { Tooltip } from 'bootstrap';
+import { APP_CONSTANTS } from '../constants';
 
 
 
@@ -16,6 +17,8 @@ import { Tooltip } from 'bootstrap';
 })
 
 export class HistoryComponent  implements OnDestroy, AfterViewChecked, AfterViewInit {
+
+  staticText = APP_CONSTANTS.CREATE;
   private dataSubscription!: Subscription;
   fileExtension: string = "";
   addfileExtension: string = "";
