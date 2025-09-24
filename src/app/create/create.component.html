@@ -2,8 +2,8 @@
   class="container-fluid min-vh-95 d-flex flex-column py-2"
   *ngIf="!userComeFirstTime"
 >
-  <div id="rowBox" class="row g-3 align-items-stretch">
-    <div id="leftBox" class="col-12 col-lg-6 d-flex flex-column">
+  <div id="rowBox" class="d-flex">
+    <div id="leftBox" class="lbox">
       <h1 class="headingClass px-2 px-sm-3">
         {{ staticText.covertional }}
       </h1>
@@ -439,15 +439,24 @@
       </div>
     </div>
 
-    <div id="rightBox" class="col-12 col-lg-6 d-flex flex-column">
-      <div class="fielsReq d-flex flex-column p-3">
+    <div id="rightBox" class="rbox">
+      <div
+        class="fielsReq d-flex flex-column p-3"
+        [ngClass]="isActive ? 'h-75' : 'h-100'"
+      >
         <div class="row g-2 align-items-center">
-          <div class="col-12 col-md-8">
+          <div class="" [ngClass]="isActive ? 'col-12' : 'col-md-8 '">
             <p
               class="headingClass d-flex align-items-center gap-2 mb-0"
               (click)="toggleButton()"
             >
-              <i class="business-idea-ic">
+              <i
+                #tooltipRef
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Collapse"
+                class="business-idea-ic"
+              >
                 <img src="../../assets/images/business.svg" alt="business" />
               </i>
               <span>{{ staticText.yourIdeaTitle }}</span>
@@ -455,7 +464,8 @@
           </div>
 
           <div
-            class="col-12 col-md-4 d-flex flex-column align-items-start align-items-md-end mt-2 mt-md-0"
+            class="d-flex flex-column align-items-start align-items-md-end mt-2 mt-md-0"
+            [ngClass]="isActive ? 'col-12' : 'col-md-4'"
           >
             <div class="progress w-100 mt-1 mb-1 d-md-none progress-bar-level">
               <div
@@ -481,9 +491,17 @@
               ></div>
             </div>
 
-            <h6 class="fw-semibold fs-12 lh-1362 mb-0 text-start text-md-end">
-              <span>{{ staticText.Progress }}</span> {{ progressPercentage }}%
-              <span>{{ staticText.complete }}</span>
+            <h6 class="fw-semibold fs-12 lh-1362 mb-0 text-start text-md-end"
+            [ngClass]="isActive ? 'h-75' : 'h-100'"
+            >
+              <ng-container *ngIf="isActive; else simpleProgress">
+                {{ progressPercentage }}%
+              </ng-container>
+
+              <ng-template #simpleProgress>
+                <span>{{ staticText.Progress }}</span> {{ progressPercentage }}%
+                <span>{{ staticText.complete }}</span>
+              </ng-template>
             </h6>
           </div>
         </div>
