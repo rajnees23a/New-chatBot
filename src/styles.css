@@ -286,9 +286,12 @@ textarea {
   padding: 0;
 }
 .send-attach-btns .btn:hover { background: #F1F5F9; }
-.send-attach-btns .btn.primaryeffect { background: #8F53F0; color: #fff; }
+.send-attach-btns .btn.primaryeffect { background: #8F53F0; color: #fff !important; }
 
-
+.risk-box{
+  margin-bottom: 60px !important;
+  position: relative !important;
+}
 .file-info {
   display: flex;
   align-items: flex-start;
