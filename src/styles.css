@@ -29,7 +29,7 @@ body {
   font-family: "Saans-Regular";
   line-height: 1;
   font-size: 14px;
-  overflow:hidden;
+  overflow: hidden;
 }
 body {
   margin: 0;
@@ -287,11 +287,11 @@ p {
   line-height: 20px;
 }
 textarea {
-  overflow: hidden; 
+  overflow: hidden;
   resize: none;
-  transition: height 0.2s ease-in-out; 
-  min-height: 38px; 
-  max-height: 300px; 
+  transition: height 0.2s ease-in-out;
+  min-height: 38px;
+  max-height: 300px;
   padding-bottom: 10px;
   overflow-y: auto;
 }
@@ -829,4 +829,11 @@ textarea {
 .disabled-delete {
   pointer-events: none;
   opacity: 0.5;
+}
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-y: auto; /* allow vertical scroll */
+    overflow-x: hidden; /* no horizontal scroll */
+  }
 }
