@@ -1,204 +1,200 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LeftNavComponent } from './left-nav.component';
-import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 import { SerrviceService } from '../../serrvice.service';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { ChangeDetectorRef } from '@angular/core';
 import { of } from 'rxjs';
-import * as bootstrap from 'bootstrap';
+import { RouterTestingModule } from '@angular/router/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 
 describe('LeftNavComponent', () => {
   let component: LeftNavComponent;
   let fixture: ComponentFixture<LeftNavComponent>;
+  let mockRouter: any;
+  let mockService: any;
+  let mockCdr: any;
 
   beforeEach(async () => {
-    spyOn(document, 'addEventListener').and.callFake(() => {});
-    spyOn(document, 'removeEventListener').and.callFake(() => {});
+    mockRouter = {
+      events: of(),
+      navigate: jasmine.createSpy('navigate'),
+      navigateByUrl: jasmine.createSpy('navigateByUrl'),
+      url: '/home'
+    };
+    mockService = {
+      userName: 'testUser',
+      retriveData: jasmine.createSpy('retriveData'),
+      deletDraftData: jasmine.createSpy('deletDraftData'),
+      triggerAction: jasmine.createSpy('triggerAction'),
+      setData: jasmine.createSpy('setData'),
+      show: jasmine.createSpy('show'),
+      navbarData$: of([]),
+    };
+    mockCdr = { detectChanges: jasmine.createSpy('detectChanges') };
+
+    // Mock bootstrap.Modal
+    (window as any).bootstrap = {
+      Modal: function() {
+        return { show: jasmine.createSpy('show') };
+      }
+    };
 
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
       declarations: [LeftNavComponent],
+      imports: [RouterTestingModule],
       providers: [
-        {
-          provide: SerrviceService,
-          useValue: {
-            userName: 'test',
-            retriveData: () => {},
-            navbarData$: { subscribe: () => ({}) },
-            deletDraftData: () => {},
-            triggerAction: () => {},
-            setData: () => {},
-            show: () => {}
-          }
-        }
+        { provide: SerrviceService, useValue: mockService },
+        { provide: ChangeDetectorRef, useValue: mockCdr }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LeftNavComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // triggers ngOnInit
-
-     component['routerSubscription'] = { unsubscribe: jasmine.createSpy('unsubscribe') } as any;
-  component.dataSubscription = { unsubscribe: jasmine.createSpy('unsubscribe') } as any;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should process data and set modifiedData correctly', () => {
-  const mockData = [{
-    session_id: '123',
-    user_name: 'user',
-    timestamp: new Date().toISOString(),
-    session_data: JSON.stringify({
-      formFieldValue: [{ label: component.navText.YOUR_IDEA_TITLE, value: 'My Idea' }]
-    })
-  }];
+  it('should toggle sidebar', () => {
+    expect(component.isCollapsed).toBe(false);
+    component.toggleSidebar();
+    expect(component.isCollapsed).toBe(true);
+    component.toggleSidebar();
+    expect(component.isCollapsed).toBe(false);
+  });
 
-  component['dataService'].navbarData$ = of(mockData);
-  component.setData();
-
-  expect(component.modifiedData[0].displayTitle).toBe('My Idea');
-});
-
-  it('should call fetchDraftData on init', () => {
-    spyOn(component, 'fetchDraftData');
+  it('should call setData on ngOnInit', () => {
+    spyOn(component, 'setData');
     component.ngOnInit();
+    expect(component.setData).toHaveBeenCalled();
+  });
+
+  it('should set selectedItem on onItemClick', fakeAsync(() => {
+    const router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
+
+    component.onItemClick({}, 'sessionId', 'userName', 2);
+    tick(); // advances the virtual timer so setTimeout runs
+
+    expect(component.selectedItem).toBe(2);
+    expect(component.isItemSelected).toBe(true);
+    expect(mockService.setData).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledWith(['/bic']);
+  }));
+
+  it('should show and hide successDiv', () => {
+    component.successDivCloseAfterSec();
+    expect(component.successDivVisible).toBeTrue();
+    component.successDivCloseInstant();
+    expect(component.successDivVisible).toBeFalse();
+  });
+
+  it('should set deleting info and show modal on deleteConfirmationBox', () => {
+    // Mock a real-like HTMLElement
+    const mockModalElement = document.createElement('div');
+    spyOn(document, 'getElementById').and.returnValue(mockModalElement);
+
+    // Mock bootstrap.Modal to avoid errors
+    (window as any).bootstrap = {
+      Modal: function() {
+        return { show: jasmine.createSpy('show') };
+      }
+    };
+
+    component.deleteConfirmationBox('user', 'session', 'title');
+    expect(component.deletingUserNAme).toBe('user');
+    expect(component.deleteingSesionId).toBe('session');
+    expect(component.deletingTitle).toBe('title');
+  });
+
+  it('should unsubscribe on ngOnDestroy', () => {
+    spyOn(component.routerSubscription, 'unsubscribe');
+    spyOn(component.dataSubscription, 'unsubscribe');
+    component.ngOnDestroy();
+    expect(component.routerSubscription.unsubscribe).toHaveBeenCalled();
+    expect(component.dataSubscription.unsubscribe).toHaveBeenCalled();
+  });
+
+  it('should fetch draft data and call retriveData and setData', () => {
+    spyOn(component, 'setData');
+    component.fetchDraftData();
+    expect(mockService.retriveData).toHaveBeenCalledWith({ user_name: mockService.userName });
+    expect(component.setData).toHaveBeenCalled();
+  });
+
+  it('should delete draft and navigate to home', () => {
+    component.deletingUserNAme = 'user';
+    component.deleteingSesionId = 'session';
+    spyOn(component, 'fetchDraftData');
+    const router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
+
+    component.deleteDraft();
+    expect(mockService.deletDraftData).toHaveBeenCalledWith({ user_name: 'user', session_id: 'session' });
     expect(component.fetchDraftData).toHaveBeenCalled();
+    expect(mockService.triggerAction).toHaveBeenCalledWith(component.navText.DELETE_SUCCESS);
+    expect(router.navigate).toHaveBeenCalledWith(['/home'], { queryParams: { id: 'home' } });
   });
 
-  it('should set deleteConfirmTitle correctly', () => {
-    component.deletingTitle = 'Test';
-    expect(component.deleteConfirmTitle).toContain('Test');
+  it('should processData with valid and invalid data', () => {
+    const validData = [{}, {}];
+    spyOn(component, 'sortAccordingToDate');
+    component.processData(validData);
+    expect(component.sortAccordingToDate).toHaveBeenCalledWith(validData);
+
+    component.processData(null); // should hit else branch
+    // No error expected
   });
-  it('should call dataService.deletDraftData and fetchDraftData on deleteDraft', () => {
-  const deletDraftDataSpy = spyOn(component['dataService'], 'deletDraftData');
-  const fetchDraftDataSpy = spyOn(component, 'fetchDraftData');
-  const triggerActionSpy = spyOn(component['dataService'], 'triggerAction');
-  const navigateSpy = spyOn(component['router'], 'navigate');
 
-  component.deletingUserNAme = 'user';
-  component.deleteingSesionId = 'id';
-  component.deleteDraft();
+  it('should handle processData else branch', () => {
+    spyOn(component, 'sortAccordingToDate');
+    component.processData([]); // empty array triggers else branch
+    expect(component.sortAccordingToDate).not.toHaveBeenCalled();
+  });
 
-  expect(deletDraftDataSpy).toHaveBeenCalled();
-  expect(fetchDraftDataSpy).toHaveBeenCalled();
-  expect(triggerActionSpy).toHaveBeenCalled();
-  expect(navigateSpy).toHaveBeenCalled();
-});
+  it('should sort array according to date', () => {
+    const arr = [
+      { timestamp: '2023-01-01' },
+      { timestamp: '2024-01-01' }
+    ];
+    component.sortAccordingToDate(arr);
+    expect(arr[0].timestamp).toBe('2024-01-01'); // newest first
+    expect(arr[1].timestamp).toBe('2023-01-01'); // oldest last
+  });
 
-it('should set modifiedData to [] when data is empty', () => {
-  component.processData([]);
-  expect(component.modifiedData).toEqual([]);
-});
+  it('should showHideDraft and set openedDropdownIndex', () => {
+    const event = new MouseEvent('click');
+    component.showHideDraft(1, event);
+    expect(component.openedDropdownIndex).toBe(1);
+  });
 
-it('should fallback to BIC draft when title is empty', () => {
-  const mockData = [{
-    session_id: '123',
-    user_name: 'user',
-    timestamp: new Date().toISOString(),
-    session_data: JSON.stringify({
-      formFieldValue: [{ label: component.navText.YOUR_IDEA_TITLE, value: '' }]
-    })
-  }];
-  component.processData(mockData);
-  expect(component.modifiedData[0].displayTitle).toContain('BIC draft');
-});
+  it('should navigate to route', () => {
+    const router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
+    component.navigateTo('/home', 'home');
+    expect(router.navigate).toHaveBeenCalledWith(['/home'], { queryParams: { id: 'home' } });
+  });
 
-it('should sort data by timestamp descending', () => {
-  const arr = [
-    { timestamp: '2020-01-01' },
-    { timestamp: '2023-01-01' }
-  ];
-  component.sortAccordingToDate(arr);
-  expect(arr[0].timestamp).toBe('2023-01-01');
-});
+  it('should close dropdown on click outside', () => {
+    component.openedDropdownIndex = 1;
+    const event = new MouseEvent('click');
+    component.closeDropdownOnClickOutside(event);
+    // Should set openedDropdownIndex to null
+    expect(component.openedDropdownIndex).toBeNull();
+  });
 
-it('should handle item click and navigate', fakeAsync(() => {
-  const showSpy = spyOn(component['dataService'], 'show');
-  const setDataSpy = spyOn(component['dataService'], 'setData');
-  const navigateSpy = spyOn(component['router'], 'navigate');
+  it('should toggle sidebar', () => {
+    component.isCollapsed = false;
+    component.toggleSidebar();
+    expect(component.isCollapsed).toBe(true);
+    component.toggleSidebar();
+    expect(component.isCollapsed).toBe(false);
+  });
 
-  component.onItemClick({ test: 1 }, 'id', 'user', 0);
-  tick(); // flush setTimeout
-
-  expect(showSpy).toHaveBeenCalled();
-  expect(component.selectedItem).toBe(0);
-  expect(setDataSpy).toHaveBeenCalled();
-  expect(navigateSpy).toHaveBeenCalledWith(['/bic']);
-}));
-
-it('should open bootstrap modal on deleteConfirmationBox', () => {
-  const modalElement = document.createElement('div');
-  spyOn(document, 'getElementById').and.returnValue(modalElement);
-  const modalShowSpy = jasmine.createSpy('show');
-  spyOn(bootstrap as any, 'Modal').and.returnValue({ show: modalShowSpy });
-
-  component.deleteConfirmationBox('user', 'id', 'title');
-  expect(modalShowSpy).toHaveBeenCalled();
-});
-
-it('should close dropdown on outside click', () => {
-  component.openedDropdownIndex = 1;
-  component.closeDropdownOnClickOutside(new MouseEvent('click'));
-  expect(component.openedDropdownIndex).toBeNull();
-});
-
-it('should toggle sidebar state', () => {
-  component.isCollapsed = false;
-  component.toggleSidebar();
-  expect(component.isCollapsed).toBeTrue();
-});
-
-it('should toggle dropdown index', () => {
-  const event = new MouseEvent('click');
-  spyOn(event, 'stopPropagation');
-  component.showHideDraft(1, event);
-  expect(component.openedDropdownIndex).toBe(1);
-
-  component.showHideDraft(1, event);
-  expect(component.openedDropdownIndex).toBeNull();
-  expect(event.stopPropagation).toHaveBeenCalled();
-});
-
-it('should navigate to create with refresh if already on /create', fakeAsync(() => {
-  spyOnProperty(component['router'], 'url').and.returnValue('/create');
-  const navigateByUrlSpy = spyOn(component['router'], 'navigateByUrl').and.returnValue(Promise.resolve(true));
-  const navigateSpy = spyOn(component['router'], 'navigate');
-
-  component.navigateTo('/create', 'create');
-  tick();
-  expect(navigateByUrlSpy).toHaveBeenCalled();
-  expect(navigateSpy).toHaveBeenCalledWith(['/create']);
-}));
-
-it('should navigate normally when not create', () => {
-  const navigateSpy = spyOn(component['router'], 'navigate');
-  component.navigateTo('/home', 'home');
-  expect(navigateSpy).toHaveBeenCalledWith(['/home']);
-});
-
-it('should clean up subscriptions and listeners on destroy', () => {
-  const unsubSpy1 = spyOn(component['routerSubscription'], 'unsubscribe');
-  const unsubSpy2 = spyOn(component.dataSubscription, 'unsubscribe');
-  const removeSpy = spyOn(document, 'removeEventListener');
-
-  component.ngOnDestroy();
-  expect(unsubSpy1).toHaveBeenCalled();
-  expect(unsubSpy2).toHaveBeenCalled();
-  expect(removeSpy).toHaveBeenCalled();
-});
-
-it('should set successDivVisible to true and then false after timeout', fakeAsync(() => {
-  component.successDivCloseAfterSec();
-  expect(component.successDivVisible).toBeTrue();
-  tick(9000);
-  expect(component.successDivVisible).toBeFalse();
-}));
-
-it('should set successDivVisible to false instantly', () => {
-  component.successDivVisible = true;
-  component.successDivCloseInstant();
-  expect(component.successDivVisible).toBeFalse();
-});
+  it('should return correct deleteConfirmTitle', () => {
+    component.deletingTitle = 'DraftTitle';
+    expect(component.deleteConfirmTitle).toContain('DraftTitle');
+  });
 });

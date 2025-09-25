@@ -14,8 +14,8 @@ import { ModifiedDraft } from './left-nav.model';
 export class LeftNavComponent implements OnInit, OnDestroy {
 
   readonly navText = APP_CONSTANTS.LEFT_NAV;
-  private routerSubscription: Subscription = new Subscription;
-  private boundClickHandler = this.closeDropdownOnClickOutside.bind(this);
+  public routerSubscription: Subscription = new Subscription;
+  public boundClickHandler = this.closeDropdownOnClickOutside.bind(this);
   dataSubscription: Subscription = new Subscription();
   modifiedData: ModifiedDraft[] = [];
   bicCounter = 1;
