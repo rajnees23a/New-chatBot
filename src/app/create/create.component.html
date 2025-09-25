@@ -2,8 +2,8 @@
   class="container-fluid min-vh-95 d-flex flex-column py-2"
   *ngIf="!userComeFirstTime"
 >
-  <div id="rowBox" class="row g-3 align-items-stretch">
-    <div id="leftBox" class="col-12 col-lg-6 d-flex flex-column">
+  <div id="rowBox" class="d-flex flex-wrap">
+    <div id="leftBox" class="lbox p-2 flex-fill col-12 col-md-6 col-lg-6">
       <h1 class="headingClass px-2 px-sm-3">
         {{ staticText.covertional }}
       </h1>
@@ -42,43 +42,29 @@
             </div>
 
             <div *ngIf="message.sender === 'bot'" class="w-100">
-              <div class="user-input d-flex mb-2">
-                <span
-                  *ngIf="isString(message.text)"
-                  class="me-3 d-none d-sm-inline"
-                >
-                  <img
-                    src="../../assets/images/moji.svg"
-                    width="32"
-                    height="54"
-                    alt=""
-                  />
+                          <div class="user-input" *ngIf="isString(message.text)">
+                <span class="me-3"
+                  ><img src="../../assets/images/moji.svg" />
                 </span>
-                <p
-                  *ngIf="isString(message.text)"
-                  class="bg-white p-2 rounded mb-0 fw-semibold w-100 shadow-sm lh-sm"
-                >
-                  {{ message.text }}
-                </p>
+                <p>{{ message.text }}</p>
+              </div>
+              <div
+                class="user-input"
+                *ngIf="
+                  !isString(message.text) &&
+                  !message.followingText &&
+                  (message.staticBotMessage == false ||
+                    message.staticBotMessage == undefined ||
+                    message.staticBotMessage == null)
+                "
+              >
+                <span class="me-3"
+                  ><img src="../../assets/images/moji.svg" />
+                </span>
+                <p>{{ message.text.question }}</p>
               </div>
 
               <div *ngIf="!isString(message.text) && !message.followingText">
-                <div class="user-input d-flex mb-2">
-                  <span class="me-3 d-none d-sm-inline">
-                    <img
-                      src="../../assets/images/moji.svg"
-                      width="32"
-                      height="54"
-                      alt=""
-                    />
-                  </span>
-                  <p
-                    class="bg-white p-2 rounded mb-0 fw-semibold w-100 shadow-sm lh-sm"
-                  >
-                    {{ message.text.question }}
-                  </p>
-                </div>
-
                 <div
                   class="bg-white rounded p-2 p-sm-3 mb-2 ms-0 ms-sm-5 shadow-sm"
                 >
@@ -302,14 +288,14 @@
             </div>
           </ng-container>
 
-          <div *ngIf="loader" class="loader-wrap ms-auto">
+          <div *ngIf="loader" class="loader-wrap">
             <div class="loader"></div>
           </div>
         </div>
 
         <div
           id="textArDiv"
-          class="send-input-wrap border rounded mt-2 mb-5 mb-md-0 position-sticky bottom-0 z-3 bg-white"
+          class="send-input-wrap  mt-3 mb-5 mb-md-0 position-sticky bottom-0 z-3 bg-white"
         >
           <div
             *ngIf="selectedFile"
@@ -334,15 +320,14 @@
           </div>
 
           <div class="d-flex align-items-start gap-2">
-            <textarea
-              #autoResizeTextarea
+             <textarea
               (keydown)="onKeyDown($event)"
               (blur)="onBlur()"
               (focus)="onFocus()"
               (input)="onInput()"
               rows="1"
               [(ngModel)]="userInput"
-              class="form-control flex-grow-1"
+              class=""
               placeholder="Reply to ADA"
               id="textAFie"
             ></textarea>
@@ -425,7 +410,7 @@
                   >
                     <path
                       d="M7.00028 8.0001H3.33362M3.27718 8.19444L1.72057 12.8442C1.59828 13.2095 1.53713 13.3922 1.58101 13.5047C1.61912 13.6023 1.70096 13.6764 1.80195 13.7046C1.91824 13.737 2.09388 13.658 2.44517 13.4999L13.5862 8.48647C13.929 8.33217 14.1005 8.25502 14.1535 8.14784C14.1995 8.05473 14.1995 7.94548 14.1535 7.85237C14.1005 7.74519 13.929 7.66805 13.5862 7.51375L2.44129 2.49859C2.09106 2.34098 1.91595 2.26218 1.79977 2.29451C1.69888 2.32258 1.61704 2.39644 1.57881 2.49393C1.53478 2.6062 1.59527 2.78845 1.71625 3.15295L3.27761 7.85712C3.29839 7.91973 3.30878 7.95103 3.31288 7.98304C3.31652 8.01145 3.31649 8.04021 3.31277 8.06861C3.30859 8.10061 3.29812 8.13189 3.27718 8.19444Z"
-                      stroke="#8F53F0"
+                      stroke="#fff"
                       stroke-width="1.46667"
                       stroke-linecap="round"
                       stroke-linejoin="round"
@@ -439,15 +424,24 @@
       </div>
     </div>
 
-    <div id="rightBox" class="col-12 col-lg-6 d-flex flex-column">
-      <div class="fielsReq d-flex flex-column p-3">
+    <div id="rightBox" class="rbox p-2 flex-fill col-12 col-md-6 col-lg-6">
+      <div
+        class="fielsReq d-flex flex-column p-3"
+        [ngClass]="isActive ? 'h-75' : 'h-100'"
+      >
         <div class="row g-2 align-items-center">
-          <div class="col-12 col-md-8">
+          <div class="" [ngClass]="isActive ? 'col-12' : 'col-md-8 '">
             <p
               class="headingClass d-flex align-items-center gap-2 mb-0"
               (click)="toggleButton()"
             >
-              <i class="business-idea-ic">
+              <i
+                #tooltipRef
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Collapse"
+                class="business-idea-ic mb-3"
+              >
                 <img src="../../assets/images/business.svg" alt="business" />
               </i>
               <span>{{ staticText.yourIdeaTitle }}</span>
@@ -455,7 +449,8 @@
           </div>
 
           <div
-            class="col-12 col-md-4 d-flex flex-column align-items-start align-items-md-end mt-2 mt-md-0"
+            class="d-flex flex-column align-items-start align-items-md-end mt-2 mt-md-0"
+            [ngClass]="isActive ? 'col-12' : 'col-md-4'"
           >
             <div class="progress w-100 mt-1 mb-1 d-md-none progress-bar-level">
               <div
@@ -481,9 +476,18 @@
               ></div>
             </div>
 
-            <h6 class="fw-semibold fs-12 lh-1362 mb-0 text-start text-md-end">
-              <span>{{ staticText.Progress }}</span> {{ progressPercentage }}%
-              <span>{{ staticText.complete }}</span>
+            <h6
+              class="fw-semibold fs-12 lh-1362 mb-0 text-start text-md-end"
+              [ngClass]="isActive ? 'h-75 me-3' : 'h-100'"
+            >
+              <ng-container *ngIf="isActive; else simpleProgress">
+                <span>{{ progressPercentage }}%</span>
+              </ng-container>
+
+              <ng-template #simpleProgress>
+                <span>{{ staticText.Progress }}</span> {{ progressPercentage }}%
+                <span>{{ staticText.complete }}</span>
+              </ng-template>
             </h6>
           </div>
         </div>
@@ -620,9 +624,11 @@
                         field.label == 'Additional attachments'
                       "
                       (click)="fileInputAttach.click()"
-                      class="btn choose-file"
+                      class="btn choose-file px-1"
                     >
-                      {{ staticText.drag }} <span>{{ staticText.choose }}</span>
+                      <span class="notFilledYetText">
+                        {{ staticText.drag }}</span
+                      ><span class="choose-span">{{ staticText.choose }}</span>
                     </button>
 
                     <div
