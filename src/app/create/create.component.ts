@@ -122,7 +122,9 @@ export class CreateComponent implements OnDestroy, AfterViewChecked, AfterViewIn
   }
 
   ngAfterViewInit() {
-    this.tooltipInstance = new Tooltip(this.tooltipElement.nativeElement);
+    if (this.tooltipElement && this.tooltipElement.nativeElement) {
+      this.tooltipInstance = new Tooltip(this.tooltipElement.nativeElement);
+    }
   }
 
   ngAfterViewChecked(): void {
@@ -296,8 +298,8 @@ export class CreateComponent implements OnDestroy, AfterViewChecked, AfterViewIn
       ...field,
       value: this.bicFieldData[field.label] || ''
     }));
-    if (this.uploadFileName) {
-      this.fields[23].value = this.uploadFileName
+    if (this.uploadFileName !== undefined && this.fields[23]) {
+      this.fields[23].value = this.uploadFileName;
     }
     this.fields.forEach((field, index) => {
       const isFilled = field.value.trim() !== '' && field.value !== this.staticText.ADA_STATIC_TEXT;

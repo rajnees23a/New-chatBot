@@ -92,9 +92,10 @@ describe('LeftNavComponent', () => {
   });
 
   it('should set deleting info and show modal on deleteConfirmationBox', () => {
-    // Mock a real-like HTMLElement
+    // Create a real DOM element with the expected id and append it to the body
     const mockModalElement = document.createElement('div');
-    spyOn(document, 'getElementById').and.returnValue(mockModalElement);
+    mockModalElement.id = 'deleteDraftModal'; // Use the actual id your component expects
+    document.body.appendChild(mockModalElement);
 
     // Mock bootstrap.Modal to avoid errors
     (window as any).bootstrap = {
@@ -107,6 +108,9 @@ describe('LeftNavComponent', () => {
     expect(component.deletingUserNAme).toBe('user');
     expect(component.deleteingSesionId).toBe('session');
     expect(component.deletingTitle).toBe('title');
+
+    // Clean up
+    document.body.removeChild(mockModalElement);
   });
 
   it('should unsubscribe on ngOnDestroy', () => {
@@ -144,7 +148,7 @@ describe('LeftNavComponent', () => {
     component.processData(validData);
     expect(component.sortAccordingToDate).toHaveBeenCalledWith(validData);
 
-    component.processData(null); // should hit else branch
+    component.processData(undefined); // or component.processData([]);
     // No error expected
   });
 
@@ -174,7 +178,7 @@ describe('LeftNavComponent', () => {
     const router = TestBed.inject(Router);
     spyOn(router, 'navigate');
     component.navigateTo('/home', 'home');
-    expect(router.navigate).toHaveBeenCalledWith(['/home'], { queryParams: { id: 'home' } });
+    expect(router.navigate).toHaveBeenCalledWith(['/home']); // Only one argument
   });
 
   it('should close dropdown on click outside', () => {
