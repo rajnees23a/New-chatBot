@@ -134,9 +134,7 @@ p {
   padding: 16px;
   height: calc(100vh - 180px);
   overflow: auto;
-  /* box-shadow: 0 4px 16px rgba(0,0,0,0.05); */
-  /* background: #fff; */
-}
+  }
 .chat-bubble {
   padding: 10px;
   border-radius: 10px;
@@ -575,11 +573,6 @@ textarea {
   width: 5% !important;
 }
 
-/* .lbox,
-.rbox {
-  width: 50% !important;
-}  */
-
 .fieldresize #leftBox {
   width: calc(100% - 90px);
   transition: all 0.5s ease 0s;
@@ -833,7 +826,7 @@ textarea {
 @media (max-width: 768px) {
   html,
   body {
-    overflow-y: auto; /* allow vertical scroll */
-    overflow-x: hidden; /* no horizontal scroll */
+    overflow-y: auto; 
+    overflow-x: hidden; 
   }
 }
