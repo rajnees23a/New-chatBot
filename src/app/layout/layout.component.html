@@ -1,20 +1,48 @@
 <div class="d-flex min-vh-100 bg-light overflow-x-hidden">
   <!-- Sidebar -->
-  <div class="flex-shrink-0">
+  <div
+    class="flex-shrink-0"
+    [ngStyle]="{
+      width: isMobile
+        ? '15%'
+        : isTablet
+        ? '10%'
+        : isLaptop
+        ? '8%'
+        : isDesktop
+        ? '5%'
+        : '3%'
+    }"
+  >
     <app-left-nav></app-left-nav>
   </div>
   <!-- Main Layout -->
-  <div class="flex-grow-1 d-flex flex-column min-vh-100">
+  <div
+    class="flex-grow-1 d-flex flex-column min-vh-100"
+    [ngStyle]="{
+      width: isMobile ? '85%' : isTablet ? '90%' : isLaptop ? '92%': isDesktop ? '95%' :'97%'
+    }"
+  >
     <app-header></app-header>
     <main class="flex-grow-1 d-flex flex-column position-relative">
       <div class="flex-grow-1 p-0">
         <router-outlet></router-outlet>
       </div>
-      <div *ngIf="showSuccessMessage" class="position-fixed bottom-0 start-50 translate-middle-x mb-3 z-3">
-        <div class="alert alert-success d-flex align-items-center shadow-sm mb-0 px-3 py-2 rounded-3 show-success">
+      <div
+        *ngIf="showSuccessMessage"
+        class="position-fixed bottom-0 start-50 translate-middle-x mb-3 z-3"
+      >
+        <div
+          class="alert alert-success d-flex align-items-center shadow-sm mb-0 px-3 py-2 rounded-3 show-success"
+        >
           <i class="bi bi-check-circle me-2"></i>
           <span class="flex-grow-1">{{ message }}</span>
-          <button type="button" class="btn-close ms-2" aria-label="Close" (click)="successDivCloseInstant()"></button>
+          <button
+            type="button"
+            class="btn-close ms-2"
+            aria-label="Close"
+            (click)="successDivCloseInstant()"
+          ></button>
         </div>
       </div>
     </main>
