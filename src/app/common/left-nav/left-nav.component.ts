@@ -97,8 +97,14 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     if (data && Array.isArray(data) && data.length > 0) {
       this.sortAccordingToDate(data);
       const parsedData = data.map(item => {
-        const parsedSessionData = JSON.parse(item.session_data);
-
+        let parsedSessionData = {};
+        if (typeof item.session_data === 'string' && item.session_data.trim() !== '') {
+          try {
+            parsedSessionData = JSON.parse(item.session_data);
+          } catch (e) {
+            parsedSessionData = {};
+          }
+        }
         // Return a new object with the original data plus the parsed session_data
         return {
           session_id: item.session_id,
@@ -108,7 +114,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
       });
       if (parsedData) {
         this.modifiedData = parsedData.map((item: any, index: any) => {
-          if (item.session_data.formFieldValue !== undefined && item.session_data.formFieldValue !== null) {
+          if (item.session_data && item.session_data.formFieldValue !== undefined && item.session_data.formFieldValue !== null) {
             const ideaTitleObj = item.session_data.formFieldValue.find((f: { label: string; }) => f.label === this.navText.YOUR_IDEA_TITLE);
             let title: any;
             if (ideaTitleObj?.value?.trim() !== '' && ideaTitleObj?.value?.trim() !== this.navText.ADA_STATIC_TEXT) {
@@ -116,14 +122,14 @@ export class LeftNavComponent implements OnInit, OnDestroy {
             } else {
               title = `BIC draft ${index + 1}`;
             }
-
             return {
               ...item,
               displayTitle: title
             };
           }
+          // If formFieldValue is missing, still return the item
+          return { ...item, displayTitle: `BIC draft ${index + 1}` };
         });
-
       }
     } else {
       this.modifiedData = [];
