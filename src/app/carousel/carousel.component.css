@@ -4,3 +4,45 @@
 .text-purple {
   color: #8f53f0 !important;
 }
+.carousel-popup {
+  z-index: 1055;
+}
+
+.guide-title-box {
+  max-width: 600px;
+  height: calc(100vh - 100px);
+  --bs-primary: #8f53f0;
+  margin: 5px;
+}
+.img-obj {
+  object-fit: contain;
+}
+
+.count-circle {
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+}
+
+.ul-list {
+  list-style: disc;
+  list-style-position: outside;
+}
+.indicator-styles {
+  --bs-carousel-indicator-width: 40px;
+  --bs-carousel-indicator-height: 4px;
+  --bs-carousel-indicator-hit-area-height: 12px;
+  --bs-carousel-indicator-border-radius: 10px;
+  --bs-carousel-indicator-bg: #f6f6f6;
+  --bs-carousel-indicator-opacity: 1;
+  --bs-carousel-indicator-active-bg: #8f53f0;
+}
+.previous-btn {
+  --bs-btn-border-color: #8f53f0;
+  --bs-btn-color: #8f53f0;
+  padding: 9px;
+}
+.next-start-btn {
+  --bs-btn-bg: #8f53f0;
+  --bs-btn-border-color: #8f53f0;
+}

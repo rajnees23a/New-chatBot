@@ -1,10 +1,8 @@
 <div
-  class="position-fixed top-0 start-0 w-100 min-vh-100 d-flex align-items-start justify-content-center bg-dark bg-opacity-25"
-  style="z-index: 1055"
+  class="carousel-popup position-fixed top-0 start-0 w-100 min-vh-100 d-flex align-items-start justify-content-center bg-dark bg-opacity-25"
 >
   <div
-    class="bg-white rounded-3 shadow p-3 p-sm-4 mt-4 mt-sm-5 w-100 d-flex flex-column theme-purple"
-    style="max-width: 600px; height: calc(100vh - 100px); --bs-primary: #8f53f0; margin: 5px;"
+    class="guide-title-box bg-white rounded-3 shadow p-3 p-sm-4 mt-4 mt-sm-5 w-100 d-flex flex-column theme-purple"
     role="dialog"
     aria-modal="true"
     aria-labelledby="guideTitle"
@@ -29,15 +27,13 @@
               <img
                 src="../../assets/images/guide-1.svg"
                 alt="guide-1"
-                class="img-fluid d-block w-30"
-                style="object-fit: contain"
+                class="img-fluid d-block w-30 img-obj"
               />
             </div>
 
             <div class="d-flex align-items-center mb-3">
               <span
-                class="d-inline-flex justify-content-center align-items-center rounded-circle bg-dark text-white border border-1 border-light fw-semibold me-2"
-                style="width: 28px; height: 28px; font-size: 12px"
+                class="count-circle d-inline-flex justify-content-center align-items-center rounded-circle bg-dark text-white border border-1 border-light fw-semibold me-2"
               >
                 {{ firstTitleNo }}
               </span>
@@ -45,10 +41,7 @@
                 {{ firstGuideTitle }}
               </h1>
             </div>
-            <ul
-              class="ms-3 ps-3 mb-2"
-              style="list-style: disc; list-style-position: outside"
-            >
+            <ul class="ms-3 ps-3 mb-2 ul-list">
               <li
                 class="mb-2"
                 *ngFor="let item of carouselItems"
@@ -65,15 +58,13 @@
               <img
                 src="../../assets/images/guide-2.svg"
                 alt="guide-2"
-                class="img-fluid d-block w-30"
-                style="object-fit: contain"
+                class="img-fluid d-block w-30 img-obj"
               />
             </div>
 
             <div class="d-flex align-items-start mb-2">
               <span
-                class="d-inline-flex justify-content-center align-items-center rounded-circle bg-dark text-white border border-1 border-light fw-semibold me-2"
-                style="width: 28px; height: 28px; font-size: 12px"
+                class="count-circle d-inline-flex justify-content-center align-items-center rounded-circle bg-dark text-white border border-1 border-light fw-semibold me-2"
               >
                 {{ secondTitleNo }}
               </span>
@@ -113,15 +104,13 @@
               <img
                 src="../../assets/images/guide-3.svg"
                 alt="guide-3"
-                class="img-fluid d-block w-30"
-                style="object-fit: contain"
+                class="img-fluid d-block w-30 img-obj"
               />
             </div>
 
             <div class="d-flex align-items-center mb-2">
               <span
-                class="d-inline-flex justify-content-center align-items-center rounded-circle bg-dark text-white border border-1 border-light fw-semibold me-2"
-                style="width: 28px; height: 28px; font-size: 12px"
+                class="count-circle d-inline-flex justify-content-center align-items-center rounded-circle bg-dark text-white border border-1 border-light fw-semibold me-2"
               >
                 {{ thirdTitleNo }}
               </span>
@@ -135,10 +124,7 @@
             <div class="row g-3">
               <div class="col-6" *ngIf="thirdPartOne">
                 <strong class="d-block mb-2">{{ thirdPartOne }}</strong>
-                <ul
-                  class="ms-3 ps-3 mb-0"
-                  style="list-style: disc; list-style-position: outside"
-                >
+                <ul class="ms-3 ps-3 mb-0 ul-list">
                   <li
                     class="mb-1"
                     *ngFor="let item of thirdPartOneList"
@@ -148,10 +134,7 @@
               </div>
               <div class="col-6" *ngIf="thirdPartTwo">
                 <strong class="d-block mb-2">{{ thirdPartTwo }}</strong>
-                <ul
-                  class="ms-3 ps-3 mb-0"
-                  style="list-style: disc; list-style-position: outside"
-                >
+                <ul class="ms-3 ps-3 mb-0 ul-list">
                   <li
                     class="mb-1"
                     *ngFor="let item of thirdPartTwoList"
@@ -161,10 +144,7 @@
               </div>
               <div class="col-6" *ngIf="thirdPartThree">
                 <strong class="d-block mb-2">{{ thirdPartThree }}</strong>
-                <ul
-                  class="ms-3 ps-3 mb-0"
-                  style="list-style: disc; list-style-position: outside"
-                >
+                <ul class="ms-3 ps-3 mb-0 ul-list">
                   <li
                     class="mb-1"
                     *ngFor="let item of thirdPartThreeList"
@@ -174,10 +154,7 @@
               </div>
               <div class="col-6" *ngIf="thirdPartFour">
                 <strong class="d-block mb-2">{{ thirdPartFour }}</strong>
-                <ul
-                  class="ms-3 ps-3 mb-0"
-                  style="list-style: disc; list-style-position: outside"
-                >
+                <ul class="ms-3 ps-3 mb-0 ul-list">
                   <li
                     class="mb-1"
                     *ngFor="let item of thirdPartFourList"
@@ -196,15 +173,13 @@
               <img
                 src="../../assets/images/guide-4.svg"
                 alt="guide-4"
-                class="img-fluid d-block w-30"
-                style="object-fit: contain"
+                class="img-fluid d-block w-30 img-obj"
               />
             </div>
 
             <div class="d-flex align-items-center mb-2">
               <span
-                class="d-inline-flex justify-content-center align-items-center rounded-circle bg-dark text-white border border-1 border-light fw-semibold me-2"
-                style="width: 28px; height: 28px; font-size: 12px"
+                class="count-circle d-inline-flex justify-content-center align-items-center rounded-circle bg-dark text-white border border-1 border-light fw-semibold me-2"
               >
                 {{ fourthTitleNo }}
               </span>
@@ -213,10 +188,7 @@
               </h1>
             </div>
 
-            <ul
-              class="ms-3 ps-3 mb-2"
-              style="list-style: disc; list-style-position: outside"
-            >
+            <ul class="ms-3 ps-3 mb-2 ul-list">
               <li
                 class="mb-1"
                 *ngFor="let item of fourthListOne"
@@ -226,10 +198,7 @@
 
             <div>
               <strong class="d-block mb-2">{{ fourthDontWorry }}</strong>
-              <ul
-                class="ms-3 ps-3 mb-2"
-                style="list-style: disc; list-style-position: outside"
-              >
+              <ul class="ms-3 ps-3 mb-2 ul-list">
                 <li
                   class="mb-1"
                   *ngFor="let item of fourthListTwo"
@@ -247,16 +216,7 @@
         <!-- Indicators -->
         <div
           id="carouselExampleIndicators"
-          class="carousel slide"
-          style="
-            --bs-carousel-indicator-width: 40px;
-            --bs-carousel-indicator-height: 4px;
-            --bs-carousel-indicator-hit-area-height: 12px;
-            --bs-carousel-indicator-border-radius: 10px;
-            --bs-carousel-indicator-bg: #f6f6f6;
-            --bs-carousel-indicator-opacity: 1;
-            --bs-carousel-indicator-active-bg: #8f53f0;
-          "
+          class="carousel slide indicator-styles"
         >
           <div class="carousel-indicators position-static m-0 gap-2 d-flex">
             <button
@@ -294,41 +254,37 @@
             [hidden]="userComeFirstTime"
             (click)="getStarted()"
             class="btn btn-link p-0 text-decoration-none text-purple"
-          
           >
-            Let me skip
+            {{ letMeSkip }}
           </button>
           <button
-          *ngIf="!isFirstSlide"
+            *ngIf="!isFirstSlide"
             id="carouselPrevBtn"
-            class="btn btn-outline-primary"
+            class="btn btn-outline-primary previous-btn"
             data-bs-target="#carouselExampleIndicators"
             data-bs-slide="prev"
             (click)="onCarouselSlide()"
-            style="--bs-btn-border-color: #8f53f0; --bs-btn-color: #8f53f0"
           >
-            Previous
+            {{ previous }}
           </button>
 
           <button
             *ngIf="!isLastSlideReached"
             (click)="onCarouselSlide()"
             id="carouselNextBtn"
-            class="btn btn-primary"
+            class="btn btn-primary next-start-btn"
             data-bs-target="#carouselExampleIndicators"
             data-bs-slide="next"
-            style="--bs-btn-bg: #8f53f0; --bs-btn-border-color: #8f53f0"
           >
-            Next
+            {{ next }}
           </button>
 
           <button
             *ngIf="isLastSlideReached"
             (click)="getStarted()"
-            class="btn btn-primary"
-            style="--bs-btn-bg: #8f53f0; --bs-btn-border-color: #8f53f0"
+            class="btn btn-primary next-start-btn"
           >
-            Get started
+            {{ getStart }}
           </button>
         </div>
       </div>
@@ -336,6 +292,3 @@
     </div>
   </div>
 </div>
-
-
-

@@ -61,6 +61,10 @@ export class CarouselComponent implements OnInit {
   fourthListOne = this.carouselText.FOURTH_LIST_ONE;
   fourthDontWorry = this.carouselText.FOURTH_DONT_WORRY;
   fourthListTwo = this.carouselText.FOURTH_LIST_TWO;
+  previous = this.carouselText.PREVIOUS;
+  letMeSkip = this.carouselText.LET_ME_SKIP;
+  next = this.carouselText.NEXT;
+  getStart = this.carouselText.GET_STARTED;
 
   constructor(private router: Router) {}
 
