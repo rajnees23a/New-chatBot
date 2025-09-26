@@ -105,6 +105,7 @@ export class CreateComponent implements OnDestroy, AfterViewChecked, AfterViewIn
   confirmBtnOfDestClk = false;
   confirmBtnOfBussClk = false;
   selectedBussiness: boolean[] = [];
+  isMobile=window.innerWidth < 768;
 
   ngOnInit() {
     if (sessionStorage.getItem('userFirstTime') && sessionStorage.getItem('userFirstTime') == 'false') {
