@@ -86,7 +86,6 @@ export class CarouselComponent implements OnInit {
     );
 
     this.totalSlides = carouselItems.length;
-    console.log('total', this.totalSlides);
   }
 
   checkIfLastSlide() {
@@ -99,12 +98,6 @@ export class CarouselComponent implements OnInit {
         this.isFirstSlide = this.currentSlideIndex === 0; // Set isFirstSlide flag
         this.isLastSlideReached =
           this.currentSlideIndex === this.totalSlides - 1; // Check for last slide
-        console.log(
-          'Slide changed, first slide:',
-          this.isFirstSlide,
-          'last slide:',
-          this.isLastSlideReached
-        );
       });
     }
   }
@@ -124,15 +117,11 @@ export class CarouselComponent implements OnInit {
   onCarouselSlide() {
     this.setTotalSlides();
     this.checkIfLastSlide();
-    console.log('checkingSlides-----------', this.currentSlideIndex);
 
     this.isFirstSlide = this.currentSlideIndex === 0;
 
-    console.log('Next button clicked!');
     // For example, check if it’s the last slide and show some message.
     if (this.isLastSlideReached == true) {
-      console.log('You are on the last slide');
     }
-    // console.log("mmmmm",event.target.children.length);
   }
 }
