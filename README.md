@@ -1,27 +1,52 @@
-# ChatBot
+# 🤖 ChatBot – AI Digital Assistant (ADA)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.11.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version **15.2.11**.
 
-## Development server
+ChatBot is an Angular-based AI-powered assistant designed to help users ideate, structure, and refine business ideas through a conversational interface. It features dynamic form generation, metadata mapping, and guided prompts inspired by ADA (AI Digital Assistant) workflows.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+---
 
-## Code scaffolding
+## 🚀 Features
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Conversational assistant with guided prompts  
+- Auto-populated business idea forms  
+- Metadata-driven field mapping  
+- Responsive UI with Bootstrap 5 and Angular Material  
+- PDF export via `jspdf`  
+- Email integration via `emailjs-com`  
+- Progress tracking and checklist validation  
+- Modular architecture for reusable components  
 
-## Build
+---
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## 📦 Tech Stack
 
-## Running unit tests
+| Category        | Packages & Tools |
+|----------------|------------------|
+| **Framework**   | Angular 15.2.x   |
+| **UI Libraries**| Angular Material, Bootstrap 5.3.3, FontAwesome |
+| **Animations**  | Animate.css      |
+| **PDF Export**  | jspdf            |
+| **Email Service**| emailjs-com     |
+| **Testing**     | Karma, Jasmine   |
+| **Utilities**   | RxJS, Zone.js    |
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+---
 
-## Running end-to-end tests
+## 🛠️ Scripts
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+| Command                                 | Description |
+|----------------------------------------|-------------|
+| `ng serve`                              | Starts the dev server at `http://localhost:4200/` |
+| `ng serve --configuration production`   | Starts the server in production mode |
+| `ng build`                              | Builds the project into `dist/` |
+| `ng build --watch --configuration development` | Builds in watch mode for development |
+| `ng test`                               | Runs unit tests via Karma |
 
-## Further help
+---
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## 💻 Development Server
+
+Run:
+```bash
+ng serve
