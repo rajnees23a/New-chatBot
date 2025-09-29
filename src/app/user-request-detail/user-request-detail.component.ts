@@ -7,27 +7,17 @@ import { RequestDetails } from './user-request-detail.model';
 @Component({
   selector: 'app-user-request-detail',
   templateUrl: './user-request-detail.component.html',
-  styleUrls: ['./user-request-detail.component.css']
+  styleUrls: ['./user-request-detail.component.css'],
 })
-
 export class UserRequestDetailComponent implements OnInit {
   staticText = APP_CONSTANTS.User_Request_Details;
   requestNumber: string | null = null;
-  //requestDetails: RequestDetails | null = null;
+  requestDetails: RequestDetails | null = null;
   activeTab: string = 'summary';
   requestData: RequestDetails[] = [];
   RequestDetailFromRequestPAge: any;
   Responsed: any;
-  requestDetails = {
-  Requestnumber: "RITM1226001",
-  Ideatitle: "Add AI chatbot support",
-  Submitteddate: "2025-09-05",
-  Lastupdated: "2025-09-12",
-  Totalnoofquestionscompleted: 5,
-  Status: "Pending_review",
-  Comments: 2
-};
-  constructor(private route: ActivatedRoute, private api: ServiceService) { }
+  constructor(private route: ActivatedRoute, private api: ServiceService) {}
 
   ngOnInit() {
     this.requestNumber = this.route.snapshot.paramMap.get('id');
@@ -43,34 +33,35 @@ export class UserRequestDetailComponent implements OnInit {
   }
 
   fetchData() {
-
     const data = { user_name: this.api.userName };
     const formData: FormData = new FormData();
     formData.append('request', JSON.stringify(data));
-    this.api.getRequestData(formData).subscribe(res => {
+    this.api.getRequestData(formData).subscribe((res) => {
+      const data = res.my_request_submitted_data;
+      this.requestData = data.sessions;
 
-      const data = res.my_request_submitted_data
-      this.requestData = data.sessions
-
-      this.requestData.forEach((item: { Submitteddate: string | any[]; }) => {
-        item.Submitteddate = item.Submitteddate.slice(0, 10);  // Extract the date part (YYYY-MM-DD)
+      this.requestData.forEach((item: { Submitteddate: string | any[] }) => {
+        item.Submitteddate = item.Submitteddate.slice(0, 10); // Extract the date part (YYYY-MM-DD)
       });
-     //this.requestDetails = this.requestData.find((req: { Requestnumber: string | null; }) => req.Requestnumber == this.requestNumber) ?? null;
+      this.requestDetails =
+        this.requestData.find(
+          (req: { Requestnumber: string | null }) =>
+            req.Requestnumber == this.requestNumber
+        ) ?? null;
     });
   }
   fetchRequestChat() {
     if (this.RequestDetailFromRequestPAge) {
       let newData = {
         session_id: this.RequestDetailFromRequestPAge.sessionDataId,
-        user_name: this.RequestDetailFromRequestPAge.sessionDataUserName
-      }
+        user_name: this.RequestDetailFromRequestPAge.sessionDataUserName,
+      };
       const formData: FormData = new FormData();
       formData.append('request', JSON.stringify(newData));
-      this.api.getRequestChatData(formData).subscribe(res => {
-        this.Responsed = res
+      this.api.getRequestChatData(formData).subscribe((res) => {
+        this.Responsed = res;
       });
     }
-
   }
 
   processData(data: any) {
@@ -80,15 +71,15 @@ export class UserRequestDetailComponent implements OnInit {
         session_id: this.RequestDetailFromRequestPAge.sessionDataId,
         user_name: this.RequestDetailFromRequestPAge.sessionDataUserName,
         chatData: modifiedData,
-        comingFrom: "request"
-      }
+        comingFrom: 'request',
+      };
       this.api.setData(addsomemorekey);
     }
   }
 
   chatDetail() {
     this.api.show();
-    this.processData(this.Responsed)
+    this.processData(this.Responsed);
     setTimeout(() => {
       this.api.hide();
     }, 2000);
