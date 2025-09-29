@@ -20,7 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { UserRRequestDetailComponent } from './user-rrequest-detail/user-rrequest-detail.component';
+import { UserRequestDetailComponent } from './user-request-detail/user-request-detail.component';
 import { HistoryComponent } from './history/history.component';
 import { DatePipe } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
@@ -39,7 +39,7 @@ import { LoaderComponent } from './loader/loader.component';
     UserRequestComponent,
     TestComponent,
     FirstTimeUserComponent,
-    UserRRequestDetailComponent,
+    UserRequestDetailComponent,
     HistoryComponent,
     CreateComponent,
     CarouselComponent,

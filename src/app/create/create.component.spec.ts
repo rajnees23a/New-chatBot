@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, flus
 import { CreateComponent } from './create.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { APP_CONSTANTS } from '../constants';
-import { SerrviceService } from '../serrvice.service';
+import { ServiceService } from '../service.service';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { mockComponentState, mockStaticText, mockFields, mockChatHistory, mockFile } from './create.component.mock';
@@ -13,11 +13,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 describe('CreateComponent', () => {
   let component: CreateComponent;
   let fixture: ComponentFixture<CreateComponent>;
-  let apiServiceSpy: jasmine.SpyObj<SerrviceService>;
+  let apiServiceSpy: jasmine.SpyObj<ServiceService>;
   let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    apiServiceSpy = jasmine.createSpyObj('SerrviceService', [
+    apiServiceSpy = jasmine.createSpyObj('ServiceService', [
       'sendData',
       'attachFile',
       'submitData',
@@ -36,7 +36,7 @@ describe('CreateComponent', () => {
       ],
       providers: [
         DatePipe,
-        { provide: SerrviceService, useValue: apiServiceSpy },
+        { provide: ServiceService, useValue: apiServiceSpy },
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: {} }
       ],

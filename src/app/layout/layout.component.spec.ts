@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { LayoutComponent } from './layout.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { of, Subject } from 'rxjs';
-import { SerrviceService } from '../serrvice.service';
+import { ServiceService } from '../service.service';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('LayoutComponent', () => {
@@ -10,21 +10,21 @@ describe('LayoutComponent', () => {
   let fixture: ComponentFixture<LayoutComponent>;
   let mockRouter: jasmine.SpyObj<Router>;
   let mockActivatedRoute: jasmine.SpyObj<ActivatedRoute>;
-  let mockService: jasmine.SpyObj<SerrviceService>;
+  let mockService: jasmine.SpyObj<ServiceService>;
   let actionSubject: Subject<{ message: string, triggered: boolean }>;
 
   beforeEach(async () => {
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
     mockActivatedRoute = jasmine.createSpyObj('ActivatedRoute', [], { snapshot: {} });
     actionSubject = new Subject<{ message: string, triggered: boolean }>();
-    mockService = jasmine.createSpyObj('SerrviceService', ['resetAction'], { action$: actionSubject.asObservable() });
+    mockService = jasmine.createSpyObj('ServiceService', ['resetAction'], { action$: actionSubject.asObservable() });
 
     await TestBed.configureTestingModule({
       declarations: [LayoutComponent],
       providers: [
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        { provide: SerrviceService, useValue: mockService }
+        { provide: ServiceService, useValue: mockService }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]   // ✅ ignore <app-left-nav> and other unknown elements
     }).compileComponents();

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LeftNavComponent } from './left-nav.component';
 import { Router } from '@angular/router';
-import { SerrviceService } from '../../serrvice.service';
+import { ServiceService } from '../../service.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -43,7 +43,7 @@ describe('LeftNavComponent', () => {
       declarations: [LeftNavComponent],
       imports: [RouterTestingModule],
       providers: [
-        { provide: SerrviceService, useValue: mockService },
+        { provide: ServiceService, useValue: mockService },
         { provide: ChangeDetectorRef, useValue: mockCdr }
       ]
     }).compileComponents();
