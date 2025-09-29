@@ -7,7 +7,7 @@ import { environment } from '../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class SerrviceService {
+export class ServiceService {
   userName = environment.userName;
   portLocal = environment.portLocal;
   portDb = environment.portDb;

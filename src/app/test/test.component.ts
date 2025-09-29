@@ -8,7 +8,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { SerrviceService } from '../serrvice.service';
+import { ServiceService } from '../service.service';
 import { DatePipe } from '@angular/common';
 import * as bootstrap from 'bootstrap';
 
@@ -35,7 +35,7 @@ export class TestComponent implements OnDestroy {
   addfileExtension: string = '';
 
   constructor(
-    private api: SerrviceService,
+    private api: ServiceService,
     private ngZone: NgZone,
     private datePipe: DatePipe,
     private cdr: ChangeDetectorRef,
@@ -716,16 +716,16 @@ export class TestComponent implements OnDestroy {
       this.fileExtension === '.ppt' ||
       this.fileExtension === '.pptx'
     ) {
-      this.fileIcon = 'assets/images/ppt1.png'; // Replace with actual icon path
+      this.fileIcon = 'assets/images/ppt-new.png'; // Replace with actual icon path
     } else if (this.fileExtension === '.pdf') {
-      this.fileIcon = 'assets/images/download.png'; // Replace with actual icon path
+      this.fileIcon = 'assets/images/pdf-download.png'; // Replace with actual icon path
     } else if (
       this.fileExtension === '.xls' ||
       this.fileExtension === '.xlsx'
     ) {
       this.fileIcon = 'assets/images/xl.png'; // Replace with actual icon path
     } else {
-      this.fileIcon = 'assets/images/download(1)2.png'; // Replace with a default icon
+      this.fileIcon = 'assets/images/doc-download.png'; // Replace with a default icon
     }
 
     this.selectedFile = file;
@@ -774,16 +774,16 @@ export class TestComponent implements OnDestroy {
     if (fileExtension === '.doc' || fileExtension === '.docx') {
       this.fileIcon = 'assets/images/docs.png'; // Replace with actual icon path
     } else if (fileExtension === '.ppt' || fileExtension === '.pptx') {
-      this.fileIcon = 'assets/images/ppt1.png'; // Replace with actual icon path
+      this.fileIcon = 'assets/images/ppt-new.png'; // Replace with actual icon path
     } else if (fileExtension === '.pdf') {
-      this.fileIcon = 'assets/images/download.png'; // Replace with actual icon path
+      this.fileIcon = 'assets/images/pdf-download.png'; // Replace with actual icon path
     } else if (
       this.fileExtension === '.xls' ||
       this.fileExtension === '.xlsx'
     ) {
       this.fileIcon = 'assets/images/xl.png'; // Replace with actual icon path
     } else {
-      this.fileIcon = 'assets/images/download(1)2.png'; // Replace with a default icon
+      this.fileIcon = 'assets/images/doc-download.png'; // Replace with a default icon
     }
   }
 
@@ -830,16 +830,16 @@ export class TestComponent implements OnDestroy {
       this.addfileExtension === '.ppt' ||
       this.addfileExtension === '.pptx'
     ) {
-      this.fileIcon = 'assets/images/ppt1.png'; // Replace with actual icon path
+      this.fileIcon = 'assets/images/ppt-new.png'; // Replace with actual icon path
     } else if (this.addfileExtension === '.pdf') {
-      this.fileIcon = 'assets/images/download.png'; // Replace with actual icon path
+      this.fileIcon = 'assets/images/pdf-download.png'; // Replace with actual icon path
     } else if (
       this.addfileExtension === '.xls' ||
       this.addfileExtension === '.xlsx'
     ) {
       this.fileIcon = 'assets/images/xl.png'; // Replace with actual icon path
     } else {
-      this.fileIcon = 'assets/images/download(1)2.png'; // Replace with a default icon
+      this.fileIcon = 'assets/images/doc-download.png'; // Replace with a default icon
     }
     // this.fileValidation(event)
     this.fileUploadFromAttachment = file;

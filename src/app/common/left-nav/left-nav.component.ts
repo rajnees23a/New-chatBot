@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { SerrviceService } from '../../serrvice.service';
+import { ServiceService } from '../../service.service';
 import { filter, Subscription } from 'rxjs';
 import * as bootstrap from 'bootstrap';
 import { APP_CONSTANTS } from '../../constants';
@@ -24,7 +24,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
   openedDropdownIndex: number | null = null;
 
 
-  constructor(private router: Router, private dataService: SerrviceService, private cdr: ChangeDetectorRef) { }
+  constructor(private router: Router, private dataService: ServiceService, private cdr: ChangeDetectorRef) { }
   isCollapsed = false;
   isRecentDelete = false;
   deletingUserNAme = ''

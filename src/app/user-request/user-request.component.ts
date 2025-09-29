@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SerrviceService } from '../serrvice.service'
+import { ServiceService } from '../service.service'
 import { Router } from '@angular/router';
 import { APP_CONSTANTS } from '../constants';
 import { RequestData } from './user-request.model';
@@ -15,7 +15,7 @@ export class UserRequestComponent implements OnInit {
   requestData: RequestData[] = [];
 
 
-  constructor(private api: SerrviceService, private router: Router) {
+  constructor(private api: ServiceService, private router: Router) {
 
   }
 
