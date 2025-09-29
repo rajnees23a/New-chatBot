@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SerrviceService } from '../serrvice.service'; // Import the DataService
+import { ServiceService } from '../service.service'; // Import the DataService
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -22,7 +22,7 @@ export class LayoutComponent implements OnInit {
   isDesktop = window.innerWidth >= 1200 && window.innerWidth < 1400;
   constructor(
     private router: Router,
-    private dataService: SerrviceService,
+    private dataService: ServiceService,
     private route: ActivatedRoute
   ) {}
 

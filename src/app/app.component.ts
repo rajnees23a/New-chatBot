@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { SerrviceService } from './serrvice.service';
+import { ServiceService } from './service.service';
 declare var bootstrap: any;
 
 
@@ -14,9 +14,9 @@ export class AppComponent implements AfterViewInit, OnInit {
   title = 'chat-bot';
   isLoading = false;
   readonly router: Router;
-  readonly dataService: SerrviceService;
+  readonly dataService: ServiceService;
 
-  constructor(router: Router, dataService: SerrviceService) {
+  constructor(router: Router, dataService: ServiceService) {
     this.router = router;
     this.dataService = dataService;
   }

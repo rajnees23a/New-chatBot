@@ -9,7 +9,7 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { SerrviceService } from '../serrvice.service';
+import { ServiceService } from '../service.service';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import * as bootstrap from 'bootstrap';
@@ -29,7 +29,7 @@ export class HistoryComponent
   addfileExtension: string = '';
 
   constructor(
-    private api: SerrviceService,
+    private api: ServiceService,
     private ngZone: NgZone,
     private datePipe: DatePipe,
     private route: ActivatedRoute,

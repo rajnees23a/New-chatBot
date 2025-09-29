@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { UserRequestComponent } from './user-request.component';
-import { SerrviceService } from '../serrvice.service';
+import { ServiceService } from '../service.service';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -8,11 +8,11 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 describe('UserRequestComponent', () => {
   let component: UserRequestComponent;
   let fixture: ComponentFixture<UserRequestComponent>;
-  let mockService: jasmine.SpyObj<SerrviceService>;
+  let mockService: jasmine.SpyObj<ServiceService>;
   let mockRouter: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    mockService = jasmine.createSpyObj('SerrviceService', [
+    mockService = jasmine.createSpyObj('ServiceService', [
       'getRequestData',
       'show',
       'setDataForRequestChatShow'
@@ -26,7 +26,7 @@ describe('UserRequestComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [UserRequestComponent],
       providers: [
-        { provide: SerrviceService, useValue: mockService },
+        { provide: ServiceService, useValue: mockService },
         { provide: Router, useValue: mockRouter }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]

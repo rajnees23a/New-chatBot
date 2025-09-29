@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SerrviceService } from '../serrvice.service';
+import { ServiceService } from '../service.service';
 import { APP_CONSTANTS } from '../constants';
 import { RequestDetails } from './user-request-detail.model';
 
@@ -18,7 +18,7 @@ export class UserRRequestDetailComponent implements OnInit {
   requestData: RequestDetails[] = [];
   RequestDetailFromRequestPAge: any;
   Responsed: any;
-  constructor(private route: ActivatedRoute, private api: SerrviceService) { }
+  constructor(private route: ActivatedRoute, private api: ServiceService) { }
 
   ngOnInit() {
     this.requestNumber = this.route.snapshot.paramMap.get('id');
