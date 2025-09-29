@@ -68,7 +68,7 @@ The application supports the following screen resolutions:
 | Tablet      | 768px – 1024px     |
 | Desktop     | 1024px and above   |
 
-Built with **Bootstrap 5** grid system and media queries for adaptive layout.
+Built with **Bootstrap 5** grid system .
 
 ---
 
@@ -128,5 +128,6 @@ This mock data is also referenced in `constants.ts` for ADA-style field simulati
 
 
 ---
+
 
 
