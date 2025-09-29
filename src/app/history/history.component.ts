@@ -677,16 +677,16 @@ export class HistoryComponent
       localfileExtension === '.ppt' ||
       localfileExtension === '.pptx'
     ) {
-      this.fileIcon = 'assets/images/ppt1.png'; // Replace with actual icon path
+      this.fileIcon = 'assets/images/ppt-new.png'; // Replace with actual icon path
     } else if (localfileExtension === '.pdf') {
-      this.fileIcon = 'assets/images/download.png'; // Replace with actual icon path
+      this.fileIcon = 'assets/images/pdf-download.png'; // Replace with actual icon path
     } else if (
       localfileExtension === '.xls' ||
       localfileExtension === '.xlsx'
     ) {
       this.fileIcon = 'assets/images/xl.png'; // Replace with actual icon path
     } else {
-      this.fileIcon = 'assets/images/download(1)2.png'; // Replace with a default icon
+      this.fileIcon = 'assets/images/doc-download.png'; // Replace with a default icon
     }
 
     this.selectedFile = file;
@@ -737,7 +737,7 @@ export class HistoryComponent
     } else if (fileExtension === '.ppt' || fileExtension === '.pptx') {
       this.fileIcon = 'path_to_ppt_icon.png'; // Replace with actual icon path
     } else if (fileExtension === '.pdf') {
-      this.fileIcon = 'assets/images/download.png'; // Replace with actual icon path
+      this.fileIcon = 'assets/images/pdf-download.png'; // Replace with actual icon path
     } else {
       this.fileIcon = 'path_to_generic_icon.png'; // Replace with a default icon
     }
@@ -784,13 +784,13 @@ export class HistoryComponent
     if (localExt === '.doc' || localExt === '.docx') {
       this.fileIcon = 'assets/images/docs.png'; // Replace with actual icon path
     } else if (localExt === '.ppt' || localExt === '.pptx') {
-      this.fileIcon = 'assets/images/ppt1.png'; // Replace with actual icon path
+      this.fileIcon = 'assets/images/ppt-new.png'; // Replace with actual icon path
     } else if (localExt === '.pdf') {
-      this.fileIcon = 'assets/images/download.png'; // Replace with actual icon path
+      this.fileIcon = 'assets/images/pdf-download.png'; // Replace with actual icon path
     } else if (localExt === '.xls' || localExt === '.xlsx') {
       this.fileIcon = 'assets/images/xl.png'; // Replace with actual icon path
     } else {
-      this.fileIcon = 'assets/images/download(1)2.png'; // Replace with a default icon
+      this.fileIcon = 'assets/images/doc-download.png'; // Replace with a default icon
     }
 
     this.fileUploadFromAttachment = file;
@@ -1812,16 +1812,16 @@ export class HistoryComponent
           this.fileExtension === '.ppt' ||
           this.fileExtension === '.pptx'
         ) {
-          this.fileIcon = 'assets/images/ppt1.png'; // Replace with actual icon path
+          this.fileIcon = 'assets/images/ppt-new.png'; // Replace with actual icon path
         } else if (this.fileExtension === '.pdf') {
-          this.fileIcon = 'assets/images/download.png'; // Replace with actual icon path
+          this.fileIcon = 'assets/images/pdf-download.png'; // Replace with actual icon path
         } else if (
           this.fileExtension === '.xls' ||
           this.fileExtension === '.xlsx'
         ) {
           this.fileIcon = 'assets/images/xl.png'; // Replace with actual icon path
         } else {
-          this.fileIcon = 'assets/images/download(1)2.png'; // Replace with a default icon
+          this.fileIcon = 'assets/images/doc-download.png'; // Replace with a default icon
         }
         this.uploadFileName = fileMessages?.[0]?.fileName;
         this.uploadFileFirstTime = true;
@@ -1836,16 +1836,16 @@ export class HistoryComponent
             this.fileExtension === '.ppt' ||
             this.fileExtension === '.pptx'
           ) {
-            this.fileIcon = 'assets/images/ppt1.png'; // Replace with actual icon path
+            this.fileIcon = 'assets/images/ppt-new.png'; // Replace with actual icon path
           } else if (this.fileExtension === '.pdf') {
-            this.fileIcon = 'assets/images/download.png'; // Replace with actual icon path
+            this.fileIcon = 'assets/images/pdf-download.png'; // Replace with actual icon path
           } else if (
             this.fileExtension === '.xls' ||
             this.fileExtension === '.xlsx'
           ) {
             this.fileIcon = 'assets/images/xl.png'; // Replace with actual icon path
           } else {
-            this.fileIcon = 'assets/images/download(1)2.png'; // Replace with a default icon
+            this.fileIcon = 'assets/images/doc-download.png'; // Replace with a default icon
           }
           this.fileUploadFromAttachment = this.fields[23].value;
           this.fileUploadFromAttachmentName = this.fields[23].value;

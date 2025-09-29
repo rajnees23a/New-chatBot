@@ -242,7 +242,7 @@ export const mockComponentState = {
   staticBotMsg: false,
   selectedFile: mockFile,
   fileUploadFromAttachment: mockFile,
-  fileIcon: 'assets/images/download.png',
+  fileIcon: 'assets/images/pdf-download.png',
   fileUrlForChatUpload: 'blob:http://localhost/test.pdf',
   fileUrlForAttachmentUpload: 'blob:http://localhost/test.pdf',
   uploadFileName: 'test.pdf',

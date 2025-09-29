@@ -101,6 +101,8 @@ p {
 
 .btn-outline-primary:hover {
   background: #f1f5f9;
+   border: 1px solid #8f53f0;
+   color:#8f53f0;
 }
 
 .btn.add-btn {

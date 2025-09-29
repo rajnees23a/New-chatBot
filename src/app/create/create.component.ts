@@ -421,16 +421,16 @@ export class CreateComponent
       localfileExtension === '.ppt' ||
       localfileExtension === '.pptx'
     ) {
-      this.fileIcon = 'assets/images/ppt1.png'; // Replace with actual icon path
+      this.fileIcon = 'assets/images/ppt-new.png'; // Replace with actual icon path
     } else if (localfileExtension === '.pdf') {
-      this.fileIcon = 'assets/images/download.png'; // Replace with actual icon path
+      this.fileIcon = 'assets/images/pdf-download.png'; // Replace with actual icon path
     } else if (
       localfileExtension === '.xls' ||
       localfileExtension === '.xlsx'
     ) {
       this.fileIcon = 'assets/images/xl.png'; // Replace with actual icon path
     } else {
-      this.fileIcon = 'assets/images/download(1)2.png'; // Replace with a default icon
+      this.fileIcon = 'assets/images/doc-download.png'; // Replace with a default icon
     }
     this.selectedFile = file;
     const div3 = document.getElementById('textAbut');
@@ -478,13 +478,13 @@ export class CreateComponent
     if (localExt === '.doc' || localExt === '.docx') {
       this.fileIcon = 'assets/images/docs.png';
     } else if (localExt === '.ppt' || localExt === '.pptx') {
-      this.fileIcon = 'assets/images/ppt1.png';
+      this.fileIcon = 'assets/images/ppt-new.png';
     } else if (localExt === '.pdf') {
-      this.fileIcon = 'assets/images/download.png';
+      this.fileIcon = 'assets/images/pdf-download.png';
     } else if (localExt === '.xls' || localExt === '.xlsx') {
       this.fileIcon = 'assets/images/xl.png';
     } else {
-      this.fileIcon = 'assets/images/download(1)2.png';
+      this.fileIcon = 'assets/images/doc-download.png';
     }
     this.fileUploadFromAttachment = file;
     this.fileUrlForAttachmentUpload = URL.createObjectURL(file);
