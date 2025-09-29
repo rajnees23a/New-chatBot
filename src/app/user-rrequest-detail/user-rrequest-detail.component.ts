@@ -18,7 +18,6 @@ export class UserRRequestDetailComponent implements OnInit {
   requestData: RequestDetails[] = [];
   RequestDetailFromRequestPAge: any;
   Responsed: any;
-
   constructor(private route: ActivatedRoute, private api: SerrviceService) { }
 
   ngOnInit() {
@@ -47,7 +46,7 @@ export class UserRRequestDetailComponent implements OnInit {
       this.requestData.forEach((item: { Submitteddate: string | any[]; }) => {
         item.Submitteddate = item.Submitteddate.slice(0, 10);  // Extract the date part (YYYY-MM-DD)
       });
-      this.requestDetails = this.requestData.find((req: { Requestnumber: string | null; }) => req.Requestnumber == this.requestNumber) ?? null;
+     this.requestDetails = this.requestData.find((req: { Requestnumber: string | null; }) => req.Requestnumber == this.requestNumber) ?? null;
     });
   }
   fetchRequestChat() {

@@ -77,13 +77,8 @@ export class CarouselComponent implements OnInit {
     }
     this.isFirstSlide = this.currentSlideIndex === 0;
     this.setTotalSlides();
-    // this.checkIfLastSlide();
+    
   }
-
-  // hideChild() {
-  //   this.hideParent.emit();
-  // }
-
   setTotalSlides() {
     const carouselItems = document.querySelectorAll(
       '#carouselExampleIndicators .carousel-item'
