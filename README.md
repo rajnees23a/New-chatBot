@@ -93,7 +93,12 @@ Opens coverage report at:
 
 ### 🖼️ Sample Test & Coverage Screenshots
 
-<img width="1366" height="719" alt="Dufry_test" src="https://github.com/user-attachments/assets/38f957c2-030b-4afc-a0b2-4e28883bdd93" />
+<img width="1312" height="991" alt="test_specs" src="https://github.com/user-attachments/assets/a4241303-0c26-4b8f-b5ce-ff9d8a34715d" />
+
+<img width="1918" height="758" alt="component-wise-coverage" src="https://github.com/user-attachments/assets/2718f291-0926-4384-aa57-709200de85a5" />
+
+<img width="793" height="194" alt="overall_coverage" src="https://github.com/user-attachments/assets/be1f0890-a470-4003-92c5-ffdc59bcfa95" />
+
 
 ---
 
@@ -128,6 +133,7 @@ This mock data is also referenced in `constants.ts` for ADA-style field simulati
 
 
 ---
+
 
 
 
