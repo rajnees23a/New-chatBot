@@ -4,7 +4,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { UserRequestComponent } from './user-request/user-request.component';
 import { TestComponent } from './test/test.component';
-import { UserRRequestDetailComponent } from './user-rrequest-detail/user-rrequest-detail.component';
+import { UserRequestDetailComponent } from './user-request-detail/user-request-detail.component';
 import { HistoryComponent } from './history/history.component';
 import { CreateComponent } from './create/create.component';
 const routes: Routes = [
@@ -16,7 +16,7 @@ const routes: Routes = [
       { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: 'home', component: HomepageComponent },
       { path: 'request', component: UserRequestComponent },
-      { path: 'requestDetail/:id', component: UserRRequestDetailComponent },
+      { path: 'requestDetail/:id', component: UserRequestDetailComponent },
       { path: 'trial', component: TestComponent },
       { path: 'create', component: CreateComponent },
       { path: 'bic', component: HistoryComponent },

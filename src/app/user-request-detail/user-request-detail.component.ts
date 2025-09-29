@@ -5,19 +5,28 @@ import { APP_CONSTANTS } from '../constants';
 import { RequestDetails } from './user-request-detail.model';
 
 @Component({
-  selector: 'app-user-rrequest-detail',
-  templateUrl: './user-rrequest-detail.component.html',
-  styleUrls: ['./user-rrequest-detail.component.css']
+  selector: 'app-user-request-detail',
+  templateUrl: './user-request-detail.component.html',
+  styleUrls: ['./user-request-detail.component.css']
 })
 
-export class UserRRequestDetailComponent implements OnInit {
+export class UserRequestDetailComponent implements OnInit {
   staticText = APP_CONSTANTS.User_Request_Details;
   requestNumber: string | null = null;
-  requestDetails: RequestDetails | null = null;
+  //requestDetails: RequestDetails | null = null;
   activeTab: string = 'summary';
   requestData: RequestDetails[] = [];
   RequestDetailFromRequestPAge: any;
   Responsed: any;
+  requestDetails = {
+  Requestnumber: "RITM1226001",
+  Ideatitle: "Add AI chatbot support",
+  Submitteddate: "2025-09-05",
+  Lastupdated: "2025-09-12",
+  Totalnoofquestionscompleted: 5,
+  Status: "Pending_review",
+  Comments: 2
+};
   constructor(private route: ActivatedRoute, private api: ServiceService) { }
 
   ngOnInit() {
@@ -46,7 +55,7 @@ export class UserRRequestDetailComponent implements OnInit {
       this.requestData.forEach((item: { Submitteddate: string | any[]; }) => {
         item.Submitteddate = item.Submitteddate.slice(0, 10);  // Extract the date part (YYYY-MM-DD)
       });
-     this.requestDetails = this.requestData.find((req: { Requestnumber: string | null; }) => req.Requestnumber == this.requestNumber) ?? null;
+     //this.requestDetails = this.requestData.find((req: { Requestnumber: string | null; }) => req.Requestnumber == this.requestNumber) ?? null;
     });
   }
   fetchRequestChat() {
