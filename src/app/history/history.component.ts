@@ -24,13 +24,13 @@ import { Tooltip } from 'bootstrap';
 export class HistoryComponent
   implements OnDestroy, AfterViewChecked, AfterViewInit
 {
-  private dataSubscription!: Subscription;
+  public dataSubscription!: Subscription;
   fileExtension: string = '';
   addfileExtension: string = '';
 
   constructor(
-    private api: SerrviceService,
-    private ngZone: NgZone,
+    public api: SerrviceService,
+    public ngZone: NgZone,
     private datePipe: DatePipe,
     private route: ActivatedRoute,
     private router: Router
@@ -399,12 +399,33 @@ export class HistoryComponent
       console.log('errrr', err);
     }
   }
+  
+  setFileIcon(localfileExtension: string) {
+  if (localfileExtension === '.doc' || localfileExtension === '.docx') {
+    this.fileIcon = 'assets/images/docs.png';
+  } else if (localfileExtension === '.ppt' || localfileExtension === '.pptx') {
+    this.fileIcon = 'assets/images/ppt1.png';
+  } else if (localfileExtension === '.pdf') {
+    this.fileIcon = 'assets/images/download.png';
+  } else if (localfileExtension === '.xls' || localfileExtension === '.xlsx') {
+    this.fileIcon = 'assets/images/xl.png';
+  } else {
+    this.fileIcon = 'assets/images/download(1)2.png';
+  }
+}
 
   autoResize(): void {
     const textArea = this.textarea.nativeElement;
     textArea.style.height = 'auto'; // Reset height
     textArea.style.height = `${textArea.scrollHeight}px`; // Set height based on content
   }
+
+  stopListening(): void {
+  this.isListening = false;
+  if (this.recognition && typeof this.recognition.stop === 'function') {
+    this.recognition.stop();
+  }
+}
 
   handleUserInput(data: any) {
     if (this.selectedFile) {
@@ -621,9 +642,13 @@ export class HistoryComponent
   }
 
   dropDownSel() {
+     if (!this.selectedOptionsofDropdown || !this.selectedOptionsofDropdown[0]) {
+    return;
+  } else {
     this.userInput = this.selectedOptionsofDropdown[0];
-
     this.dataa.edit_field = this.editFieldVal;
+  }
+
   }
 
   startListening() {
@@ -950,6 +975,7 @@ export class HistoryComponent
         },
         error: (error) => {
           console.log('error', error);
+          this.loader = false;
         },
         complete: () => console.log('Completed'),
       });
@@ -993,6 +1019,7 @@ export class HistoryComponent
         },
         (error) => {
           console.log('error', error);
+          this.loader = false;
         }
       );
     } else {
@@ -1081,6 +1108,7 @@ export class HistoryComponent
         },
         (error) => {
           console.log('error', error);
+          this.loader = false;
         }
       );
     }
@@ -1131,6 +1159,7 @@ export class HistoryComponent
       },
       error: (error) => {
         console.log('error', error);
+        this.loader = false;
       },
       complete: () => console.log('Completed'),
     });
@@ -1177,6 +1206,7 @@ export class HistoryComponent
       },
       error: (error) => {
         console.log('error', error);
+        this.loader = false;
       },
       complete: () => console.log('Completed'),
     });
@@ -1188,17 +1218,15 @@ export class HistoryComponent
     this.createNew = this.receivedValue;
   }
 
-  splitByDot(str: string): string[] {
-    // This regex splits on periods not part of common abbreviations like "e.g."
-    return str
-      .split(/(?<!\b(?:e|i)\.g)\.(?!\S)/gi) // doesn't split on e.g. or i.e.
-      .map((item) => item.trim())
-      .filter((item) => item !== '');
+  splitByDot(str: string | undefined | null): string[] {
+  if (typeof str !== 'string') {
+    return [];
   }
-
-  validateField(field: any) {
-    field.valid = field.value.length > 5;
-  }
+  return str
+    .split(/(?<!\b(?:e|i)\.g)\.(?!\S)/gi)
+    .map((item) => item.trim())
+    .filter((item) => item !== '');
+}
 
   checkFirst10Completed() {
     const first10Fields = this.fields.slice(0, 9); // Get first 10 elements
@@ -1234,6 +1262,10 @@ export class HistoryComponent
   }
 
   editButton(indexVal: any) {
+    const field = this.fields[indexVal];
+  if (!field) {
+    return;
+  }
     if (this.fields[indexVal].label == 'Areas involved') {
       this.editDropButton(indexVal);
       setTimeout(() => {
@@ -1415,6 +1447,7 @@ export class HistoryComponent
       },
       error: (error) => {
         console.log('error', error);
+        this.loader = false;
       },
       complete: () => console.log('Completed'),
     });
@@ -1551,6 +1584,7 @@ export class HistoryComponent
       },
       error: (error) => {
         console.log('error', error);
+        this.loader = false;
       },
       complete: () => console.log('Completed'),
     });
@@ -1793,7 +1827,8 @@ export class HistoryComponent
     this.uploadFileFirstTime = false;
     this.fileUploadFromAttachmentName = '';
     this.fileUploadFromAttachment = null;
-    if (this.chatHistory) {
+    this.fileIcon = ''; 
+    if (this.chatHistory && this.chatHistory.length > 0) {
       let lastElement = this.chatHistory[this.chatHistory.length - 1];
       if (lastElement.dropdown) {
         this.botButtonResponse = lastElement.dropdown;
@@ -1855,6 +1890,7 @@ export class HistoryComponent
           this.uploadFileFirstTime = false;
           this.fileUploadFromAttachmentName = '';
           this.fileUploadFromAttachment = null;
+          this.fileIcon = '';
         }
       }
     }
@@ -1891,8 +1927,11 @@ export class HistoryComponent
     }
     this.progress = 0;
     this.progressPercentage = 0;
-    if (this.dataSubscription) {
-      this.dataSubscription.unsubscribe();
-    }
+    if (this.dataSubscription && typeof this.dataSubscription.unsubscribe === 'function') {
+    this.dataSubscription.unsubscribe();
+  }
+  if (this.recognition && typeof this.recognition.stop === 'function') {
+    this.recognition.stop();
+  }
   }
 }
