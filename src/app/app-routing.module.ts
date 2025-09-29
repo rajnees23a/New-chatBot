@@ -11,10 +11,9 @@ const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    // component: ChatGptCodeComponent,
+
     children: [
       { path: '', redirectTo: '/home', pathMatch: 'full' },
-      // { path: '', component: HomepageComponent },
       { path: 'home', component: HomepageComponent },
       { path: 'request', component: UserRequestComponent },
       { path: 'requestDetail/:id', component: UserRRequestDetailComponent },
@@ -27,6 +26,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

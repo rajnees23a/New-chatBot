@@ -38,3 +38,12 @@
 .user-request-detail-text {
   max-width: 100%;
 }
+
+.request-status {
+  background: #dbeafe !important;
+  color: #2563eb !important;
+  border: 1px solid #bfdbfe;
+}
+.request-text {
+  color: #8f53f0 !important;
+}

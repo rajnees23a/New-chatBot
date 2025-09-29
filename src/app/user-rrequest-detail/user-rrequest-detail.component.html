@@ -158,7 +158,7 @@
                       <td class="py-3">
                         <a
                           href="#"
-                          class="link-primary text-uppercase fw-semibold px-2 py-2 text-truncate d-inline-block user-request-detail-text"
+                          class="link-primary request-text text-uppercase fw-semibold px-2 py-2 text-truncate d-inline-block user-request-detail-text"
                           title="{{ requestDetails?.Requestnumber }}"
                         >
                           {{ requestDetails?.Requestnumber }}
@@ -171,7 +171,7 @@
                       </td>
                       <td class="py-3">
                         <span
-                          class="badge d-inline-flex align-items-center px-2 py-2 small"
+                          class="badge request-status d-inline-flex align-items-center px-2 py-2 small"
                           [ngClass]="{
                             'text-bg-primary':
                               requestDetails?.Status === 'Pending_review' ||
