@@ -118,6 +118,15 @@ This mock data is also referenced in `constants.ts` for ADA-style field simulati
 ## 🖼️ Application Screenshots
 
 
+<img width="1359" height="671" alt="create_request_1440px_resolution" src="https://github.com/user-attachments/assets/e59057b4-698c-4ba2-b6ff-6ba14498dd69" />
+
+<img width="1366" height="625" alt="create_request_1024px_resolution" src="https://github.com/user-attachments/assets/3e8a3126-666d-4d2b-9ab7-ab221888b9f3" />
+
+<img width="1353" height="631" alt="create_request_768px_resolution" src="https://github.com/user-attachments/assets/5fec0e1e-9abe-4977-9f40-7e53233552dd" />
+
+<img width="1336" height="607" alt="create_request_375px_mobile_resolution" src="https://github.com/user-attachments/assets/10a78789-fdb1-42fa-969c-890f3bc4e637" />
+
 
 ---
+
 
