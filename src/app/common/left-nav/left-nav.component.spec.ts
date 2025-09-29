@@ -201,4 +201,42 @@ describe('LeftNavComponent', () => {
     component.deletingTitle = 'DraftTitle';
     expect(component.deleteConfirmTitle).toContain('DraftTitle');
   });
+
+it('should handle processData with empty, ADA, and valid titles', () => {
+  const data = [
+    { session_id: '1', user_name: 'u', session_data: '{}' }, // empty
+    { 
+      session_id: '2', 
+      user_name: 'v', 
+      session_data: JSON.stringify({ 
+        formFieldValue: [{ label: component.navText.YOUR_IDEA_TITLE, value: component.navText.ADA_STATIC_TEXT }] 
+      }) 
+    }, // ADA text
+    { 
+      session_id: '3', 
+      user_name: 'w', 
+      session_data: JSON.stringify({ 
+        formFieldValue: [{ label: component.navText.YOUR_IDEA_TITLE, value: 'Valid Title' }] 
+      }) 
+    } // valid title
+  ];
+
+  component.processData(data);
+
+  expect(component.modifiedData[0].displayTitle).toContain('BIC draft'); // empty
+  expect(component.modifiedData[1].displayTitle).toContain('BIC draft'); // ADA text
+  expect(component.modifiedData[2].displayTitle).toBe('Valid Title'); // valid title
+});
+
+it('should handle invalid dates in sortAccordingToDate', () => {
+  const arr = [{ timestamp: 'invalid' }, { timestamp: '2024-01-01' }];
+  component.sortAccordingToDate(arr);
+  expect(arr.length).toBe(2);
+});
+
+it('should not throw if modal element is missing', () => {
+  component.deletingTitle = 'Title';
+  expect(() => component.deleteConfirmationBox('user','sess','title')).not.toThrow();
+});
+
 });
