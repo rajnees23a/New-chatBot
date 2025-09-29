@@ -92,7 +92,8 @@ Opens coverage report at:
 ```
 
 ### 🖼️ Sample Test & Coverage Screenshots
-_Replace these with actual screenshots after test execution._
+
+<img width="1366" height="719" alt="Dufry_test" src="https://github.com/user-attachments/assets/38f957c2-030b-4afc-a0b2-4e28883bdd93" />
 
 ---
 
@@ -116,6 +117,7 @@ This mock data is also referenced in `constants.ts` for ADA-style field simulati
 
 ## 🖼️ Application Screenshots
 
-_Replace these with actual UI screenshots from your app._
+
 
 ---
+
