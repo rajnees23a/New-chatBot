@@ -22,7 +22,7 @@ ChatBot is an Angular-based AI-powered assistant designed to help users ideate, 
 ## 📦 Tech Stack
 
 | Category        | Packages & Tools |
-|----------------|------------------|
+|-----------------|------------------|
 | **Framework**   | Angular 15.2.x   |
 | **UI Libraries**| Angular Material, Bootstrap 5.3.3, FontAwesome |
 | **Animations**  | Animate.css      |
@@ -42,6 +42,7 @@ ChatBot is an Angular-based AI-powered assistant designed to help users ideate, 
 | `ng build`                              | Builds the project into `dist/` |
 | `ng build --watch --configuration development` | Builds in watch mode for development |
 | `ng test`                               | Runs unit tests via Karma |
+| `ng test --code-coverage`               | Runs unit tests and generates coverage report |
 
 ---
 
@@ -50,3 +51,71 @@ ChatBot is an Angular-based AI-powered assistant designed to help users ideate, 
 Run:
 ```bash
 ng serve
+```
+
+Navigate to [http://localhost:4200/](http://localhost:4200/).  
+The application will automatically reload if you change any of the source files.
+
+---
+
+## 📱 Responsive Design
+
+The application supports the following screen resolutions:
+
+| Device Type | Resolution Range   |
+|-------------|--------------------|
+| Mobile      | 360px – 768px      |
+| Tablet      | 768px – 1024px     |
+| Desktop     | 1024px and above   |
+
+Built with **Bootstrap 5** grid system and media queries for adaptive layout.
+
+---
+
+## 🧪 Testing & Coverage
+
+### ✅ Unit Tests
+Run:
+```bash
+ng test
+```
+
+### 📊 Coverage Report
+Run:
+```bash
+ng test --code-coverage
+```
+
+Opens coverage report at:
+```
+/coverage/chat-bot/index.html
+```
+
+### 🖼️ Sample Test & Coverage Screenshots
+_Replace these with actual screenshots after test execution._
+
+---
+
+## ⚙️ Configuration & Mock Data
+
+### 🔧 Configuration File
+Static constants and metadata mappings are defined in:
+```
+src/app/constants.ts
+```
+
+### 📦 Mock Data
+Mock data for static form population and testing is located at:
+```
+src/app/create/create.component.mock.ts
+```
+
+This mock data is also referenced in `constants.ts` for ADA-style field simulation.
+
+---
+
+## 🖼️ Application Screenshots
+
+_Replace these with actual UI screenshots from your app._
+
+---
