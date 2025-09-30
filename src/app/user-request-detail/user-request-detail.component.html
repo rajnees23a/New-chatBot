@@ -82,12 +82,12 @@
                 <i class="bi bi-check-circle-fill text-success fs-4"></i>
                 <div class="min-w-0">
                   <span
-                    class="fw-semibold text-dark d-block letter-spacing-1 small"
+                    class="fw-semibold text-dark d-block letter-spacing-1 small mb-1"
                   >
                     {{ staticText.canvas }}
                   </span>
                   <p
-                    class="text-muted small mb-1 mt-2 text-truncate"
+                    class="text-muted small mb-2 text-truncate"
                     title="{{ requestDetails?.Ideatitle }}"
                   >
                     {{ requestDetails?.Ideatitle }}
@@ -106,10 +106,10 @@
                     class="img-fluid user-detail-inner-img"
                 /></i>
                 <div class="min-w-0">
-                  <span class="fw-semibold text-dark d-block small">
+                  <span class="fw-semibold text-dark d-block small mb-1">
                     {{ staticText.review }}
                   </span>
-                  <p class="text-muted small mb-1 mt-2">
+                  <p class="text-muted small mb-2">
                     {{ staticText.reviewText }}
                   </p>
                 </div>
@@ -121,10 +121,10 @@
               >
                 <i><span class="number-badge">3</span></i>
                 <div class="min-w-0">
-                  <span class="fw-semibold text-dark d-block small">
+                  <span class="fw-semibold text-dark d-block small mb-1">
                     {{ staticText.feedback }}
                   </span>
-                  <p class="text-muted small mb-1 mt-2">
+                  <p class="text-muted small mb-2">
                     {{ staticText.feedbackText }}
                   </p>
                 </div>
@@ -135,10 +135,10 @@
               >
                 <i><span class="number-badge">4</span></i>
                 <div class="min-w-0">
-                  <span class="fw-semibold text-dark d-block small">
+                  <span class="fw-semibold text-dark d-block small mb-1">
                     {{ staticText.accepted }}
                   </span>
-                  <p class="text-muted small mb-1 mt-2">
+                  <p class="text-muted small mb-2">
                     {{ staticText.acceptedText }}
                   </p>
                 </div>
@@ -152,10 +152,10 @@
                 >
                   <tbody>
                     <tr>
-                      <td class="text-secondary small px-2 py-3">
+                      <td class="text-secondary small px-2 py-2">
                         <span>{{ staticText.request }}</span>
                       </td>
-                      <td class="py-3">
+                      <td class="py-2">
                         <a
                           href="#"
                           class="link-primary request-text text-uppercase fw-semibold px-2 py-2 text-truncate d-inline-block user-request-detail-text"
@@ -166,10 +166,10 @@
                       </td>
                     </tr>
                     <tr>
-                      <td class="text-secondary small px-2 py-3">
+                      <td class="text-secondary small px-2 py-2">
                         <span>{{ staticText.status }}</span>
                       </td>
-                      <td class="py-3">
+                      <td class="py-2">
                         <span
                           class="badge request-status d-inline-flex align-items-center px-2 py-2 small"
                           [ngClass]="{
@@ -187,34 +187,34 @@
                       </td>
                     </tr>
                     <tr>
-                      <td class="text-secondary small px-2 py-3">
+                      <td class="text-secondary small px-2 py-2">
                         <span>{{ staticText.date }}</span>
                       </td>
-                      <td class="fw-semibold px-2 py-3 text-nowrap">
+                      <td class="fw-semibold px-2 py-2 text-nowrap">
                         {{ requestDetails?.Submitteddate }}
                       </td>
                     </tr>
                     <tr>
-                      <td class="text-secondary small px-2 py-3">
+                      <td class="text-secondary small px-2 py-2">
                         <span>{{ staticText.last }}</span>
                       </td>
-                      <td class="fw-semibold px-2 py-3 text-nowrap">
+                      <td class="fw-semibold px-2 py-2 text-nowrap">
                         {{ requestDetails?.Lastupdated }}
                       </td>
                     </tr>
                     <tr>
-                      <td class="text-secondary small px-2 py-3">
+                      <td class="text-secondary small px-2 py-2">
                         <span>{{ staticText.completedQuestions }}</span>
                       </td>
-                      <td class="fw-semibold px-2 py-3">
+                      <td class="fw-semibold px-2 py-2">
                         {{ requestDetails?.Totalnoofquestionscompleted }}
                       </td>
                     </tr>
                     <tr>
-                      <td class="text-secondary small px-2 py-3">
+                      <td class="text-secondary small px-2 py-2">
                         <span>{{ staticText.comments }}</span>
                       </td>
-                      <td class="fw-semibold px-2 py-3">0</td>
+                      <td class="fw-semibold px-2 py-2">0</td>
                     </tr>
                   </tbody>
                 </table>
