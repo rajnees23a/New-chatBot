@@ -36,9 +36,14 @@
   --bs-progress-height: 8px;
   width: 131px;
 }
-.choose-span{
-  color: #8F53F0;
+.choose-span {
+  color: #8f53f0;
 }
-.guideboxms{
+.guideboxms {
   margin-left: 45px !important;
+}
+@media (max-width: 1024px) and (min-width: 768px) {
+  .progress-inner-bar {
+    width: 100px !important;
+  }
 }
