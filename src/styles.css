@@ -781,6 +781,7 @@ textarea {
 .user-detail-wrapper {
   height: calc(100vh - 50px);
   overflow: hidden;
+  overflow-y:scroll !important;
 }
 .user-detail-wrapper #leftBox .headingClass {
   margin-left: 0;
