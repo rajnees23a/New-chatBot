@@ -296,7 +296,7 @@
         <div
           id="textArDiv"
           class="send-input-wrap mx-0"
-         [ngStyle]="{ 'margin-bottom': isMobile ? '20px' : '-20px' }"
+          [ngStyle]="{ 'margin-bottom': isMobile ? '20px' : '-20px' }"
         >
           <div *ngIf="selectedFile" class="file-info">
             <div class="file-icon">
@@ -416,8 +416,11 @@
       </div>
     </div>
 
-    <div id="rightBox" class="rbox p-2 flex-fill col-12 col-md-6 col-lg-6" 
-     [ngStyle]="{ 'margin-top': isMobile ? '48px' : '0px' }">
+    <div
+      id="rightBox"
+      class="rbox p-2 flex-fill col-12 col-md-6 col-lg-6"
+      [ngStyle]="{ 'margin-top': isMobile ? '48px' : '0px' }"
+    >
       <div
         class="fielsReq d-flex flex-column p-3"
         [ngClass]="isActive ? 'h-75' : 'h-100'"
@@ -433,7 +436,8 @@
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
                 title="Collapse"
-                class="business-idea-ic mb-3"
+                class="business-idea-ic"
+                [ngClass]="isActive ? 'mb-3' : 'mb-0'"
               >
                 <img src="../../assets/images/business.svg" alt="business" />
               </i>
