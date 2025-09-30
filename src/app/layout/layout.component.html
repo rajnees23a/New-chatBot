@@ -2,26 +2,14 @@
   <!-- Sidebar -->
   <div
     class="flex-shrink-0"
-    [ngStyle]="{
-      width: isMobile
-        ? '15%'
-        : isTablet
-        ? '10%'
-        : isLaptop
-        ? '8%'
-        : isDesktop
-        ? '5%'
-        : '3%'
-    }"
+   
   >
     <app-left-nav></app-left-nav>
   </div>
   <!-- Main Layout -->
   <div
-    class="flex-grow-1 d-flex flex-column min-vh-100"
-    [ngStyle]="{
-      width: isMobile ? '85%' : isTablet ? '90%' : isLaptop ? '92%': isDesktop ? '95%' :'97%'
-    }"
+    class="flex-grow-1 overflow-x-scroll d-flex flex-column min-vh-100"
+   
   >
     <app-header></app-header>
     <main class="flex-grow-1 d-flex flex-column position-relative">
