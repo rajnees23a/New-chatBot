@@ -19,7 +19,7 @@ import { Tooltip } from 'bootstrap';
 @Component({
   selector: 'app-history',
   templateUrl: './history.component.html',
- 
+  styleUrls: ['./history.component.css']
 })
 export class HistoryComponent
   implements OnDestroy, AfterViewChecked, AfterViewInit
@@ -60,6 +60,7 @@ export class HistoryComponent
   recognition: any;
   receivedValue: boolean | null = null;
   isCollapsed = false;
+  isTab = window.innerWidth < 768 && window.innerWidth < 1024;
   @ViewChild('reviewModal') reviewModal!: ElementRef;
   @ViewChild('chatContainerBox') chatContainerBox!: ElementRef;
   @ViewChild('tooltipRef', { static: false }) tooltipElement!: ElementRef;
@@ -399,20 +400,26 @@ export class HistoryComponent
       console.log('errrr', err);
     }
   }
-  
+
   setFileIcon(localfileExtension: string) {
-  if (localfileExtension === '.doc' || localfileExtension === '.docx') {
-    this.fileIcon = 'assets/images/docs.png';
-  } else if (localfileExtension === '.ppt' || localfileExtension === '.pptx') {
-    this.fileIcon = 'assets/images/ppt1.png';
-  } else if (localfileExtension === '.pdf') {
-    this.fileIcon = 'assets/images/download.png';
-  } else if (localfileExtension === '.xls' || localfileExtension === '.xlsx') {
-    this.fileIcon = 'assets/images/xl.png';
-  } else {
-    this.fileIcon = 'assets/images/download(1)2.png';
+    if (localfileExtension === '.doc' || localfileExtension === '.docx') {
+      this.fileIcon = 'assets/images/docs.png';
+    } else if (
+      localfileExtension === '.ppt' ||
+      localfileExtension === '.pptx'
+    ) {
+      this.fileIcon = 'assets/images/ppt1.png';
+    } else if (localfileExtension === '.pdf') {
+      this.fileIcon = 'assets/images/download.png';
+    } else if (
+      localfileExtension === '.xls' ||
+      localfileExtension === '.xlsx'
+    ) {
+      this.fileIcon = 'assets/images/xl.png';
+    } else {
+      this.fileIcon = 'assets/images/download(1)2.png';
+    }
   }
-}
 
   autoResize(): void {
     const textArea = this.textarea.nativeElement;
@@ -421,11 +428,11 @@ export class HistoryComponent
   }
 
   stopListening(): void {
-  this.isListening = false;
-  if (this.recognition && typeof this.recognition.stop === 'function') {
-    this.recognition.stop();
+    this.isListening = false;
+    if (this.recognition && typeof this.recognition.stop === 'function') {
+      this.recognition.stop();
+    }
   }
-}
 
   handleUserInput(data: any) {
     if (this.selectedFile) {
@@ -642,13 +649,12 @@ export class HistoryComponent
   }
 
   dropDownSel() {
-     if (!this.selectedOptionsofDropdown || !this.selectedOptionsofDropdown[0]) {
-    return;
-  } else {
-    this.userInput = this.selectedOptionsofDropdown[0];
-    this.dataa.edit_field = this.editFieldVal;
-  }
-
+    if (!this.selectedOptionsofDropdown || !this.selectedOptionsofDropdown[0]) {
+      return;
+    } else {
+      this.userInput = this.selectedOptionsofDropdown[0];
+      this.dataa.edit_field = this.editFieldVal;
+    }
   }
 
   startListening() {
@@ -1219,14 +1225,14 @@ export class HistoryComponent
   }
 
   splitByDot(str: string | undefined | null): string[] {
-  if (typeof str !== 'string') {
-    return [];
+    if (typeof str !== 'string') {
+      return [];
+    }
+    return str
+      .split(/(?<!\b(?:e|i)\.g)\.(?!\S)/gi)
+      .map((item) => item.trim())
+      .filter((item) => item !== '');
   }
-  return str
-    .split(/(?<!\b(?:e|i)\.g)\.(?!\S)/gi)
-    .map((item) => item.trim())
-    .filter((item) => item !== '');
-}
 
   checkFirst10Completed() {
     const first10Fields = this.fields.slice(0, 9); // Get first 10 elements
@@ -1263,9 +1269,9 @@ export class HistoryComponent
 
   editButton(indexVal: any) {
     const field = this.fields[indexVal];
-  if (!field) {
-    return;
-  }
+    if (!field) {
+      return;
+    }
     if (this.fields[indexVal].label == 'Areas involved') {
       this.editDropButton(indexVal);
       setTimeout(() => {
@@ -1827,7 +1833,7 @@ export class HistoryComponent
     this.uploadFileFirstTime = false;
     this.fileUploadFromAttachmentName = '';
     this.fileUploadFromAttachment = null;
-    this.fileIcon = ''; 
+    this.fileIcon = '';
     if (this.chatHistory && this.chatHistory.length > 0) {
       let lastElement = this.chatHistory[this.chatHistory.length - 1];
       if (lastElement.dropdown) {
@@ -1927,11 +1933,14 @@ export class HistoryComponent
     }
     this.progress = 0;
     this.progressPercentage = 0;
-    if (this.dataSubscription && typeof this.dataSubscription.unsubscribe === 'function') {
-    this.dataSubscription.unsubscribe();
-  }
-  if (this.recognition && typeof this.recognition.stop === 'function') {
-    this.recognition.stop();
-  }
+    if (
+      this.dataSubscription &&
+      typeof this.dataSubscription.unsubscribe === 'function'
+    ) {
+      this.dataSubscription.unsubscribe();
+    }
+    if (this.recognition && typeof this.recognition.stop === 'function') {
+      this.recognition.stop();
+    }
   }
 }

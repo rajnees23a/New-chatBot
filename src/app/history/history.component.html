@@ -353,8 +353,22 @@
               <span>Your business idea overview</span>
             </p>
           </div>
-          <div class="col-md-4 prg-out-wrap">
-            <div class="progress mt-2">
+          <div
+            class="col-md-4 prg-out-wrap"
+            [ngClass]="
+              isActive
+                ? 'align-items:start !important'
+                : 'align-items:flex-end !important'
+            "
+          >
+            <div
+              class="progress mt-2"
+              [ngClass]="
+                isActive && isTab
+                  ? 'width:45px !important'
+                  : 'width:90px !important'
+              "
+            >
               <div
                 class="progress-bar bg-success"
                 [style.width.%]="progress"
@@ -502,7 +516,8 @@
                       (click)="fileInputAttach.click()"
                       class="btn choose-file"
                     >
-                      Drag and drop or <span> Choose files </span>
+                      <span class="notFilledYetText">Drag and drop or</span
+                      ><span class="choose-span"> Choose files</span>
                     </button>
                     <div
                       *ngIf="
@@ -618,9 +633,9 @@
             </div>
           </div>
         </div>
-        <div class="subnit-btn">
+        <div class="subnit-btn p-2 bg-white">
           <button
-            class="btn btn-success"
+            class="btn btn-purple"
             [disabled]="buttonDisabled"
             (click)="submitButton()"
           >
