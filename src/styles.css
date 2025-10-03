@@ -101,8 +101,8 @@ p {
 
 .btn-outline-primary:hover {
   background: #f1f5f9;
-   border: 1px solid #8f53f0;
-   color:#8f53f0;
+  border: 1px solid #8f53f0;
+  color: #8f53f0;
 }
 
 .btn.add-btn {
@@ -136,7 +136,7 @@ p {
   padding: 16px;
   height: calc(100vh - 180px);
   overflow: auto;
-  }
+}
 .chat-bubble {
   padding: 10px;
   border-radius: 10px;
@@ -439,7 +439,6 @@ textarea {
 }
 .progress {
   background: #e1d7fd;
-  width: 131px;
   height: 8px;
   margin-bottom: 5px;
 }
@@ -455,7 +454,6 @@ textarea {
 .prg-out-wrap {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
 }
 .business-idea-ic {
   margin-right: 5px;
@@ -781,7 +779,6 @@ textarea {
 .user-detail-wrapper {
   height: calc(100vh - 50px);
   overflow: hidden;
-  overflow-y:scroll !important;
 }
 .user-detail-wrapper #leftBox .headingClass {
   margin-left: 0;
@@ -798,7 +795,7 @@ textarea {
   width: 100%;
 }
 .user-detail-wrapper .form-container {
-  height: calc(100vh - 212px);
+  height: calc(100vh - 288px);
   overflow: auto;
 }
 
@@ -829,7 +826,14 @@ textarea {
 @media (max-width: 768px) {
   html,
   body {
-    overflow-y: auto; 
-    overflow-x: hidden; 
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .user-detail-wrapper {
+    overflow-y: scroll !important;
+  }
+  .chatbot-wrap{
+    overflow-y:scroll !important;
   }
 }
+
