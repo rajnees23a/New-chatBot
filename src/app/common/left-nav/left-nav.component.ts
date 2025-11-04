@@ -17,11 +17,119 @@ export class LeftNavComponent implements OnInit, OnDestroy {
   public routerSubscription: Subscription = new Subscription;
   public boundClickHandler = this.closeDropdownOnClickOutside.bind(this);
   dataSubscription: Subscription = new Subscription();
+  mockDraftSubscription: Subscription = new Subscription();
   modifiedData: ModifiedDraft[] = [];
   bicCounter = 1;
   selectedItem: number | null = null;
   isItemSelected: boolean = false;
   openedDropdownIndex: number | null = null;
+
+  // Mock data for demo purposes
+  // Set mockEnabled = false to use real API calls
+  // Set mockEnabled = true to use mock data for demo/testing
+  private mockEnabled = true; // <-- Toggle this to switch between mock and real data
+  
+  private mockDraftData = [
+    {
+      session_id: 'draft_001',
+      user_name: 'john.doe',
+      timestamp: '2024-11-03T14:30:00Z',
+      session_data: JSON.stringify({
+        chatHistory: [
+          {
+            text: "Hello! Let's start by understanding your idea. Give me a brief overview, covering the key challenge and what you want to achieve",
+            sender: 'bot'
+          },
+          {
+            text: "I want to create a mobile app for inventory management in our warehouses. Currently, we use paper-based tracking which is slow and error-prone.",
+            sender: 'user',
+            isFile: false
+          },
+          {
+            text: "That's a great initiative! Digital inventory management can significantly improve accuracy and efficiency. Can you tell me more about the specific problems you're facing with the current paper-based system?",
+            sender: 'bot'
+          },
+          {
+            text: "We have issues with real-time tracking, frequent data entry errors, and it takes too long to locate items in our large warehouse.",
+            sender: 'user',
+            isFile: false
+          }
+        ],
+        formFieldValue: [
+          { label: 'Your idea title', value: 'Mobile Inventory Management App', valid: true, editing: false, image: 'assets/images/title.svg', completed: true },
+          { label: 'Problem statement', value: 'Paper-based inventory tracking is slow, error-prone, and lacks real-time visibility in warehouse operations.', valid: true, editing: false, image: 'assets/images/problem-statement.svg', completed: true },
+          { label: 'Objective', value: '', valid: false, editing: false, image: 'assets/images/objective.svg', completed: false }
+        ],
+        submit: false
+      })
+    },
+    {
+      session_id: 'draft_002', 
+      user_name: 'jane.smith',
+      timestamp: '2024-11-02T16:45:00Z',
+      session_data: JSON.stringify({
+        chatHistory: [
+          {
+            text: "Hello! Let's start by understanding your idea. Give me a brief overview, covering the key challenge and what you want to achieve",
+            sender: 'bot'
+          },
+          {
+            text: "I want to implement an employee wellness program with a dedicated app for tracking fitness, mental health resources, and team challenges.",
+            sender: 'user',
+            isFile: false
+          },
+          {
+            text: "Excellent idea! Employee wellness programs can boost productivity and job satisfaction. What specific wellness challenges are you seeing in your organization?",
+            sender: 'bot'
+          }
+        ],
+        formFieldValue: [
+          { label: 'Your idea title', value: 'Employee Wellness Program App', valid: true, editing: false, image: 'assets/images/title.svg', completed: true },
+          { label: 'Problem statement', value: '', valid: false, editing: false, image: 'assets/images/problem-statement.svg', completed: false },
+          { label: 'Objective', value: '', valid: false, editing: false, image: 'assets/images/objective.svg', completed: false }
+        ],
+        submit: false
+      })
+    },
+    {
+      session_id: 'draft_003',
+      user_name: 'mike.johnson', 
+      timestamp: '2024-11-01T11:20:00Z',
+      session_data: JSON.stringify({
+        chatHistory: [
+          {
+            text: "Hello! Let's start by understanding your idea. Give me a brief overview, covering the key challenge and what you want to achieve",
+            sender: 'bot'
+          },
+          {
+            text: "I want to create an automated scheduling system for our maintenance team. Currently, we schedule everything manually which leads to conflicts and inefficiencies.",
+            sender: 'user',
+            isFile: false
+          },
+          {
+            text: "That sounds like a valuable automation project! Manual scheduling can definitely create bottlenecks. What are the main pain points you're experiencing with the current process?",
+            sender: 'bot'
+          },
+          {
+            text: "Double bookings, missed maintenance windows, difficulty tracking technician availability, and poor communication about schedule changes.",
+            sender: 'user',
+            isFile: false
+          },
+          {
+            text: "I understand the challenges clearly. What would be your primary objectives with this automated scheduling system?",
+            sender: 'bot'
+          }
+        ],
+        formFieldValue: [
+          { label: 'Your idea title', value: 'Automated Maintenance Scheduling System', valid: true, editing: false, image: 'assets/images/title.svg', completed: true },
+          { label: 'Problem statement', value: 'Manual scheduling leads to double bookings, missed maintenance windows, poor technician availability tracking, and communication issues.', valid: true, editing: false, image: 'assets/images/problem-statement.svg', completed: true },
+          { label: 'Objective', value: 'Implement an automated scheduling system to eliminate conflicts, improve resource utilization, and enhance communication.', valid: true, editing: false, image: 'assets/images/objective.svg', completed: true },
+          { label: 'Key results', value: '', valid: false, editing: false, image: 'assets/images/key-result.svg', completed: false }
+        ],
+        submit: false
+      })
+    }
+  ];
 
 
   constructor(private router: Router, private dataService: ServiceService, private cdr: ChangeDetectorRef) { }
@@ -50,6 +158,19 @@ export class LeftNavComponent implements OnInit, OnDestroy {
       this.selectedItem = null;
     });
     this.fetchDraftData();
+    
+    // Subscribe to mock draft changes
+    if (this.mockEnabled) {
+      this.mockDraftSubscription = this.dataService.mockDraft$.subscribe(draftAction => {
+        if (draftAction) {
+          if (draftAction.action === 'save') {
+            this.addMockDraft(draftAction.sessionId, draftAction.userName, draftAction.chatHistory, draftAction.formFieldValue);
+          } else if (draftAction.action === 'delete') {
+            this.removeMockDraft(draftAction.sessionId, draftAction.userName);
+          }
+        }
+      });
+    }
   }
 
   get deleteConfirmTitle() {
@@ -58,20 +179,89 @@ export class LeftNavComponent implements OnInit, OnDestroy {
 
   // Method to trigger Draft data retrieval
   fetchDraftData() {
-    const data = { user_name: this.dataService.userName };
-    this.dataService.retriveData(data);
-    this.setData();
+    if (this.mockEnabled) {
+      // Use mock data
+      this.loadMockDraftData();
+    } else {
+      // Use real API
+      const data = { user_name: this.dataService.userName };
+      this.dataService.retriveData(data);
+      this.setData();
+    }
+  }
+
+  loadMockDraftData() {
+    // Process mock data directly
+    this.processData(this.mockDraftData);
+    
+    // Auto-expand sidebar when there are drafts for better demo experience
+    if (this.modifiedData.length > 0 && this.mockEnabled) {
+      this.isCollapsed = true;
+    }
+  }
+
+  // Method to add a new draft to mock data (can be called from create component)
+  addMockDraft(sessionId: string, userName: string, chatHistory: any[], formFieldValue: any[]) {
+    if (this.mockEnabled) {
+      const newDraft = {
+        session_id: sessionId,
+        user_name: userName,
+        timestamp: new Date().toISOString(),
+        session_data: JSON.stringify({
+          chatHistory: chatHistory,
+          formFieldValue: formFieldValue,
+          submit: false
+        })
+      };
+      
+      this.mockDraftData.unshift(newDraft); // Add to beginning of array
+      this.fetchDraftData(); // Refresh the display
+    }
+  }
+
+  // Method to remove a draft from mock data
+  removeMockDraft(sessionId: string, userName: string) {
+    if (this.mockEnabled) {
+      const index = this.mockDraftData.findIndex(draft => 
+        draft.session_id === sessionId && 
+        draft.user_name === userName
+      );
+      if (index > -1) {
+        this.mockDraftData.splice(index, 1);
+        this.fetchDraftData(); // Refresh the display
+      }
+    }
   }
 
   deleteDraft() {
-    const data = {
-      user_name: this.deletingUserNAme,
-      session_id: this.deleteingSesionId
+    if (this.mockEnabled) {
+      // Remove from mock data
+      const index = this.mockDraftData.findIndex(draft => 
+        draft.session_id === this.deleteingSesionId && 
+        draft.user_name === this.deletingUserNAme
+      );
+      if (index > -1) {
+        this.mockDraftData.splice(index, 1);
+        this.fetchDraftData(); // Refresh the display
+      }
+      
+      // Show success message
+      this.successDivText = this.navText.DELETE_SUCCESS;
+      this.successDivCloseAfterSec();
+      
+      // Navigate to home
+      this.router.navigate(['/home'], { queryParams: { id: 'home' } });
+    } else {
+      // Use real API
+      const data = {
+        user_name: this.deletingUserNAme,
+        session_id: this.deleteingSesionId
+      }
+      this.dataService.deletDraftData(data);
+      this.fetchDraftData();
+      this.dataService.triggerAction(this.navText.DELETE_SUCCESS);
+      this.router.navigate(['/home'], { queryParams: { id: 'home' } });
     }
-    this.dataService.deletDraftData(data);
-    this.fetchDraftData();
-    this.dataService.triggerAction(this.navText.DELETE_SUCCESS);
-    this.router.navigate(['/home'], { queryParams: { id: 'home' } });
   }
 
   successDivCloseAfterSec() {
@@ -104,12 +294,16 @@ export class LeftNavComponent implements OnInit, OnDestroy {
           } catch (e) {
             parsedSessionData = {};
           }
+        } else if (typeof item.session_data === 'object') {
+          // Handle case where session_data is already an object (for mock data)
+          parsedSessionData = item.session_data;
         }
         // Return a new object with the original data plus the parsed session_data
         return {
           session_id: item.session_id,
           user_name: item.user_name,
-          session_data: parsedSessionData
+          session_data: parsedSessionData,
+          timestamp: item.timestamp // Preserve timestamp for sorting
         };
       });
       if (parsedData) {
@@ -214,6 +408,9 @@ ngOnDestroy() {
   }
   if (this.dataSubscription) {
     this.dataSubscription.unsubscribe();
+  }
+  if (this.mockDraftSubscription) {
+    this.mockDraftSubscription.unsubscribe();
   }
 }
 }

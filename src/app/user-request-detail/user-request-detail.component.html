@@ -232,7 +232,9 @@
       aria-labelledby="nav-profile-tab"
       tabindex="0"
     >
-      <app-history *ngIf="activeTab === 'idea'"></app-history>
+      <div class="container-fluid p-0" *ngIf="activeTab === 'idea'">
+        <app-history></app-history>
+      </div>
     </div>
   </div>
 </div>

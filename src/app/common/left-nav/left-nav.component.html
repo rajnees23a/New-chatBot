@@ -22,8 +22,7 @@
     </div>
 
     <button
-      class="toggle-btn2 btn p-2 d-none"
-      [class.d-block]="isCollapsed"
+      class="toggle-btn2 btn p-2"
       aria-label="Toggle btn"
       role="button"
       (click)="toggleSidebar()"
@@ -36,7 +35,6 @@
 
   <button
     class="toggle-btn btn p-0 w-100 bg-transparent border-0 text-center"
-    [class.d-none]="isCollapsed"
     aria-label="Togglle btn right"
     role="button"
     (click)="toggleSidebar()"
@@ -147,7 +145,7 @@
     </ul>
   </div>
 
-  <div class="recent-tabs d-none px-3" [class.d-block]="isCollapsed">
+  <div class="recent-tabs px-0" [class.d-block]="modifiedData.length > 0">
     <h2 class="fs-6 fw-semibold text-secondary border-top pt-4 mb-3">
       {{ navText.DRAFTS }}
     </h2>

@@ -27,6 +27,95 @@ export class CreateComponent
 {
   staticText = APP_CONSTANTS.CREATE;
 
+  // Mock data for demo purposes
+  // Set mockEnabled = false to use real API calls
+  // Set mockEnabled = true to use mock data for demo/testing
+  private mockEnabled = true; // <-- Toggle this to switch between mock and real data
+  
+  // Progressive form filling - starts empty and fills as conversation progresses
+  private conversationStage = 0;
+  private mockResponseStages = [
+    {
+      // Stage 0: After user describes initial idea
+      botMessage: "That's a fantastic idea! An AI-powered customer service chatbot can really transform the customer experience. Let me help you develop this further. Can you tell me more about the specific problem this will solve?",
+      formUpdates: {
+        'Your idea title': 'AI-Powered Customer Service Chatbot'
+      },
+      buttons: []
+    },
+    {
+      // Stage 1: After user explains the problem
+      botMessage: "I see the challenge clearly now. Long wait times definitely impact customer satisfaction. What specific goals do you want to achieve with this chatbot solution?",
+      formUpdates: {
+        'Problem statement': 'Customers experience long wait times for basic inquiries like store hours, product availability, and return policies, leading to poor customer satisfaction and increased staff workload.'
+      },
+      buttons: []
+    },
+    {
+      // Stage 2: After user explains objectives
+      botMessage: "Excellent objectives! How will you measure the success of this initiative? What key results are you targeting?",
+      formUpdates: {
+        'Objective': 'Implement an AI-powered chatbot to provide instant customer service, reduce wait times, improve customer satisfaction, and optimize staff efficiency.'
+      },
+      buttons: []
+    },
+    {
+      // Stage 3: After user provides metrics
+      botMessage: "Great metrics! Those are very achievable and measurable goals. What key features do you envision for this chatbot?",
+      formUpdates: {
+        'Key results': 'Reduce customer wait time by 80%, increase customer satisfaction scores by 25%, decrease staff workload on basic inquiries by 60%, handle 1000+ daily interactions autonomously.'
+      },
+      buttons: []
+    },
+    {
+      // Stage 4: After user describes features
+      botMessage: "Comprehensive feature set! Is there any urgency or specific timeline driving this project?",
+      formUpdates: {
+        'Key features': 'FAQ handling, real-time product availability checking, simple return processing, appointment scheduling, human agent escalation, POS system integration.'
+      },
+      buttons: []
+    },
+    {
+      // Stage 5: After user mentions timeline
+      botMessage: "That makes perfect sense for the holiday season! Which areas of your organization will be involved in this project?",
+      formUpdates: {
+        'Urgency': 'High - Must be ready by November for holiday season rush (Black Friday and Christmas shopping periods)'
+      },
+      dropdown: ['Customer Service', 'IT Department', 'Marketing', 'Operations', 'Finance', 'Legal'],
+      fieldName: 'Areas involved'
+    },
+    {
+      // Stage 6: After areas selection
+      botMessage: "Perfect team involvement! How does this align with your Destination 2027 strategic goals?",
+      formUpdates: {
+        'Areas involved': 'Customer Service, IT Department, Marketing, Operations'
+      },
+      dropdown: ['Digital Transformation', 'Customer Experience Excellence', 'Operational Efficiency', 'Innovation Leadership'],
+      fieldName: 'Destination 2027 alignment'
+    },
+    {
+      // Stage 7: After alignment selection
+      botMessage: "Excellent alignment! What potential risks should we consider for this project?",
+      formUpdates: {
+        'Destination 2027 alignment': 'Digital Transformation, Customer Experience Excellence'
+      },
+      buttons: []
+    },
+    {
+      // Stage 8: After risks discussion
+      botMessage: "Good thinking on risk management! I've captured all the key details. Would you like to review everything we've discussed?",
+      formUpdates: {
+        'Risks': 'Integration challenges with legacy POS systems, customer adoption resistance, training requirements for staff, potential system downtime during peak periods.'
+      },
+      buttons: ['Yes, everything looks good', "No, I'd like to review and make edits"]
+    }
+  ];
+
+  private mockChatHistory: any[] = [];
+
+  // Start with empty form - will be filled progressively during conversation
+  private mockFormData: { [key: string]: string } = {};
+
   constructor(
     private api: ServiceService,
     private ngZone: NgZone,
@@ -128,6 +217,9 @@ export class CreateComponent
   isMobile = window.innerWidth < 768;
 
   ngOnInit() {
+    // Uncomment the next line to skip the first-time user carousel for quicker demo access
+    // this.userComeFirstTime = false;
+    
     if (
       sessionStorage.getItem('userFirstTime') &&
       sessionStorage.getItem('userFirstTime') == 'false'
@@ -136,27 +228,74 @@ export class CreateComponent
     }
     this.sessionId = this.generateSessionId();
     this.dataa.session_id = this.sessionId;
-    this.chatHistory.push({
-      text: this.staticText.bot_default_message,
-      sender: this.staticText.senderBot,
-    });
-    this.chatHistory.push({
-      text: {
-        question: this.staticText.guideQuestionTitle,
-        guidelines: this.staticText.bot_default_guideText,
-      },
-      sender: this.staticText.senderBot,
-      staticBotMessage: true,
-    });
-    this.chatHistory.push({
-      followingText: {
-        question: this.staticText.followingQuestionTitle,
-        hints: this.staticText.bot_default_following,
-      },
-      sender: this.staticText.senderBot,
-    });
+    
+    // Load mock data for demo or real data for production
+    if (this.mockEnabled) {
+      this.loadMockData();
+    } else {
+      // Original initialization for real data
+      this.chatHistory.push({
+        text: this.staticText.bot_default_message,
+        sender: this.staticText.senderBot,
+      });
+      this.chatHistory.push({
+        text: {
+          question: this.staticText.guideQuestionTitle,
+          guidelines: this.staticText.bot_default_guideText,
+        },
+        sender: this.staticText.senderBot,
+        staticBotMessage: true,
+      });
+      this.chatHistory.push({
+        followingText: {
+          question: this.staticText.followingQuestionTitle,
+          hints: this.staticText.bot_default_following,
+        },
+        sender: this.staticText.senderBot,
+      });
+    }
 
     window.onbeforeunload = (event) => {};
+  }
+
+  loadMockData() {
+    // Start with initial bot messages only - no pre-filled form
+    this.chatHistory = [
+      {
+        text: this.staticText.bot_default_message,
+        sender: this.staticText.senderBot,
+      },
+      {
+        text: {
+          question: this.staticText.guideQuestionTitle,
+          guidelines: this.staticText.bot_default_guideText,
+        },
+        sender: this.staticText.senderBot,
+        staticBotMessage: true,
+      },
+      {
+        followingText: {
+          question: this.staticText.followingQuestionTitle,
+          hints: this.staticText.bot_default_following,
+        },
+        sender: this.staticText.senderBot,
+      }
+    ];
+    
+    // Start with empty form data - will be filled during conversation
+    this.bicFieldData = {};
+    this.conversationStage = 0;
+    
+    // Fields start empty
+    this.fields = this.fields.map((field) => ({
+      ...field,
+      value: '',
+      valid: false,
+      completed: false
+    }));
+    
+    // Update progress (should be 0% initially)
+    this.progressBarUpdate();
   }
 
   ngAfterViewInit() {
@@ -221,34 +360,153 @@ export class CreateComponent
       this.staticBotMsg = true;
       this.dataa.confirmation = 'True';
     }
-    this.api.sendData(this.dataa, this.selectedFile).subscribe({
-      next: (response) => {
-        this.botRespondedFirstTime = true;
-        this.loader = false;
-        this.apiResponseData = response;
-        if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
-            this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
+    
+    if (this.mockEnabled) {
+      // Simulate API response with mock data
+      this.simulateMockApiResponse(data);
+    } else {
+      // Original API call
+      this.api.sendData(this.dataa, this.selectedFile).subscribe({
+        next: (response) => {
+          this.botRespondedFirstTime = true;
+          this.loader = false;
+          this.apiResponseData = response;
+          if (this.apiResponseData) {
+            if (this.apiResponseData.hasOwnProperty('BIC')) {
+              this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
+            }
+            if (this.apiResponseData.hasOwnProperty('bot_message')) {
+              this.botChatMessage = this.apiResponseData.bot_message;
+            }
+            if (this.apiResponseData.hasOwnProperty('button')) {
+              this.botButtonResponse = this.apiResponseData.button;
+            }
+            this.processChatResponse();
+            setTimeout(() => this.initializeTooltips(), 0);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
-            this.botChatMessage = this.apiResponseData.bot_message;
-          }
-          if (this.apiResponseData.hasOwnProperty('button')) {
-            this.botButtonResponse = this.apiResponseData.button;
-          }
-          this.processChatResponse();
-          setTimeout(() => this.initializeTooltips(), 0);
+        },
+        error: (error) => {
+          this.loader = false;
+          this.chatHistory.push({
+            text: this.staticText.sorryNetworkText,
+            sender: this.staticText.senderBot,
+          });
+        },
+        complete: () => {},
+      });
+    }
+  }
+
+  simulateMockApiResponse(userMessage: string) {
+    // Simulate API delay
+    setTimeout(() => {
+      this.loader = false;
+      this.botRespondedFirstTime = true;
+      
+      let botResponse;
+      
+      // If editing a specific field, handle field-specific responses
+      if (this.dataa.edit_field) {
+        botResponse = this.generateMockBotResponse(userMessage);
+      } else {
+        // Progressive conversation flow
+        if (this.conversationStage < this.mockResponseStages.length) {
+          const stage = this.mockResponseStages[this.conversationStage];
+          
+          // Update form data progressively
+          Object.keys(stage.formUpdates).forEach(fieldLabel => {
+            this.bicFieldData[fieldLabel] = (stage.formUpdates as any)[fieldLabel];
+            this.mockFormData[fieldLabel] = (stage.formUpdates as any)[fieldLabel];
+          });
+          
+          botResponse = {
+            message: stage.botMessage,
+            buttons: stage.buttons || [],
+            dropdown: stage.dropdown || [],
+            fieldName: stage.fieldName || ''
+          };
+          
+          this.conversationStage++;
+        } else {
+          // Fallback for additional questions
+          botResponse = this.generateMockBotResponse(userMessage);
         }
-      },
-      error: (error) => {
-        this.loader = false;
-        this.chatHistory.push({
-          text: this.staticText.sorryNetworkText,
-          sender: this.staticText.senderBot,
-        });
-      },
-      complete: () => {},
-    });
+      }
+      
+      // Add bot response to chat history
+      this.chatHistory.push({
+        text: botResponse.message,
+        sender: 'bot',
+        button: botResponse.buttons || [],
+        dropdown: botResponse.dropdown || [],
+        mappingButton: botResponse.mappingButton || [],
+        fieldName: botResponse.fieldName || ''
+      });
+      
+      // Update form fields if this was editing a specific field
+      if (this.dataa.edit_field && this.mockFormData[this.dataa.edit_field]) {
+        this.bicFieldData[this.dataa.edit_field] = this.mockFormData[this.dataa.edit_field];
+      }
+      
+      // Process the response
+      this.botChatMessage = botResponse.message;
+      this.botButtonResponse = botResponse.buttons || [];
+      this.processChatResponse();
+      setTimeout(() => this.initializeTooltips(), 0);
+      
+    }, 1500); // Simulate 1.5 second API delay
+  }
+
+  generateMockBotResponse(userMessage: string): any {
+    const currentField = this.dataa.edit_field;
+    
+    // If editing a specific field, provide appropriate response
+    if (currentField) {
+      switch (currentField) {
+        case 'Areas involved':
+          return {
+            message: "Great! Which areas of your organization will be involved in this project?",
+            dropdown: ['Customer Service', 'IT Department', 'Marketing', 'Operations', 'Finance', 'Legal'],
+            fieldName: 'Areas involved'
+          };
+        case 'Destination 2027 alignment':
+          return {
+            message: "How does this project align with your Destination 2027 strategic goals?",
+            dropdown: ['Digital Transformation', 'Customer Experience Excellence', 'Operational Efficiency', 'Innovation Leadership'],
+            fieldName: 'Destination 2027 alignment'
+          };
+        case 'Business sponsor':
+          return {
+            message: "Who will be the business sponsor for this project?",
+            mappingButton: ['Customer Experience Director', 'Head of Retail Operations', 'VP of Customer Service'],
+            fieldName: 'Business sponsor'
+          };
+        case 'IT sponsor':
+          return {
+            message: "Who will be the IT sponsor for this project?",
+            mappingButton: ['Chief Technology Officer', 'IT Director', 'Head of Digital Innovation'],
+            fieldName: 'IT sponsor'
+          };
+        default:
+          return {
+            message: `Thank you for providing details about ${currentField}. I've updated the form with your input. Is there anything else you'd like to modify or add?`,
+            buttons: ['Yes, everything looks good', "No, I'd like to review and make edits"]
+          };
+      }
+    }
+    
+    // General conversation responses
+    const responses = [
+      "That's excellent input! I'm updating your business idea canvas with this information. Let me ask you about...",
+      "Perfect! I can see this is a well-thought-out initiative. Let me help you refine a few more details...",
+      "Great details! I'm capturing all of this in your form. Would you like to review what we have so far?",
+      "Wonderful! This information really helps shape your business case. Shall we continue with additional details?"
+    ];
+    
+    return {
+      message: responses[Math.floor(Math.random() * responses.length)],
+      buttons: ['Continue with more details', 'Review current progress', 'All looks good to me']
+    };
   }
 
   // This function is called when the user focuses on the textarea
@@ -1171,13 +1429,31 @@ export class CreateComponent
       user_name: this.api.userName,
       session_data: chatData,
     };
-    this.api.submitData(data).subscribe({
-      next: (response) => {
-        this.additionalDataForSubmit();
-      },
-      error: (err) => {},
-      complete: () => {},
-    });
+    
+    if (this.mockEnabled) {
+      // Mock submit response
+      setTimeout(() => {
+        this.mockSubmitSuccess();
+      }, 1000);
+    } else {
+      // Original API call
+      this.api.submitData(data).subscribe({
+        next: (response) => {
+          this.additionalDataForSubmit();
+        },
+        error: (err) => {},
+        complete: () => {},
+      });
+    }
+  }
+
+  mockSubmitSuccess() {
+    // Show success message
+    this.successDivText = this.staticText.successContent;
+    this.successDivCloseAfterSec();
+    
+    // Simulate what would happen after successful submission
+    this.additionalDataForSubmit();
   }
 
   submitButton() {
@@ -1225,17 +1501,30 @@ export class CreateComponent
       additionalData.update_data.Additional_Files =
         this.fileUploadFromAttachment;
     }
-    this.api.submitAdditionalData(additionalData).subscribe({
-      next: (response) => {
+    
+    if (this.mockEnabled) {
+      // Mock successful submission
+      setTimeout(() => {
         this.api.triggerAction(this.staticText.generatedText);
         this.router.navigate(['/request']);
         setTimeout(() => {
           this.initializeTooltips();
         });
-      },
-      error: (err) => {},
-      complete: () => {},
-    });
+      }, 500);
+    } else {
+      // Original API call
+      this.api.submitAdditionalData(additionalData).subscribe({
+        next: (response) => {
+          this.api.triggerAction(this.staticText.generatedText);
+          this.router.navigate(['/request']);
+          setTimeout(() => {
+            this.initializeTooltips();
+          });
+        },
+        error: (err) => {},
+        complete: () => {},
+      });
+    }
   }
 
   saveChatData() {
@@ -1251,17 +1540,29 @@ export class CreateComponent
       timestamp: new Date().toString(),
     };
 
-    this.api.submitData(data).subscribe({
-      next: (response) => {
-        const data = { user_name: this.api.userName };
-        this.api.retriveData(data);
-        setTimeout(() => {
-          this.initializeTooltips();
-        });
-      },
-      error: (err) => {},
-      complete: () => {},
-    });
+    if (this.mockEnabled) {
+      // Save to mock data by calling a method on the left-nav component
+      // We'll use the service to communicate this
+      this.api.saveMockDraft(this.sessionId, this.api.userName, this.chatHistory, this.fields);
+      
+      // Simulate the same behavior as real API
+      setTimeout(() => {
+        this.initializeTooltips();
+      });
+    } else {
+      // Original API call
+      this.api.submitData(data).subscribe({
+        next: (response) => {
+          const data = { user_name: this.api.userName };
+          this.api.retriveData(data);
+          setTimeout(() => {
+            this.initializeTooltips();
+          });
+        },
+        error: (err) => {},
+        complete: () => {},
+      });
+    }
   }
 
   onConfirmAreas() {
@@ -1274,6 +1575,14 @@ export class CreateComponent
       sender: this.staticText.senderUser,
       isFile: false,
     });
+    
+    if (this.mockEnabled) {
+      // Update mock form data with selection
+      this.bicFieldData['Areas involved'] = this.getSelectedRegions();
+      this.mockFormData['Areas involved'] = this.getSelectedRegions();
+      this.progressBarUpdate();
+    }
+    
     this.loader = true;
     this.dataa.edit_field = this.editFieldVal;
     this.dataa.confirmation = this.staticText.true;
@@ -1291,6 +1600,14 @@ export class CreateComponent
       sender: this.staticText.senderUser,
       isFile: false,
     });
+    
+    if (this.mockEnabled) {
+      // Update mock form data with selection
+      this.bicFieldData['Destination 2027 alignment'] = this.getSelectedDestination();
+      this.mockFormData['Destination 2027 alignment'] = this.getSelectedDestination();
+      this.progressBarUpdate();
+    }
+    
     this.loader = true;
     this.dataa.edit_field = this.editFieldVal;
     this.dataa.confirmation = this.staticText.true;

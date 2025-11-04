@@ -47,3 +47,32 @@
 .request-text {
   color: #8f53f0 !important;
 }
+
+/* Ensure history component displays properly in tab container */
+.tab-pane app-history {
+  display: block;
+  width: 100%;
+}
+
+.tab-pane .chatbot-wrap {
+  width: 100%;
+  min-height: 600px;
+}
+
+.tab-pane .chatbot-wrap #rowBox {
+  width: 100%;
+  margin: 0;
+}
+
+.tab-pane .chatbot-wrap #leftBox,
+.tab-pane .chatbot-wrap #rightBox {
+  width: 50%;
+  padding: 15px;
+}
+
+@media (max-width: 768px) {
+  .tab-pane .chatbot-wrap #leftBox,
+  .tab-pane .chatbot-wrap #rightBox {
+    width: 100%;
+  }
+}
