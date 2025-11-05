@@ -212,4 +212,13 @@ export class ServiceService {
     };
     this.mockDraftSubject.next(draftData);
   }
+
+  // Method to notify about draft changes (alias for compatibility)
+  notifyDraftChange(action: string, sessionId: string, userName: string, chatHistory?: any[], formFieldValue?: any[]) {
+    if (action === 'save' && chatHistory && formFieldValue) {
+      this.saveMockDraft(sessionId, userName, chatHistory, formFieldValue);
+    } else if (action === 'delete') {
+      this.deleteMockDraft(sessionId, userName);
+    }
+  }
 }

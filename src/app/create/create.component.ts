@@ -2,7 +2,6 @@ import {
   Component,
   NgZone,
   ElementRef,
-  Renderer2,
   ViewChild,
   OnDestroy,
   AfterViewChecked,
@@ -16,6 +15,8 @@ import * as bootstrap from 'bootstrap';
 import { Tooltip } from 'bootstrap';
 import { Field } from './field.model';
 import { APP_CONSTANTS } from '../constants';
+import { MockResponseStage, MockDataService } from '../mock-data';
+import { CreateComponentMockData } from './create.component.mock';
 
 @Component({
   selector: 'app-create',
@@ -26,91 +27,9 @@ export class CreateComponent
   implements OnDestroy, AfterViewChecked, AfterViewInit
 {
   staticText = APP_CONSTANTS.CREATE;
-
-  // Mock data for demo purposes
-  // Set mockEnabled = false to use real API calls
-  // Set mockEnabled = true to use mock data for demo/testing
   private mockEnabled = true; // <-- Toggle this to switch between mock and real data
-  
-  // Progressive form filling - starts empty and fills as conversation progresses
   private conversationStage = 0;
-  private mockResponseStages = [
-    {
-      // Stage 0: After user describes initial idea
-      botMessage: "That's a fantastic idea! An AI-powered customer service chatbot can really transform the customer experience. Let me help you develop this further. Can you tell me more about the specific problem this will solve?",
-      formUpdates: {
-        'Your idea title': 'AI-Powered Customer Service Chatbot'
-      },
-      buttons: []
-    },
-    {
-      // Stage 1: After user explains the problem
-      botMessage: "I see the challenge clearly now. Long wait times definitely impact customer satisfaction. What specific goals do you want to achieve with this chatbot solution?",
-      formUpdates: {
-        'Problem statement': 'Customers experience long wait times for basic inquiries like store hours, product availability, and return policies, leading to poor customer satisfaction and increased staff workload.'
-      },
-      buttons: []
-    },
-    {
-      // Stage 2: After user explains objectives
-      botMessage: "Excellent objectives! How will you measure the success of this initiative? What key results are you targeting?",
-      formUpdates: {
-        'Objective': 'Implement an AI-powered chatbot to provide instant customer service, reduce wait times, improve customer satisfaction, and optimize staff efficiency.'
-      },
-      buttons: []
-    },
-    {
-      // Stage 3: After user provides metrics
-      botMessage: "Great metrics! Those are very achievable and measurable goals. What key features do you envision for this chatbot?",
-      formUpdates: {
-        'Key results': 'Reduce customer wait time by 80%, increase customer satisfaction scores by 25%, decrease staff workload on basic inquiries by 60%, handle 1000+ daily interactions autonomously.'
-      },
-      buttons: []
-    },
-    {
-      // Stage 4: After user describes features
-      botMessage: "Comprehensive feature set! Is there any urgency or specific timeline driving this project?",
-      formUpdates: {
-        'Key features': 'FAQ handling, real-time product availability checking, simple return processing, appointment scheduling, human agent escalation, POS system integration.'
-      },
-      buttons: []
-    },
-    {
-      // Stage 5: After user mentions timeline
-      botMessage: "That makes perfect sense for the holiday season! Which areas of your organization will be involved in this project?",
-      formUpdates: {
-        'Urgency': 'High - Must be ready by November for holiday season rush (Black Friday and Christmas shopping periods)'
-      },
-      dropdown: ['Customer Service', 'IT Department', 'Marketing', 'Operations', 'Finance', 'Legal'],
-      fieldName: 'Areas involved'
-    },
-    {
-      // Stage 6: After areas selection
-      botMessage: "Perfect team involvement! How does this align with your Destination 2027 strategic goals?",
-      formUpdates: {
-        'Areas involved': 'Customer Service, IT Department, Marketing, Operations'
-      },
-      dropdown: ['Digital Transformation', 'Customer Experience Excellence', 'Operational Efficiency', 'Innovation Leadership'],
-      fieldName: 'Destination 2027 alignment'
-    },
-    {
-      // Stage 7: After alignment selection
-      botMessage: "Excellent alignment! What potential risks should we consider for this project?",
-      formUpdates: {
-        'Destination 2027 alignment': 'Digital Transformation, Customer Experience Excellence'
-      },
-      buttons: []
-    },
-    {
-      // Stage 8: After risks discussion
-      botMessage: "Good thinking on risk management! I've captured all the key details. Would you like to review everything we've discussed?",
-      formUpdates: {
-        'Risks': 'Integration challenges with legacy POS systems, customer adoption resistance, training requirements for staff, potential system downtime during peak periods.'
-      },
-      buttons: ['Yes, everything looks good', "No, I'd like to review and make edits"]
-    }
-  ];
-
+  private mockResponseStages: MockResponseStage[] = MockDataService.getChatbotConversationStages();
   private mockChatHistory: any[] = [];
 
   // Start with empty form - will be filled progressively during conversation
@@ -193,6 +112,8 @@ export class CreateComponent
   };
   selectedIndexOfButton: number | null = null;
   submitButtonClicked = false;
+  submissionSuccessful = false;
+  modalSubmitted = false;
   botRespondedFirstTime = false;
   comingFromCreate = '';
   selectedAreas: boolean[] = [];
@@ -205,10 +126,10 @@ export class CreateComponent
   itUserInputForMappingButtons = '';
   bussinessDropDownKey = '';
   itDropDownKey = '';
-  // Index mapping based on design for progress %
-  groupA = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 9 fields 6%
-  groupB = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]; // 10 fields 3%
-  groupC = [19, 20, 21, 22, 23, 24, 25]; // 7 fields 2%
+  // Index mapping based on design for progress % - Total 24 fields = 100% (excluding Additional attachments field #23)
+  groupA = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 9 required fields - 6% each = 54%
+  groupB = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]; // 10 fields - 3% each = 30%
+  groupC = [19, 20, 21, 22, 24]; // 5 fields - 3.2% each = 16% total (excluding index 23: Additional attachments)
   progressPercentage: number = 0;
   confirmBtnOfAreaClk = false;
   confirmBtnOfDestClk = false;
@@ -217,9 +138,6 @@ export class CreateComponent
   isMobile = window.innerWidth < 768;
 
   ngOnInit() {
-    // Uncomment the next line to skip the first-time user carousel for quicker demo access
-    // this.userComeFirstTime = false;
-    
     if (
       sessionStorage.getItem('userFirstTime') &&
       sessionStorage.getItem('userFirstTime') == 'false'
@@ -255,7 +173,119 @@ export class CreateComponent
       });
     }
 
-    window.onbeforeunload = (event) => {};
+    window.onbeforeunload = (event) => {
+      // Auto-save draft when user is about to leave the page (only if not submitting)
+      if (!this.submitButtonClicked && !this.submissionSuccessful && !this.modalSubmitted) {
+        this.saveCurrentConversationAsDraft();
+      }
+    };
+
+    // Subscribe to service actions for new conversation trigger
+    this.api.action$.subscribe(action => {
+      if (action.triggered && action.message === 'start_new_conversation') {
+        this.startNewConversation();
+        this.api.resetAction(); // Reset the action state
+      }
+    });
+  }
+
+  // Method to save current conversation to session storage as draft
+  saveCurrentConversationAsDraft() {
+    // Don't save as draft if submission is in progress, was successful, or submitted via modal
+    if (this.submitButtonClicked || this.submissionSuccessful || this.modalSubmitted) {
+      console.log('Create Component: Skipping draft save - submission in progress, completed, or submitted via modal');
+      return;
+    }
+    
+    // Only save if there's meaningful conversation (more than initial bot messages)
+    const userMessages = this.chatHistory.filter(msg => msg.sender === 'user');
+    if (userMessages.length > 0 && this.hasAnyFilledFields()) {
+      const draftData = {
+        session_id: this.sessionId,
+        user_name: this.api.userName || 'demo_user',
+        timestamp: new Date().toISOString(),
+        chatHistory: this.chatHistory,
+        formFieldValue: this.fields.map(field => ({
+          label: field.label,
+          value: this.bicFieldData[field.label] || field.value || '',
+          valid: field.valid,
+          editing: field.editing,
+          image: field.image,
+          completed: field.completed
+        })),
+        submit: false
+      };
+
+      // Only get existing drafts if they already exist, don't create empty array
+      const existingDraftsString = sessionStorage.getItem('chat_drafts');
+      const existingDrafts = existingDraftsString ? JSON.parse(existingDraftsString) : [];
+      
+      const existingIndex = existingDrafts.findIndex((draft: any) => draft.session_id === this.sessionId);
+      
+      if (existingIndex > -1) {
+        existingDrafts[existingIndex] = draftData;
+      } else {
+        existingDrafts.unshift(draftData);
+      }
+
+      sessionStorage.setItem('chat_drafts', JSON.stringify(existingDrafts));
+      console.log('Create Component: Draft saved to session storage');
+      
+      // Note: No need to notify service as left-nav reads directly from session storage
+    }
+  }
+
+  // Method to get drafts from session storage
+  getDraftsFromSessionStorage(): any[] {
+    const drafts = sessionStorage.getItem('chat_drafts');
+    return drafts ? JSON.parse(drafts) : [];
+  }
+
+  // Method to check if any fields are filled
+  hasAnyFilledFields(): boolean {
+    return this.fields.some(field => 
+      field.value?.trim() !== '' && 
+      field.value !== this.staticText.ADA_STATIC_TEXT &&
+      this.bicFieldData[field.label]?.trim() !== ''
+    );
+  }
+
+  // Method to handle new conversation (when + button is clicked)
+  startNewConversation() {
+    // Save current conversation as draft first (only if there's meaningful content and not already submitted)
+    const userMessages = this.chatHistory.filter(msg => msg.sender === 'user');
+    if (userMessages.length > 0 && this.hasAnyFilledFields() && !this.submitButtonClicked && !this.submissionSuccessful && !this.modalSubmitted) {
+      this.saveCurrentConversationAsDraft();
+    }
+    
+    this.resetConversationState();
+    
+    this.sessionId = this.generateSessionId();
+    this.dataa.session_id = this.sessionId;
+    
+    if (this.mockEnabled) {
+      this.loadMockData();
+    }
+  }
+
+  resetConversationState() {
+    this.chatHistory = [];
+    this.bicFieldData = {};
+    this.conversationStage = 0;
+    this.fields = this.fields.map(field => ({
+      ...field,
+      value: '',
+      valid: false,
+      completed: false,
+      editing: false
+    }));
+    this.progress = 0;
+    this.progressPercentage = 0;
+    this.userInput = '';
+    this.selectedFile = null;
+    this.allFieldssLookGoodButton = true;
+    this.buttonDisabled = true;
+    this.loader = false;
   }
 
   loadMockData() {
@@ -300,7 +330,11 @@ export class CreateComponent
 
   ngAfterViewInit() {
     if (this.tooltipElement && this.tooltipElement.nativeElement) {
-      this.tooltipInstance = new Tooltip(this.tooltipElement.nativeElement);
+      this.tooltipInstance = new Tooltip(this.tooltipElement.nativeElement, {
+        trigger: 'hover', // Only show on hover, not click
+        placement: 'auto', // Auto placement
+        container: 'body' // Append to body to avoid z-index issues
+      });
     }
   }
 
@@ -433,7 +467,9 @@ export class CreateComponent
         }
       }
       
-      // Add bot response to chat history
+      // Store response data for processing (don't add to chat history yet - processChatResponse will handle it)
+      this.botChatMessage = botResponse.message;
+      this.botButtonResponse = botResponse.buttons || [];
       this.chatHistory.push({
         text: botResponse.message,
         sender: 'bot',
@@ -442,16 +478,13 @@ export class CreateComponent
         mappingButton: botResponse.mappingButton || [],
         fieldName: botResponse.fieldName || ''
       });
-      
-      // Update form fields if this was editing a specific field
+
       if (this.dataa.edit_field && this.mockFormData[this.dataa.edit_field]) {
         this.bicFieldData[this.dataa.edit_field] = this.mockFormData[this.dataa.edit_field];
       }
-      
-      // Process the response
-      this.botChatMessage = botResponse.message;
-      this.botButtonResponse = botResponse.buttons || [];
-      this.processChatResponse();
+
+      this.progressBarUpdate();
+      this.allFieldssLookGoodButton = false;
       setTimeout(() => this.initializeTooltips(), 0);
       
     }, 1500); // Simulate 1.5 second API delay
@@ -460,53 +493,13 @@ export class CreateComponent
   generateMockBotResponse(userMessage: string): any {
     const currentField = this.dataa.edit_field;
     
-    // If editing a specific field, provide appropriate response
+    // If editing a specific field, use the centralized mock data
     if (currentField) {
-      switch (currentField) {
-        case 'Areas involved':
-          return {
-            message: "Great! Which areas of your organization will be involved in this project?",
-            dropdown: ['Customer Service', 'IT Department', 'Marketing', 'Operations', 'Finance', 'Legal'],
-            fieldName: 'Areas involved'
-          };
-        case 'Destination 2027 alignment':
-          return {
-            message: "How does this project align with your Destination 2027 strategic goals?",
-            dropdown: ['Digital Transformation', 'Customer Experience Excellence', 'Operational Efficiency', 'Innovation Leadership'],
-            fieldName: 'Destination 2027 alignment'
-          };
-        case 'Business sponsor':
-          return {
-            message: "Who will be the business sponsor for this project?",
-            mappingButton: ['Customer Experience Director', 'Head of Retail Operations', 'VP of Customer Service'],
-            fieldName: 'Business sponsor'
-          };
-        case 'IT sponsor':
-          return {
-            message: "Who will be the IT sponsor for this project?",
-            mappingButton: ['Chief Technology Officer', 'IT Director', 'Head of Digital Innovation'],
-            fieldName: 'IT sponsor'
-          };
-        default:
-          return {
-            message: `Thank you for providing details about ${currentField}. I've updated the form with your input. Is there anything else you'd like to modify or add?`,
-            buttons: ['Yes, everything looks good', "No, I'd like to review and make edits"]
-          };
-      }
+      return CreateComponentMockData.generateFieldResponse(currentField);
     }
     
     // General conversation responses
-    const responses = [
-      "That's excellent input! I'm updating your business idea canvas with this information. Let me ask you about...",
-      "Perfect! I can see this is a well-thought-out initiative. Let me help you refine a few more details...",
-      "Great details! I'm capturing all of this in your form. Would you like to review what we have so far?",
-      "Wonderful! This information really helps shape your business case. Shall we continue with additional details?"
-    ];
-    
-    return {
-      message: responses[Math.floor(Math.random() * responses.length)],
-      buttons: ['Continue with more details', 'Review current progress', 'All looks good to me']
-    };
+    return CreateComponentMockData.getRandomGeneralResponse();
   }
 
   // This function is called when the user focuses on the textarea
@@ -563,7 +556,11 @@ export class CreateComponent
 
       if (this.tooltipInstance) {
         this.tooltipInstance.dispose(); // destroy old instance
-        this.tooltipInstance = new Tooltip(tooltipEl); // create new instance
+        this.tooltipInstance = new Tooltip(tooltipEl, {
+          trigger: 'hover', // Only show on hover, not click
+          placement: 'auto', // Auto placement
+          container: 'body' // Append to body to avoid z-index issues
+        }); // create new instance
       }
       if (this.isActive) {
         div1.classList.add('fieldresize');
@@ -599,6 +596,7 @@ export class CreateComponent
     this.fields = this.fields.map((field) => ({
       ...field,
       value: this.bicFieldData[field.label] || '',
+      // Preserve the completed status - only update value, don't auto-complete
     }));
     if (this.uploadFileName !== undefined && this.fields[23]) {
       this.fields[23].value = this.uploadFileName;
@@ -609,17 +607,18 @@ export class CreateComponent
         field.value !== this.staticText.ADA_STATIC_TEXT;
       if (isFilled) {
         if (this.groupA.includes(index)) {
-          this.progress += 6;
+          this.progress += 6; // 9 fields × 6% = 54%
         } else if (this.groupB.includes(index)) {
-          this.progress += 3;
+          this.progress += 3; // 10 fields × 3% = 30%
         } else if (this.groupC.includes(index)) {
-          this.progress += 2;
+          this.progress += 3.2; // 5 fields × 3.2% = 16% (total: 54+30+16=100%)
         }
+        // Note: Index 23 (Additional attachments) is excluded from progress calculation
       }
     });
 
-    // Cap it at 100%
-    this.progressPercentage = Math.min(this.progress, 100);
+    // Ensure exactly 100% when all counted fields are filled, but cap at 100%
+    this.progressPercentage = Math.min(Math.round(this.progress), 100);
     this.checkFirst10Completed();
   }
 
@@ -1419,6 +1418,7 @@ export class CreateComponent
 
   submitButtonPopup() {
     this.submitButtonClicked = true;
+    this.modalSubmitted = true; // Track that user submitted via modal
     let chatData = {
       chatHistory: this.chatHistory,
       formFieldValue: this.fields,
@@ -1457,6 +1457,9 @@ export class CreateComponent
   }
 
   submitButton() {
+    // Set submission intent immediately when user clicks submit (before modal)
+    this.submitButtonClicked = true;
+    
     if (!this.allLooksGoodCliced) {
       const modalElement = document.getElementById(
         'reviewModal'
@@ -1478,6 +1481,14 @@ export class CreateComponent
       const myModal = new bootstrap.Modal(modalElement);
       myModal.show();
     }
+  }
+
+  // Method to handle modal cancellation/closing without submission
+  onModalCancel() {
+    // Reset submission flag if user cancels modal without submitting
+    this.submitButtonClicked = false;
+    this.modalSubmitted = false;
+    console.log('Create Component: Modal cancelled - reset submission flags');
   }
 
   additionalDataForSubmit() {
@@ -1503,6 +1514,10 @@ export class CreateComponent
     }
     
     if (this.mockEnabled) {
+      // Remove the draft from session storage since it's being submitted
+      this.removeDraftFromSessionStorage();
+      this.submissionSuccessful = true;
+      
       // Mock successful submission
       setTimeout(() => {
         this.api.triggerAction(this.staticText.generatedText);
@@ -1515,6 +1530,9 @@ export class CreateComponent
       // Original API call
       this.api.submitAdditionalData(additionalData).subscribe({
         next: (response) => {
+          // Remove the draft from session storage since it's being submitted
+          this.removeDraftFromSessionStorage();
+          this.submissionSuccessful = true;
           this.api.triggerAction(this.staticText.generatedText);
           this.router.navigate(['/request']);
           setTimeout(() => {
@@ -1528,6 +1546,12 @@ export class CreateComponent
   }
 
   saveChatData() {
+    // Don't save as draft if any submission process has been initiated
+    if (this.submitButtonClicked || this.submissionSuccessful || this.modalSubmitted) {
+      console.log('Create Component: Skipping saveChatData - submission process initiated');
+      return;
+    }
+
     let chatData = {
       chatHistory: this.chatHistory,
       formFieldValue: this.fields,
@@ -1662,7 +1686,11 @@ export class CreateComponent
       tooltipTriggerList.forEach((tooltipTriggerEl) => {
         const instance = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
         if (instance) instance.dispose();
-        new bootstrap.Tooltip(tooltipTriggerEl);
+        new bootstrap.Tooltip(tooltipTriggerEl, {
+          trigger: 'hover', // Only show on hover, not click
+          placement: 'auto', // Auto placement
+          container: 'body' // Append to body to avoid z-index issues
+        });
       });
     }, 0);
   }
@@ -1691,14 +1719,47 @@ export class CreateComponent
     return additionalField ? additionalField.value === '' : false;
   }
 
-  ngOnDestroy() {
-    if (this.submitButtonClicked == true) {
-      this.submitButtonClicked = false;
-    } else {
-      if (this.botRespondedFirstTime == true) {
-        this.saveChatData();
-        this.api.triggerAction(this.staticText.draftSaved);
+  // Remove submitted draft from session storage
+  // Remove submitted draft from session storage
+  removeDraftFromSessionStorage() {
+    if (this.mockEnabled && this.sessionId) {
+      // Only proceed if chat_drafts already exists in session storage
+      const existingDraftsString = sessionStorage.getItem('chat_drafts');
+      if (existingDraftsString) {
+        const existingDrafts = JSON.parse(existingDraftsString);
+        const filteredDrafts = existingDrafts.filter((draft: any) => 
+          draft.session_id !== this.sessionId
+        );
+        
+        // If no drafts left, remove the entire session storage item
+        if (filteredDrafts.length === 0) {
+          sessionStorage.removeItem('chat_drafts');
+          console.log('Create Component: Removed all drafts from session storage');
+        } else {
+          sessionStorage.setItem('chat_drafts', JSON.stringify(filteredDrafts));
+          console.log('Create Component: Removed submitted draft from session storage:', this.sessionId);
+        }
+      } else {
+        console.log('Create Component: No drafts found in session storage to remove');
       }
+    }
+  }
+
+  ngOnDestroy() {
+    // Don't save as draft if any submission process has started or completed
+    if (this.submitButtonClicked || this.submissionSuccessful || this.modalSubmitted) {
+      console.log('Create Component: Not saving as draft - submission process initiated or completed');
+      // Reset flags for cleanup
+      this.submitButtonClicked = false;
+      this.submissionSuccessful = false;
+      this.modalSubmitted = false;
+      return; // Exit early without saving
+    }
+    
+    // Only save if bot has responded and no submission was attempted
+    if (this.botRespondedFirstTime === true) {
+      this.saveChatData();
+      this.api.triggerAction(this.staticText.draftSaved);
     }
   }
 }

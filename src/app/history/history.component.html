@@ -1,9 +1,19 @@
-<div class="chatbot-wrap">
-  <div id="rowBox" class="row">
-    <div id="leftBox" class="col-md-6">
-      <h1 class="headingClass">Conversational assistant</h1>
-      <div class="chat-outer-wrap">
-        <div class="chat-container d-flex flex-column" #chatContainerBox>
+<div 
+  [ngClass]="{
+    'container-fluid vh-100 d-flex flex-column py-2 overflow-hidden': !isEmbeddedContext,
+    'h-100 d-flex flex-column': isEmbeddedContext
+  }"
+>
+  <div id="rowBox" class="d-flex flex-wrap h-100">
+    <div id="leftBox" class="lbox p-2 flex-fill col-12 col-md-6 col-lg-6">
+      <h1 class="headingClass px-2 px-sm-3">Conversational assistant</h1>
+      <div class="chat-outer-wrap position-relative d-flex flex-column">
+        <div class="chat-container d-flex flex-column mb-4" 
+             #chatContainerBox
+             [ngStyle]="{
+               'max-height': isEmbeddedContext && isMobile ? '30vh' : 'auto',
+               'overflow-y': isEmbeddedContext && isMobile ? 'auto' : 'visible'
+             }">
           <div *ngFor="let message of chatHistory; let i = index">
             <div *ngIf="message.sender === 'user'">
               <div
@@ -337,35 +347,87 @@
         </div>
       </div>
     </div>
-    <div id="rightBox" class="col-md-6 fielsReq">
-      <div class="fld-inner-wrap">
-        <div class="row mt-4">
-          <div class="col-md-8">
-            <p class="headingClass" (click)="toggleButton()">
+    <div
+      id="rightBox"
+      class="rbox p-2 flex-fill col-12 col-md-6 col-lg-6"
+      [ngStyle]="{ 'margin-top': isMobile ? '48px' : '0px' }"
+    >
+      <div
+        class="fielsReq d-flex flex-column p-3"
+        [ngClass]="{
+          'h-75': isActive,
+          'h-100': !isActive && !isEmbeddedContext,
+          'mobile-embedded-form': isEmbeddedContext && isMobile
+        }"
+      >
+        <div class="row g-2 align-items-center">
+          <div class="" [ngClass]="isActive ? 'col-12' : 'col-md-8'">
+            <p
+              class="headingClass d-flex align-items-center gap-2 mb-0"
+              (click)="toggleButton()"
+            >
               <i
                 #tooltipRef
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
                 title="Collapse"
                 class="business-idea-ic"
-                ><img src="../../assets/images/business.svg" alt="business"
-              /></i>
+                [ngClass]="isActive ? 'mb-3' : 'mb-0'"
+              >
+                <img src="../../assets/images/business.svg" alt="business" />
+              </i>
               <span>Your business idea overview</span>
             </p>
           </div>
-          <div class="col-md-4 prg-out-wrap">
-            <div class="progress mt-2">
+
+          <div
+            class="d-flex flex-column align-items-start align-items-md-end mt-2 mt-md-0"
+            [ngClass]="isActive ? 'col-12' : 'col-md-4'"
+          >
+            <div class="progress w-100 mt-1 mb-1 d-md-none progress-bar-level" style="background-color: #e9ecef; height: 8px; border-radius: 4px;">
               <div
-                class="progress-bar bg-success"
-                [style.width.%]="progress"
+                class="progress-bar"
+                role="progressbar"
+                [style.width.%]="progressPercentage"
+                [style.background-color]="'#8f53f0'"
+                [style.min-width]="progressPercentage > 0 ? '2px' : '0'"
+                [attr.aria-valuenow]="progressPercentage"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                style="transition: width 0.6s ease-in-out; height: 100%; border-radius: 4px;"
+              ></div>
+            </div>
+
+            <div
+              class="progress mt-1 mb-1 d-none d-md-block progress-inner-bar"
+              style="background-color: #e9ecef; height: 8px; border-radius: 4px;"
+            >
+              <div
+                class="progress-bar"
+                role="progressbar"
+                [style.width.%]="progressPercentage"
+                [style.background-color]="'#8f53f0'"
+                [style.min-width]="progressPercentage > 0 ? '2px' : '0'"
+                [attr.aria-valuenow]="progressPercentage"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                style="transition: width 0.6s ease-in-out; height: 100%; border-radius: 4px;"
               ></div>
             </div>
             <h6 class="progressBar">
-              <span>Progress</span> {{ progress }}% <span>completed</span>
+              <span>Progress</span> {{ progressPercentage }}% <span>completed</span>
             </h6>
           </div>
         </div>
-        <div class="form-container">
+        <div 
+          class="form-container flex-grow-1" 
+          [ngStyle]="{
+            'height': isEmbeddedContext && isMobile ? 'auto' : (isEmbeddedContext ? 'calc(100vh - 300px)' : 'calc(100vh - 200px)'),
+            'max-height': isEmbeddedContext && isMobile ? '50vh' : 'none',
+            'overflow-y': 'auto',
+            'overflow-x': 'hidden'
+          }"
+        >
           <div class="req-fld-wrap">
             <h6>Required key fields</h6>
             <button
@@ -612,14 +674,16 @@
             </div>
           </div>
         </div>
-        <div class="subnit-btn">
-          <button
-            class="btn btn-success"
-            [disabled]="buttonDisabled"
-            (click)="submitButton()"
-          >
-            Submit
-          </button>
+        <div class="cta-wrap flex-shrink-0 mt-3">
+          <div class="subnit-btn-history p-2 bg-white">
+            <button
+              class="btn btn-purple"
+              [disabled]="buttonDisabled"
+              (click)="submitButton()"
+            >
+              Submit
+            </button>
+          </div>
         </div>
         <div *ngIf="errorDivVisible" class="validation-msg warning">
           <i class="bi bi-exclamation-triangle"></i>

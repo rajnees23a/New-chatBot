@@ -49,10 +49,14 @@ export class AppComponent implements AfterViewInit, OnInit {
       }
     });
 
-    // Re-initialize all tooltips
+    // Re-initialize all tooltips with hover-only behavior
     const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.forEach((tooltipTriggerEl: Element) => {
-      new bootstrap.Tooltip(tooltipTriggerEl);
+      new bootstrap.Tooltip(tooltipTriggerEl, {
+        trigger: 'hover', // Only show on hover, not click
+        placement: 'auto', // Auto placement
+        container: 'body' // Append to body to avoid z-index issues
+      });
     });
   }
 

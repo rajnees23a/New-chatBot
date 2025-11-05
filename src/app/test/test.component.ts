@@ -423,7 +423,7 @@ export class TestComponent implements OnDestroy {
 
     const draw = () => {
       this.animationFrameId = requestAnimationFrame(draw);
-      this.analyser.getByteFrequencyData(this.dataArray); // IMPORTANT: use frequency data
+      // this.analyser.getByteFrequencyData(this.dataArray); // IMPORTANT: use frequency data
 
       ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
