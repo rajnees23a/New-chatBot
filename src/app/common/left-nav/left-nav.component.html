@@ -3,7 +3,7 @@
   [ngClass]="{ collapsed: isCollapsed }"
 >
   <div
-    class="logo-toggle-wrap d-flex align-items-center justify-content-center gap-2 mb-4 ps-0 ps-md-1"
+    class="logo-toggle-wrap d-flex align-items-center justify-content-between gap-2 mb-4 ps-0 ps-md-1"
   >
     <div class="logo d-flex align-items-center">
       <a href="#" class="d-flex align-items-center text-decoration-none">
@@ -22,8 +22,7 @@
     </div>
 
     <button
-      class="toggle-btn2 btn p-2 d-none"
-      [class.d-block]="isCollapsed"
+      class="toggle-btn2 btn p-2"
       aria-label="Toggle btn"
       role="button"
       (click)="toggleSidebar()"
@@ -36,7 +35,6 @@
 
   <button
     class="toggle-btn btn p-0 w-100 bg-transparent border-0 text-center"
-    [class.d-none]="isCollapsed"
     aria-label="Togglle btn right"
     role="button"
     (click)="toggleSidebar()"
@@ -53,7 +51,7 @@
   <div class="page-tabs px-1">
     <ul class="nav-list list-unstyled mb-0">
       <li
-        class="nav-item d-flex align-items-center py-3 px-3 mb-2 fw-semibold text-secondary rounded cursor-pointer"
+        class="nav-item d-flex align-items-center py-3 px-3 mb-2 fw-semibold rounded cursor-pointer"
         routerLink="/create"
         data-bs-toggle="tooltip"
         data-bs-placement="right"
@@ -80,7 +78,7 @@
       </li>
 
       <li
-        class="nav-item d-flex align-items-center py-3 px-3 mb-2 fw-semibold text-secondary rounded cursor-pointer"
+        class="nav-item d-flex align-items-center py-3 px-3 mb-2 fw-semibold rounded cursor-pointer"
         routerLink="/home"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
@@ -109,7 +107,7 @@
       </li>
 
       <li
-        class="nav-item d-flex align-items-center py-3 px-3 mb-2 fw-semibold text-secondary rounded cursor-pointer"
+        class="nav-item d-flex align-items-center py-3 px-3 mb-2 fw-semibold rounded cursor-pointer"
         routerLink="/request"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
@@ -147,8 +145,8 @@
     </ul>
   </div>
 
-  <div class="recent-tabs d-none px-3" [class.d-block]="isCollapsed">
-    <h2 class="fs-6 fw-semibold text-secondary border-top pt-4 mb-3">
+  <div class="recent-tabs px-3" [class.d-none]="!isCollapsed">
+    <h2 class="fs-6 fw-semibold border-top pt-4 mb-3">
       {{ navText.DRAFTS }}
     </h2>
 

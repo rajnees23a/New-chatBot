@@ -13,9 +13,7 @@
 
     <div
       id="carouselExampleIndicators"
-      class="carousel slide carousel-fade d-flex flex-column flex-grow-1 overflow-auto"
-      data-bs-ride="false"
-      data-bs-interval="false"
+      class="carousel carousel-fade d-flex flex-column flex-grow-1 overflow-auto"
     >
       <div
         class="carousel-inner d-flex flex-column overflow-auto overflow-x-hidden"
@@ -41,9 +39,9 @@
                 {{ firstGuideTitle }}
               </h1>
             </div>
-            <ul class="ms-3 ps-3 mb-2 ul-list">
+            <ul class="ms-3 ps-3 mb-2 ul-list slide-content">
               <li
-                class="mb-2"
+                class="mb-3"
                 *ngFor="let item of carouselItems"
                 [innerHTML]="item"
               ></li>
@@ -188,9 +186,9 @@
               </h1>
             </div>
 
-            <ul class="ms-3 ps-3 mb-2 ul-list">
+            <ul class="ms-3 ps-3 mb-2 ul-list slide-content">
               <li
-                class="mb-1"
+                class="mb-3"
                 *ngFor="let item of fourthListOne"
                 [innerHTML]="item"
               ></li>
@@ -198,9 +196,9 @@
 
             <div>
               <strong class="d-block mb-2">{{ fourthDontWorry }}</strong>
-              <ul class="ms-3 ps-3 mb-2 ul-list">
+              <ul class="ms-3 ps-3 mb-2 ul-list slide-content">
                 <li
-                  class="mb-1"
+                  class="mb-3"
                   *ngFor="let item of fourthListTwo"
                   [innerHTML]="item"
                 ></li>
@@ -213,39 +211,24 @@
       <div
         class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-auto pt-3 flex-shrink-0"
       >
-        <!-- Indicators -->
-        <div
-          id="carouselExampleIndicators"
-          class="carousel slide indicator-styles"
-        >
-          <div class="carousel-indicators position-static m-0 gap-2 d-flex">
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to="0"
-              class="active"
-              aria-current="true"
-              aria-label="Slide 1"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to="1"
-              aria-label="Slide 2"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to="2"
-              aria-label="Slide 3"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to="3"
-              aria-label="Slide 4"
-            ></button>
-          </div>
+        <!-- Progress Indicators - 4 bars -->
+        <div class="progress-indicators">
+          <div 
+            class="progress-bar-segment" 
+            [class.active]="currentSlideIndex === 0"
+          ></div>
+          <div 
+            class="progress-bar-segment" 
+            [class.active]="currentSlideIndex === 1"
+          ></div>
+          <div 
+            class="progress-bar-segment" 
+            [class.active]="currentSlideIndex === 2"
+          ></div>
+          <div 
+            class="progress-bar-segment" 
+            [class.active]="currentSlideIndex === 3"
+          ></div>
         </div>
 
         <!-- Actions -->
@@ -259,22 +242,16 @@
           </button>
           <button
             *ngIf="!isFirstSlide"
-            id="carouselPrevBtn"
+            (click)="goToPreviousSlide()"
             class="btn btn-outline-primary previous-btn"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="prev"
-            (click)="onCarouselSlide()"
           >
             {{ previous }}
           </button>
 
           <button
             *ngIf="!isLastSlideReached"
-            (click)="onCarouselSlide()"
-            id="carouselNextBtn"
+            (click)="goToNextSlide()"
             class="btn btn-primary next-start-btn"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="next"
           >
             {{ next }}
           </button>

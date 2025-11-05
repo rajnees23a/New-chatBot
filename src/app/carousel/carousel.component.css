@@ -27,15 +27,37 @@
 .ul-list {
   list-style: disc;
   list-style-position: outside;
+  line-height: 1.6;
 }
-.indicator-styles {
-  --bs-carousel-indicator-width: 40px;
-  --bs-carousel-indicator-height: 4px;
-  --bs-carousel-indicator-hit-area-height: 12px;
-  --bs-carousel-indicator-border-radius: 10px;
-  --bs-carousel-indicator-bg: #f6f6f6;
-  --bs-carousel-indicator-opacity: 1;
-  --bs-carousel-indicator-active-bg: #8f53f0;
+
+.ul-list li {
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+/* Better spacing for slide content */
+.slide-content li {
+  margin-bottom: 1rem !important;
+  line-height: 1.6 !important;
+  padding-bottom: 0.25rem;
+}
+/* Progress indicators - 4 separate bars */
+.progress-indicators {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.progress-bar-segment {
+  width: 30px;
+  height: 4px;
+  background-color: #e0e0e0;
+  border-radius: 2px;
+  transition: background-color 0.4s ease-in-out;
+}
+
+.progress-bar-segment.active {
+  background-color: #8f53f0;
 }
 .previous-btn {
   --bs-btn-border-color: #8f53f0;
@@ -45,4 +67,35 @@
 .next-start-btn {
   --bs-btn-bg: #8f53f0;
   --bs-btn-border-color: #8f53f0;
+}
+
+/* Smooth fade transition for carousel */
+.carousel-fade .carousel-item {
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+  transform: none !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-fade .carousel-item.active {
+  opacity: 1;
+  position: relative;
+}
+
+/* Make carousel inner container relative for absolute positioning */
+.carousel-fade .carousel-inner {
+  position: relative;
+  height: 100%;
+}
+
+/* Disable all Bootstrap sliding animations */
+.carousel-fade .carousel-item-next,
+.carousel-fade .carousel-item-prev,
+.carousel-fade .carousel-item-start,
+.carousel-fade .carousel-item-end {
+  transform: none !important;
 }

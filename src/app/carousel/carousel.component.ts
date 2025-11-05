@@ -76,29 +76,55 @@ export class CarouselComponent implements OnInit {
       this.userComeFirstTime = false;
     }
     this.isFirstSlide = this.currentSlideIndex === 0;
-    this.setTotalSlides();
-    
+    // Use setTimeout to ensure DOM is ready
+    setTimeout(() => {
+      this.setTotalSlides();
+    }, 0);
   }
+
+  goToSlide(index: number) {
+    if (index === this.currentSlideIndex) return;
+    
+    const items = document.querySelectorAll('#carouselExampleIndicators .carousel-item');
+    const currentActive = document.querySelector('#carouselExampleIndicators .carousel-item.active');
+    
+    if (currentActive && items[index]) {
+      // Start fade out current
+      (currentActive as HTMLElement).style.opacity = '0';
+      
+      setTimeout(() => {
+        // Remove active from current
+        currentActive.classList.remove('active');
+        
+        // Add active to target and fade in
+        items[index].classList.add('active');
+        (items[index] as HTMLElement).style.opacity = '1';
+        
+        // Update component state
+        this.currentSlideIndex = index;
+        this.isFirstSlide = index === 0;
+        this.isLastSlideReached = index === this.totalSlides - 1;
+      }, 250);
+    }
+  }
+
+  goToNextSlide() {
+    if (this.currentSlideIndex < this.totalSlides - 1) {
+      this.goToSlide(this.currentSlideIndex + 1);
+    }
+  }
+
+  goToPreviousSlide() {
+    if (this.currentSlideIndex > 0) {
+      this.goToSlide(this.currentSlideIndex - 1);
+    }
+  }
+  
   setTotalSlides() {
     const carouselItems = document.querySelectorAll(
       '#carouselExampleIndicators .carousel-item'
     );
-
     this.totalSlides = carouselItems.length;
-  }
-
-  checkIfLastSlide() {
-    const carousel = document.getElementById(
-      'carouselExampleIndicators'
-    ) as any;
-    if (carousel) {
-      carousel.addEventListener('slid.bs.carousel', (event: any) => {
-        this.currentSlideIndex = event.to; // Update the current slide index
-        this.isFirstSlide = this.currentSlideIndex === 0; // Set isFirstSlide flag
-        this.isLastSlideReached =
-          this.currentSlideIndex === this.totalSlides - 1; // Check for last slide
-      });
-    }
   }
 
   getStarted(): void {
@@ -111,16 +137,5 @@ export class CarouselComponent implements OnInit {
   closePopup(): void {
     this.showCarousel = false;
     this.step = 1;
-  }
-
-  onCarouselSlide() {
-    this.setTotalSlides();
-    this.checkIfLastSlide();
-
-    this.isFirstSlide = this.currentSlideIndex === 0;
-
-    // For example, check if it’s the last slide and show some message.
-    if (this.isLastSlideReached == true) {
-    }
   }
 }
