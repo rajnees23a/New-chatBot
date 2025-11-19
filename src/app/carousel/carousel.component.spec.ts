@@ -57,7 +57,7 @@ describe('CarouselComponent', () => {
 
     component.totalSlides = 5;
     component.currentSlideIndex = 4;
-    component.checkIfLastSlide();
+    (component as any).checkIfLastSlide();
 
     // Simulate event callback
     const event = { to: 4 };
@@ -89,17 +89,17 @@ describe('CarouselComponent', () => {
 
   it('should update slide states in onCarouselSlide', () => {
     spyOn(component, 'setTotalSlides');
-    spyOn(component, 'checkIfLastSlide');
+    spyOn(component as any, 'checkIfLastSlide');
     component.currentSlideIndex = 0;
     component.isLastSlideReached = false;
-    component.onCarouselSlide();
+    (component as any).onCarouselSlide();
     expect(component.setTotalSlides).toHaveBeenCalled();
-    expect(component.checkIfLastSlide).toHaveBeenCalled();
+    expect((component as any).checkIfLastSlide).toHaveBeenCalled();
     expect(component.isFirstSlide).toBeTrue();
 
     component.currentSlideIndex = 1;
     component.isLastSlideReached = true;
-    component.onCarouselSlide();
+    (component as any).onCarouselSlide();
     expect(component.isFirstSlide).toBeFalse();
   });
 });

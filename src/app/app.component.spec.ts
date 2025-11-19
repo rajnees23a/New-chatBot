@@ -4,7 +4,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppComponent } from './app.component';
 import { Router, NavigationEnd } from '@angular/router';
 import { of, Subject } from 'rxjs';
-import { SerrviceService } from './serrvice.service';
+import { ServiceService } from './service.service';
 import { Component } from '@angular/core';
 
 @Component({selector: 'app-loader', template: ''})
@@ -32,7 +32,7 @@ describe('AppComponent', () => {
       ],
       providers: [
         {
-          provide: SerrviceService,
+          provide: ServiceService,
           useValue: {
             loading$: loadingSubject.asObservable()
           }
@@ -43,7 +43,7 @@ describe('AppComponent', () => {
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
-    dataService = TestBed.inject(SerrviceService);
+    dataService = TestBed.inject(ServiceService);
   });
 
   it('should create the app', () => {
