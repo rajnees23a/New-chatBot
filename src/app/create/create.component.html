@@ -449,27 +449,34 @@
             class="d-flex flex-column align-items-start align-items-md-end mt-2 mt-md-0"
             [ngClass]="isActive ? 'col-12' : 'col-md-4'"
           >
-            <div class="progress w-100 mt-1 mb-1 d-md-none progress-bar-level">
+            <div class="progress w-100 mt-1 mb-1 d-md-none progress-bar-level" style="background-color: #e9ecef; height: 8px; border-radius: 4px;">
               <div
-                class="progress-bar bg-success"
+                class="progress-bar"
                 role="progressbar"
                 [style.width.%]="progressPercentage"
+                [style.background-color]="'#8f53f0'"
+                [style.min-width]="progressPercentage > 0 ? '2px' : '0'"
                 [attr.aria-valuenow]="progressPercentage"
                 aria-valuemin="0"
                 aria-valuemax="100"
+                style="transition: width 0.6s ease-in-out; height: 100%; border-radius: 4px;"
               ></div>
             </div>
 
             <div
               class="progress mt-1 mb-1 d-none d-md-block progress-inner-bar"
+              style="background-color: #e9ecef; height: 8px; border-radius: 4px;"
             >
               <div
-                class="progress-bar bg-success"
+                class="progress-bar"
                 role="progressbar"
                 [style.width.%]="progressPercentage"
+                [style.background-color]="'#8f53f0'"
+                [style.min-width]="progressPercentage > 0 ? '2px' : '0'"
                 [attr.aria-valuenow]="progressPercentage"
                 aria-valuemin="0"
                 aria-valuemax="100"
+                style="transition: width 0.6s ease-in-out; height: 100%; border-radius: 4px;"
               ></div>
             </div>
 

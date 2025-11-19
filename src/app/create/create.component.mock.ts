@@ -1,5 +1,88 @@
 import { Field } from './field.model';
 
+/**
+ * Interface for mock field responses
+ */
+export interface MockFieldResponse {
+  message: string;
+  buttons?: string[];
+  dropdown?: string[];
+  mappingButton?: string[];
+  fieldName?: string;
+}
+
+/**
+ * Mock responses for specific field editing scenarios
+ */
+export class CreateComponentMockData {
+  
+  /**
+   * Generate mock bot response based on the field being edited
+   * @param currentField - The field label being edited
+   * @returns MockFieldResponse object with appropriate response data
+   */
+  static generateFieldResponse(currentField: string): MockFieldResponse {
+    switch (currentField) {
+      case 'Areas involved':
+        return {
+          message: "Great! Which areas of your organization will be involved in this project?",
+          dropdown: ['Customer Service', 'IT Department', 'Marketing', 'Operations', 'Finance', 'Legal'],
+          fieldName: 'Areas involved'
+        };
+        
+      case 'Destination 2027 alignment':
+        return {
+          message: "How does this project align with your Destination 2027 strategic goals?",
+          dropdown: ['Digital Transformation', 'Customer Experience Excellence', 'Operational Efficiency', 'Innovation Leadership'],
+          fieldName: 'Destination 2027 alignment'
+        };
+        
+      case 'Business sponsor':
+        return {
+          message: "Who will be the business sponsor for this project?",
+          mappingButton: ['Customer Experience Director', 'Head of Retail Operations', 'VP of Customer Service'],
+          fieldName: 'Business sponsor'
+        };
+        
+      case 'IT sponsor':
+        return {
+          message: "Who will be the IT sponsor for this project?",
+          mappingButton: ['Chief Technology Officer', 'IT Director', 'Head of Digital Innovation'],
+          fieldName: 'IT sponsor'
+        };
+        
+      default:
+        return {
+          message: `Thank you for providing details about ${currentField}. I've updated the form with your input. Is there anything else you'd like to modify or add?`,
+          buttons: ['Yes, everything looks good', "No, I'd like to review and make edits"]
+        };
+    }
+  }
+
+  /**
+   * General conversation responses for non-specific field interactions
+   */
+  static getGeneralResponses(): string[] {
+    return [
+      "That's excellent input! I'm updating your business idea canvas with this information. Let me ask you about...",
+      "Perfect! I can see this is a well-thought-out initiative. Let me help you refine a few more details...",
+      "Great details! I'm capturing all of this in your form. Would you like to review what we have so far?",
+      "Wonderful! This information really helps shape your business case. Shall we continue with additional details?"
+    ];
+  }
+
+  /**
+   * Get a random general response
+   */
+  static getRandomGeneralResponse(): MockFieldResponse {
+    const responses = this.getGeneralResponses();
+    return {
+      message: responses[Math.floor(Math.random() * responses.length)],
+      buttons: ['Continue with more details', 'Review current progress', 'All looks good to me']
+    };
+  }
+}
+
 export const mockStaticText = {
   CREATE: {},
   langForChat: 'en-US',

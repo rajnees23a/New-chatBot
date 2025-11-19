@@ -2,7 +2,6 @@ import {
   Component,
   NgZone,
   ElementRef,
-  Renderer2,
   ViewChild,
   OnDestroy,
   AfterViewChecked,
@@ -16,6 +15,8 @@ import * as bootstrap from 'bootstrap';
 import { Tooltip } from 'bootstrap';
 import { Field } from './field.model';
 import { APP_CONSTANTS } from '../constants';
+import { MockResponseStage, MockDataService } from '../mock-data';
+import { CreateComponentMockData } from './create.component.mock';
 
 @Component({
   selector: 'app-create',
@@ -26,6 +27,13 @@ export class CreateComponent
   implements OnDestroy, AfterViewChecked, AfterViewInit
 {
   staticText = APP_CONSTANTS.CREATE;
+  private mockEnabled = true; // <-- Toggle this to switch between mock and real data
+  private conversationStage = 0;
+  private mockResponseStages: MockResponseStage[] = MockDataService.getChatbotConversationStages();
+  private mockChatHistory: any[] = [];
+
+  // Start with empty form - will be filled progressively during conversation
+  private mockFormData: { [key: string]: string } = {};
 
   constructor(
     private api: ServiceService,
@@ -104,6 +112,8 @@ export class CreateComponent
   };
   selectedIndexOfButton: number | null = null;
   submitButtonClicked = false;
+  submissionSuccessful = false;
+  modalSubmitted = false;
   botRespondedFirstTime = false;
   comingFromCreate = '';
   selectedAreas: boolean[] = [];
@@ -116,10 +126,10 @@ export class CreateComponent
   itUserInputForMappingButtons = '';
   bussinessDropDownKey = '';
   itDropDownKey = '';
-  // Index mapping based on design for progress %
-  groupA = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 9 fields 6%
-  groupB = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]; // 10 fields 3%
-  groupC = [19, 20, 21, 22, 23, 24, 25]; // 7 fields 2%
+  // Index mapping based on design for progress % - Total 24 fields = 100% (excluding Additional attachments field #23)
+  groupA = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 9 required fields - 6% each = 54%
+  groupB = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]; // 10 fields - 3% each = 30%
+  groupC = [19, 20, 21, 22, 24]; // 5 fields - 3.2% each = 16% total (excluding index 23: Additional attachments)
   progressPercentage: number = 0;
   confirmBtnOfAreaClk = false;
   confirmBtnOfDestClk = false;
@@ -136,32 +146,195 @@ export class CreateComponent
     }
     this.sessionId = this.generateSessionId();
     this.dataa.session_id = this.sessionId;
-    this.chatHistory.push({
-      text: this.staticText.bot_default_message,
-      sender: this.staticText.senderBot,
-    });
-    this.chatHistory.push({
-      text: {
-        question: this.staticText.guideQuestionTitle,
-        guidelines: this.staticText.bot_default_guideText,
-      },
-      sender: this.staticText.senderBot,
-      staticBotMessage: true,
-    });
-    this.chatHistory.push({
-      followingText: {
-        question: this.staticText.followingQuestionTitle,
-        hints: this.staticText.bot_default_following,
-      },
-      sender: this.staticText.senderBot,
-    });
+    
+    // Load mock data for demo or real data for production
+    if (this.mockEnabled) {
+      this.loadMockData();
+    } else {
+      // Original initialization for real data
+      this.chatHistory.push({
+        text: this.staticText.bot_default_message,
+        sender: this.staticText.senderBot,
+      });
+      this.chatHistory.push({
+        text: {
+          question: this.staticText.guideQuestionTitle,
+          guidelines: this.staticText.bot_default_guideText,
+        },
+        sender: this.staticText.senderBot,
+        staticBotMessage: true,
+      });
+      this.chatHistory.push({
+        followingText: {
+          question: this.staticText.followingQuestionTitle,
+          hints: this.staticText.bot_default_following,
+        },
+        sender: this.staticText.senderBot,
+      });
+    }
 
-    window.onbeforeunload = (event) => {};
+    window.onbeforeunload = (event) => {
+      // Auto-save draft when user is about to leave the page (only if not submitting)
+      if (!this.submitButtonClicked && !this.submissionSuccessful && !this.modalSubmitted) {
+        this.saveCurrentConversationAsDraft();
+      }
+    };
+
+    // Subscribe to service actions for new conversation trigger
+    this.api.action$.subscribe(action => {
+      if (action.triggered && action.message === 'start_new_conversation') {
+        this.startNewConversation();
+        this.api.resetAction(); // Reset the action state
+      }
+    });
+  }
+
+  // Method to save current conversation to session storage as draft
+  saveCurrentConversationAsDraft() {
+    // Don't save as draft if submission is in progress, was successful, or submitted via modal
+    if (this.submitButtonClicked || this.submissionSuccessful || this.modalSubmitted) {
+      console.log('Create Component: Skipping draft save - submission in progress, completed, or submitted via modal');
+      return;
+    }
+    
+    // Only save if there's meaningful conversation (more than initial bot messages)
+    const userMessages = this.chatHistory.filter(msg => msg.sender === 'user');
+    if (userMessages.length > 0 && this.hasAnyFilledFields()) {
+      const draftData = {
+        session_id: this.sessionId,
+        user_name: this.api.userName || 'demo_user',
+        timestamp: new Date().toISOString(),
+        chatHistory: this.chatHistory,
+        formFieldValue: this.fields.map(field => ({
+          label: field.label,
+          value: this.bicFieldData[field.label] || field.value || '',
+          valid: field.valid,
+          editing: field.editing,
+          image: field.image,
+          completed: field.completed
+        })),
+        submit: false
+      };
+
+      // Only get existing drafts if they already exist, don't create empty array
+      const existingDraftsString = sessionStorage.getItem('chat_drafts');
+      const existingDrafts = existingDraftsString ? JSON.parse(existingDraftsString) : [];
+      
+      const existingIndex = existingDrafts.findIndex((draft: any) => draft.session_id === this.sessionId);
+      
+      if (existingIndex > -1) {
+        existingDrafts[existingIndex] = draftData;
+      } else {
+        existingDrafts.unshift(draftData);
+      }
+
+      sessionStorage.setItem('chat_drafts', JSON.stringify(existingDrafts));
+      console.log('Create Component: Draft saved to session storage');
+      
+      // Note: No need to notify service as left-nav reads directly from session storage
+    }
+  }
+
+  // Method to get drafts from session storage
+  getDraftsFromSessionStorage(): any[] {
+    const drafts = sessionStorage.getItem('chat_drafts');
+    return drafts ? JSON.parse(drafts) : [];
+  }
+
+  // Method to check if any fields are filled
+  hasAnyFilledFields(): boolean {
+    return this.fields.some(field => 
+      field.value?.trim() !== '' && 
+      field.value !== this.staticText.ADA_STATIC_TEXT &&
+      this.bicFieldData[field.label]?.trim() !== ''
+    );
+  }
+
+  // Method to handle new conversation (when + button is clicked)
+  startNewConversation() {
+    // Save current conversation as draft first (only if there's meaningful content and not already submitted)
+    const userMessages = this.chatHistory.filter(msg => msg.sender === 'user');
+    if (userMessages.length > 0 && this.hasAnyFilledFields() && !this.submitButtonClicked && !this.submissionSuccessful && !this.modalSubmitted) {
+      this.saveCurrentConversationAsDraft();
+    }
+    
+    this.resetConversationState();
+    
+    this.sessionId = this.generateSessionId();
+    this.dataa.session_id = this.sessionId;
+    
+    if (this.mockEnabled) {
+      this.loadMockData();
+    }
+  }
+
+  resetConversationState() {
+    this.chatHistory = [];
+    this.bicFieldData = {};
+    this.conversationStage = 0;
+    this.fields = this.fields.map(field => ({
+      ...field,
+      value: '',
+      valid: false,
+      completed: false,
+      editing: false
+    }));
+    this.progress = 0;
+    this.progressPercentage = 0;
+    this.userInput = '';
+    this.selectedFile = null;
+    this.allFieldssLookGoodButton = true;
+    this.buttonDisabled = true;
+    this.loader = false;
+  }
+
+  loadMockData() {
+    // Start with initial bot messages only - no pre-filled form
+    this.chatHistory = [
+      {
+        text: this.staticText.bot_default_message,
+        sender: this.staticText.senderBot,
+      },
+      {
+        text: {
+          question: this.staticText.guideQuestionTitle,
+          guidelines: this.staticText.bot_default_guideText,
+        },
+        sender: this.staticText.senderBot,
+        staticBotMessage: true,
+      },
+      {
+        followingText: {
+          question: this.staticText.followingQuestionTitle,
+          hints: this.staticText.bot_default_following,
+        },
+        sender: this.staticText.senderBot,
+      }
+    ];
+    
+    // Start with empty form data - will be filled during conversation
+    this.bicFieldData = {};
+    this.conversationStage = 0;
+    
+    // Fields start empty
+    this.fields = this.fields.map((field) => ({
+      ...field,
+      value: '',
+      valid: false,
+      completed: false
+    }));
+    
+    // Update progress (should be 0% initially)
+    this.progressBarUpdate();
   }
 
   ngAfterViewInit() {
     if (this.tooltipElement && this.tooltipElement.nativeElement) {
-      this.tooltipInstance = new Tooltip(this.tooltipElement.nativeElement);
+      this.tooltipInstance = new Tooltip(this.tooltipElement.nativeElement, {
+        trigger: 'hover', // Only show on hover, not click
+        placement: 'auto', // Auto placement
+        container: 'body' // Append to body to avoid z-index issues
+      });
     }
   }
 
@@ -221,34 +394,112 @@ export class CreateComponent
       this.staticBotMsg = true;
       this.dataa.confirmation = 'True';
     }
-    this.api.sendData(this.dataa, this.selectedFile).subscribe({
-      next: (response) => {
-        this.botRespondedFirstTime = true;
-        this.loader = false;
-        this.apiResponseData = response;
-        if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
-            this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
+    
+    if (this.mockEnabled) {
+      // Simulate API response with mock data
+      this.simulateMockApiResponse(data);
+    } else {
+      // Original API call
+      this.api.sendData(this.dataa, this.selectedFile).subscribe({
+        next: (response) => {
+          this.botRespondedFirstTime = true;
+          this.loader = false;
+          this.apiResponseData = response;
+          if (this.apiResponseData) {
+            if (this.apiResponseData.hasOwnProperty('BIC')) {
+              this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
+            }
+            if (this.apiResponseData.hasOwnProperty('bot_message')) {
+              this.botChatMessage = this.apiResponseData.bot_message;
+            }
+            if (this.apiResponseData.hasOwnProperty('button')) {
+              this.botButtonResponse = this.apiResponseData.button;
+            }
+            this.processChatResponse();
+            setTimeout(() => this.initializeTooltips(), 0);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
-            this.botChatMessage = this.apiResponseData.bot_message;
-          }
-          if (this.apiResponseData.hasOwnProperty('button')) {
-            this.botButtonResponse = this.apiResponseData.button;
-          }
-          this.processChatResponse();
-          setTimeout(() => this.initializeTooltips(), 0);
+        },
+        error: (error) => {
+          this.loader = false;
+          this.chatHistory.push({
+            text: this.staticText.sorryNetworkText,
+            sender: this.staticText.senderBot,
+          });
+        },
+        complete: () => {},
+      });
+    }
+  }
+
+  simulateMockApiResponse(userMessage: string) {
+    // Simulate API delay
+    setTimeout(() => {
+      this.loader = false;
+      this.botRespondedFirstTime = true;
+      
+      let botResponse;
+      
+      // If editing a specific field, handle field-specific responses
+      if (this.dataa.edit_field) {
+        botResponse = this.generateMockBotResponse(userMessage);
+      } else {
+        // Progressive conversation flow
+        if (this.conversationStage < this.mockResponseStages.length) {
+          const stage = this.mockResponseStages[this.conversationStage];
+          
+          // Update form data progressively
+          Object.keys(stage.formUpdates).forEach(fieldLabel => {
+            this.bicFieldData[fieldLabel] = (stage.formUpdates as any)[fieldLabel];
+            this.mockFormData[fieldLabel] = (stage.formUpdates as any)[fieldLabel];
+          });
+          
+          botResponse = {
+            message: stage.botMessage,
+            buttons: stage.buttons || [],
+            dropdown: stage.dropdown || [],
+            fieldName: stage.fieldName || ''
+          };
+          
+          this.conversationStage++;
+        } else {
+          // Fallback for additional questions
+          botResponse = this.generateMockBotResponse(userMessage);
         }
-      },
-      error: (error) => {
-        this.loader = false;
-        this.chatHistory.push({
-          text: this.staticText.sorryNetworkText,
-          sender: this.staticText.senderBot,
-        });
-      },
-      complete: () => {},
-    });
+      }
+      
+      // Store response data for processing (don't add to chat history yet - processChatResponse will handle it)
+      this.botChatMessage = botResponse.message;
+      this.botButtonResponse = botResponse.buttons || [];
+      this.chatHistory.push({
+        text: botResponse.message,
+        sender: 'bot',
+        button: botResponse.buttons || [],
+        dropdown: botResponse.dropdown || [],
+        mappingButton: botResponse.mappingButton || [],
+        fieldName: botResponse.fieldName || ''
+      });
+
+      if (this.dataa.edit_field && this.mockFormData[this.dataa.edit_field]) {
+        this.bicFieldData[this.dataa.edit_field] = this.mockFormData[this.dataa.edit_field];
+      }
+
+      this.progressBarUpdate();
+      this.allFieldssLookGoodButton = false;
+      setTimeout(() => this.initializeTooltips(), 0);
+      
+    }, 1500); // Simulate 1.5 second API delay
+  }
+
+  generateMockBotResponse(userMessage: string): any {
+    const currentField = this.dataa.edit_field;
+    
+    // If editing a specific field, use the centralized mock data
+    if (currentField) {
+      return CreateComponentMockData.generateFieldResponse(currentField);
+    }
+    
+    // General conversation responses
+    return CreateComponentMockData.getRandomGeneralResponse();
   }
 
   // This function is called when the user focuses on the textarea
@@ -305,7 +556,11 @@ export class CreateComponent
 
       if (this.tooltipInstance) {
         this.tooltipInstance.dispose(); // destroy old instance
-        this.tooltipInstance = new Tooltip(tooltipEl); // create new instance
+        this.tooltipInstance = new Tooltip(tooltipEl, {
+          trigger: 'hover', // Only show on hover, not click
+          placement: 'auto', // Auto placement
+          container: 'body' // Append to body to avoid z-index issues
+        }); // create new instance
       }
       if (this.isActive) {
         div1.classList.add('fieldresize');
@@ -341,6 +596,7 @@ export class CreateComponent
     this.fields = this.fields.map((field) => ({
       ...field,
       value: this.bicFieldData[field.label] || '',
+      // Preserve the completed status - only update value, don't auto-complete
     }));
     if (this.uploadFileName !== undefined && this.fields[23]) {
       this.fields[23].value = this.uploadFileName;
@@ -351,17 +607,18 @@ export class CreateComponent
         field.value !== this.staticText.ADA_STATIC_TEXT;
       if (isFilled) {
         if (this.groupA.includes(index)) {
-          this.progress += 6;
+          this.progress += 6; // 9 fields × 6% = 54%
         } else if (this.groupB.includes(index)) {
-          this.progress += 3;
+          this.progress += 3; // 10 fields × 3% = 30%
         } else if (this.groupC.includes(index)) {
-          this.progress += 2;
+          this.progress += 3.2; // 5 fields × 3.2% = 16% (total: 54+30+16=100%)
         }
+        // Note: Index 23 (Additional attachments) is excluded from progress calculation
       }
     });
 
-    // Cap it at 100%
-    this.progressPercentage = Math.min(this.progress, 100);
+    // Ensure exactly 100% when all counted fields are filled, but cap at 100%
+    this.progressPercentage = Math.min(Math.round(this.progress), 100);
     this.checkFirst10Completed();
   }
 
@@ -1171,16 +1428,37 @@ export class CreateComponent
       user_name: this.api.userName,
       session_data: chatData,
     };
-    this.api.submitData(data).subscribe({
-      next: (response) => {
-        this.additionalDataForSubmit();
-      },
-      error: (err) => {},
-      complete: () => {},
-    });
+    
+    if (this.mockEnabled) {
+      // Mock submit response
+      setTimeout(() => {
+        this.mockSubmitSuccess();
+      }, 1000);
+    } else {
+      // Original API call
+      this.api.submitData(data).subscribe({
+        next: (response) => {
+          this.additionalDataForSubmit();
+        },
+        error: (err) => {},
+        complete: () => {},
+      });
+    }
+  }
+
+  mockSubmitSuccess() {
+    // Show success message
+    this.successDivText = this.staticText.successContent;
+    this.successDivCloseAfterSec();
+    
+    // Simulate what would happen after successful submission
+    this.additionalDataForSubmit();
   }
 
   submitButton() {
+    // Set submission intent immediately when user clicks submit (before modal)
+    this.submitButtonClicked = true;
+    
     if (!this.allLooksGoodCliced) {
       const modalElement = document.getElementById(
         'reviewModal'
@@ -1204,6 +1482,14 @@ export class CreateComponent
     }
   }
 
+  // Method to handle modal cancellation/closing without submission
+  onModalCancel() {
+    // Reset submission flag if user cancels modal without submitting
+    this.submitButtonClicked = false;
+    this.modalSubmitted = false;
+    console.log('Create Component: Modal cancelled - reset submission flags');
+  }
+
   additionalDataForSubmit() {
     const filled = this.fields.filter(
       (field) =>
@@ -1225,17 +1511,37 @@ export class CreateComponent
       additionalData.update_data.Additional_Files =
         this.fileUploadFromAttachment;
     }
-    this.api.submitAdditionalData(additionalData).subscribe({
-      next: (response) => {
+    
+    if (this.mockEnabled) {
+      // Remove the draft from session storage since it's being submitted
+      this.removeDraftFromSessionStorage();
+      this.submissionSuccessful = true;
+      
+      // Mock successful submission
+      setTimeout(() => {
         this.api.triggerAction(this.staticText.generatedText);
         this.router.navigate(['/request']);
         setTimeout(() => {
           this.initializeTooltips();
         });
-      },
-      error: (err) => {},
-      complete: () => {},
-    });
+      }, 500);
+    } else {
+      // Original API call
+      this.api.submitAdditionalData(additionalData).subscribe({
+        next: (response) => {
+          // Remove the draft from session storage since it's being submitted
+          this.removeDraftFromSessionStorage();
+          this.submissionSuccessful = true;
+          this.api.triggerAction(this.staticText.generatedText);
+          this.router.navigate(['/request']);
+          setTimeout(() => {
+            this.initializeTooltips();
+          });
+        },
+        error: (err) => {},
+        complete: () => {},
+      });
+    }
   }
 
   saveChatData() {
@@ -1251,17 +1557,29 @@ export class CreateComponent
       timestamp: new Date().toString(),
     };
 
-    this.api.submitData(data).subscribe({
-      next: (response) => {
-        const data = { user_name: this.api.userName };
-        this.api.retriveData(data);
-        setTimeout(() => {
-          this.initializeTooltips();
-        });
-      },
-      error: (err) => {},
-      complete: () => {},
-    });
+    if (this.mockEnabled) {
+      // Save to mock data by calling a method on the left-nav component
+      // We'll use the service to communicate this
+      this.api.saveMockDraft(this.sessionId, this.api.userName, this.chatHistory, this.fields);
+      
+      // Simulate the same behavior as real API
+      setTimeout(() => {
+        this.initializeTooltips();
+      });
+    } else {
+      // Original API call
+      this.api.submitData(data).subscribe({
+        next: (response) => {
+          const data = { user_name: this.api.userName };
+          this.api.retriveData(data);
+          setTimeout(() => {
+            this.initializeTooltips();
+          });
+        },
+        error: (err) => {},
+        complete: () => {},
+      });
+    }
   }
 
   onConfirmAreas() {
@@ -1274,6 +1592,14 @@ export class CreateComponent
       sender: this.staticText.senderUser,
       isFile: false,
     });
+    
+    if (this.mockEnabled) {
+      // Update mock form data with selection
+      this.bicFieldData['Areas involved'] = this.getSelectedRegions();
+      this.mockFormData['Areas involved'] = this.getSelectedRegions();
+      this.progressBarUpdate();
+    }
+    
     this.loader = true;
     this.dataa.edit_field = this.editFieldVal;
     this.dataa.confirmation = this.staticText.true;
@@ -1291,6 +1617,14 @@ export class CreateComponent
       sender: this.staticText.senderUser,
       isFile: false,
     });
+    
+    if (this.mockEnabled) {
+      // Update mock form data with selection
+      this.bicFieldData['Destination 2027 alignment'] = this.getSelectedDestination();
+      this.mockFormData['Destination 2027 alignment'] = this.getSelectedDestination();
+      this.progressBarUpdate();
+    }
+    
     this.loader = true;
     this.dataa.edit_field = this.editFieldVal;
     this.dataa.confirmation = this.staticText.true;
@@ -1374,14 +1708,47 @@ export class CreateComponent
     return additionalField ? additionalField.value === '' : false;
   }
 
-  ngOnDestroy() {
-    if (this.submitButtonClicked == true) {
-      this.submitButtonClicked = false;
-    } else {
-      if (this.botRespondedFirstTime == true) {
-        this.saveChatData();
-        this.api.triggerAction(this.staticText.draftSaved);
+  // Remove submitted draft from session storage
+  // Remove submitted draft from session storage
+  removeDraftFromSessionStorage() {
+    if (this.mockEnabled && this.sessionId) {
+      // Only proceed if chat_drafts already exists in session storage
+      const existingDraftsString = sessionStorage.getItem('chat_drafts');
+      if (existingDraftsString) {
+        const existingDrafts = JSON.parse(existingDraftsString);
+        const filteredDrafts = existingDrafts.filter((draft: any) => 
+          draft.session_id !== this.sessionId
+        );
+        
+        // If no drafts left, remove the entire session storage item
+        if (filteredDrafts.length === 0) {
+          sessionStorage.removeItem('chat_drafts');
+          console.log('Create Component: Removed all drafts from session storage');
+        } else {
+          sessionStorage.setItem('chat_drafts', JSON.stringify(filteredDrafts));
+          console.log('Create Component: Removed submitted draft from session storage:', this.sessionId);
+        }
+      } else {
+        console.log('Create Component: No drafts found in session storage to remove');
       }
+    }
+  }
+
+  ngOnDestroy() {
+    // Don't save as draft if any submission process has started or completed
+    if (this.submitButtonClicked || this.submissionSuccessful || this.modalSubmitted) {
+      console.log('Create Component: Not saving as draft - submission process initiated or completed');
+      // Reset flags for cleanup
+      this.submitButtonClicked = false;
+      this.submissionSuccessful = false;
+      this.modalSubmitted = false;
+      return; // Exit early without saving
+    }
+    
+    // Only save if bot has responded and no submission was attempted
+    if (this.botRespondedFirstTime === true) {
+      this.saveChatData();
+      this.api.triggerAction(this.staticText.draftSaved);
     }
   }
 }

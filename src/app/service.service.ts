@@ -40,6 +40,10 @@ export class ServiceService {
   private loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
 
+  // Mock draft functionality
+  private mockDraftSubject = new BehaviorSubject<any>(null);
+  mockDraft$ = this.mockDraftSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
   // POST request to send data to the API
@@ -186,5 +190,35 @@ export class ServiceService {
 
   hide() {
     this.loading.next(false);
+  }
+
+  // Mock draft management methods
+  saveMockDraft(sessionId: string, userName: string, chatHistory: any[], formFieldValue: any[]) {
+    const draftData = {
+      action: 'save',
+      sessionId,
+      userName,
+      chatHistory,
+      formFieldValue
+    };
+    this.mockDraftSubject.next(draftData);
+  }
+
+  deleteMockDraft(sessionId: string, userName: string) {
+    const draftData = {
+      action: 'delete',
+      sessionId,
+      userName
+    };
+    this.mockDraftSubject.next(draftData);
+  }
+
+  // Method to notify about draft changes (alias for compatibility)
+  notifyDraftChange(action: string, sessionId: string, userName: string, chatHistory?: any[], formFieldValue?: any[]) {
+    if (action === 'save' && chatHistory && formFieldValue) {
+      this.saveMockDraft(sessionId, userName, chatHistory, formFieldValue);
+    } else if (action === 'delete') {
+      this.deleteMockDraft(sessionId, userName);
+    }
   }
 }

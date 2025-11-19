@@ -3,6 +3,7 @@ import { ServiceService } from '../service.service'
 import { Router } from '@angular/router';
 import { APP_CONSTANTS } from '../constants';
 import { RequestData } from './user-request.model';
+import { MockDataService } from '../mock-data';
 
 @Component({
   selector: 'app-user-request',
@@ -14,13 +15,22 @@ export class UserRequestComponent implements OnInit {
   tableHeaders = this.staticText.TABLE_HEADERS;
   requestData: RequestData[] = [];
 
-
   constructor(private api: ServiceService, private router: Router) {
 
   }
 
   ngOnInit(): void {
-    this.fetchData();
+    // Use mock data for now - uncomment the line below to use real API data
+    this.loadMockData();
+    // this.fetchData();
+  }
+
+  loadMockData() {
+    // Load mock data from centralized service and format the dates
+    this.requestData = MockDataService.getRequestList();
+    this.requestData.forEach((item: { Submitteddate: string | any[] }) => {
+      item.Submitteddate = MockDataService.formatDate(item.Submitteddate as string);
+    });
   }
 
   getStatusStyle(status: string) {

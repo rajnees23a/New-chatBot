@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ServiceService } from '../service.service';
 import { APP_CONSTANTS } from '../constants';
 import { RequestDetails } from './user-request-detail.model';
+import { MockDataService, UserRequestDetailMockData } from '../mock-data';
 
 @Component({
   selector: 'app-user-request-detail',
@@ -17,6 +18,7 @@ export class UserRequestDetailComponent implements OnInit {
   requestData: RequestDetails[] = [];
   RequestDetailFromRequestPAge: any;
   Responsed: any;
+
   constructor(private route: ActivatedRoute, private api: ServiceService) {}
 
   ngOnInit() {
@@ -27,9 +29,45 @@ export class UserRequestDetailComponent implements OnInit {
       }
     });
 
-    this.fetchData();
-    this.fetchRequestChat();
+    // Use mock data for now - uncomment the line below to use real API data
+    this.loadAllMockData();
+    // this.fetchData();
+    // this.fetchRequestChat();
+    
     this.api.hide();
+  }
+
+  loadAllMockData() {
+    // Load request list/summary data
+    this.loadRequestMockData();
+    
+    // Load chat conversation and form data
+    this.loadChatMockData();
+  }
+
+  loadRequestMockData() {
+    this.requestData = MockDataService.getRequestDetails();
+    this.requestData.forEach((item: { Submitteddate: string | any[] }) => {
+      item.Submitteddate = MockDataService.formatDate(item.Submitteddate as string);
+    });
+    
+    this.requestDetails = MockDataService.findRequestByNumber(this.requestNumber || '');
+  }
+
+
+  loadChatMockData() {
+    this.Responsed = UserRequestDetailMockData.generateMockResponse();
+    if (!this.RequestDetailFromRequestPAge) {
+      this.RequestDetailFromRequestPAge = UserRequestDetailMockData.getMockRequestPageData();
+    }
+  }
+
+  loadMockData() {
+    this.loadRequestMockData();
+  }
+
+  loadMockChatData() {
+    this.loadChatMockData();
   }
 
   fetchData() {
