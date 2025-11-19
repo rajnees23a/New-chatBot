@@ -34,6 +34,7 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
   
   isCollapsed = false;
   isRecentDelete = false;
+  isDeletingInProgress = false; // Flag to prevent auto-refresh during deletion
   deletingUserNAme = '';
   deleteingSesionId = '';
   deletingTitle = '';
@@ -92,6 +93,12 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Method to manually refresh drafts from session storage
   refreshDrafts() {
+    // Don't refresh if we're in the middle of deleting
+    if (this.isDeletingInProgress) {
+      console.log('Skipping auto-refresh - deletion in progress');
+      return;
+    }
+    
     if (this.mockEnabled) {
       const draftsData = this.getDraftsFromSessionStorage();
       this.processData(draftsData);
@@ -179,16 +186,71 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
   deleteDraft() {
     if (this.mockEnabled) {
+      // Set flag to prevent auto-refresh during deletion
+      this.isDeletingInProgress = true;
+      
       // Remove from session storage
       const existingDrafts = this.getDraftsFromSessionStorage();
-      const filteredDrafts = existingDrafts.filter(draft => 
-        !(draft.session_id === this.deleteingSesionId && draft.user_name === this.deletingUserNAme)
-      );
+      console.log('===== DELETE DRAFT START =====');
+      console.log('Current URL:', this.router.url);
+      console.log('Total drafts before deletion:', existingDrafts.length);
+      console.log('Trying to delete session_id:', this.deleteingSesionId);
+      console.log('Trying to delete user_name:', this.deletingUserNAme);
+      
+      const filteredDrafts = existingDrafts.filter(draft => {
+        const shouldKeep = !(draft.session_id === this.deleteingSesionId && draft.user_name === this.deletingUserNAme);
+        return shouldKeep;
+      });
+      
+      console.log('Total drafts after deletion:', filteredDrafts.length);
+      
+      // Save updated drafts to session storage
       sessionStorage.setItem('chat_drafts', JSON.stringify(filteredDrafts));
-      this.fetchDraftData();
+      console.log('Saved to session storage');
+      
+      // Immediately update the UI with new data
+      this.processData(filteredDrafts);
+      console.log('modifiedData.length after processData:', this.modifiedData.length);
+      
+      // Force change detection to update the view
+      this.cdr.detectChanges();
+      console.log('Change detection triggered');
+      
+      // Show success message
       this.successDivText = this.navText.DELETE_SUCCESS;
       this.successDivCloseAfterSec();
-      this.router.navigate(['/home'], { queryParams: { id: 'home' } });
+      
+      // Check current route and navigate appropriately
+      const currentUrl = this.router.url;
+      const isOnHistoryPage = currentUrl.includes('/bic');
+      
+      // Re-initialize tooltips immediately for removed items
+      setTimeout(() => {
+        this.initializeTooltips();
+      }, 100);
+      
+      // If we're on the history page viewing the deleted draft, navigate to home
+      if (isOnHistoryPage) {
+        console.log('On history page - navigating to home');
+        // Use a longer delay and force navigation
+        setTimeout(() => {
+          this.router.navigate(['/home'], { queryParams: { id: 'home' }, replaceUrl: false }).then(() => {
+            console.log('Navigation completed');
+            // Reset the deletion flag after navigation completes
+            setTimeout(() => {
+              this.isDeletingInProgress = false;
+              console.log('===== DELETE DRAFT END =====');
+            }, 200);
+          });
+        }, 300);
+      } else {
+        console.log('Not on history page - staying on current page');
+        // Reset the deletion flag
+        setTimeout(() => {
+          this.isDeletingInProgress = false;
+          console.log('===== DELETE DRAFT END =====');
+        }, 500);
+      }
     } else {
       // Use real API
       const data = {

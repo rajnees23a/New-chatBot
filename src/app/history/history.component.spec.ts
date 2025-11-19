@@ -6,18 +6,18 @@ import { FormsModule } from '@angular/forms';
 import { of, Subject, throwError } from 'rxjs';
 
 import { HistoryComponent } from './history.component';
-import { SerrviceService } from '../serrvice.service';
+import { ServiceService } from '../service.service';
 import { mockDraftData, mockRequestData, mockApiResponse, mockFile } from './history.mock';
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
   let fixture: ComponentFixture<HistoryComponent>;
-  let apiServiceSpy: jasmine.SpyObj<SerrviceService>;
+  let apiServiceSpy: jasmine.SpyObj<ServiceService>;
   let routerSpy: jasmine.SpyObj<Router>;
   let processChatResponseSpy: jasmine.Spy;
 
   beforeEach(async () => {
-    apiServiceSpy = jasmine.createSpyObj('SerrviceService', [
+    apiServiceSpy = jasmine.createSpyObj('ServiceService', [
       'sendData',
       'attachFile',
       'submitData',
@@ -35,7 +35,7 @@ describe('HistoryComponent', () => {
       imports: [HttpClientTestingModule, FormsModule],
       providers: [
         DatePipe,
-        { provide: SerrviceService, useValue: apiServiceSpy },
+        { provide: ServiceService, useValue: apiServiceSpy },
         { provide: ActivatedRoute, useValue: {} },
         { provide: Router, useValue: routerSpy }
       ]
