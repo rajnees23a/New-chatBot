@@ -26,8 +26,6 @@ declare var $: any;
 })
 export class HistoryComponent
   implements OnDestroy, AfterViewChecked, AfterViewInit {
-  private mockEnabled = true; // <-- Toggle this to switch between mock and real data
-
   private conversationStage = 0;
 
   private mockResponseStages: MockResponseStage[] = MockDataService.getChatbotConversationStages();
@@ -392,7 +390,7 @@ export class HistoryComponent
   }
 
   responseDataMethod(data: any) {
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       // Use mock response system for demo
       setTimeout(() => {
         this.simulateMockApiResponse(data);
@@ -472,7 +470,7 @@ export class HistoryComponent
   updateSessionStorage() {
     try {
       // Update the main chat_drafts array that left-nav component reads from
-      if (this.mockEnabled && this.sessionId) {
+      if (ServiceService.isMockEnabled && this.sessionId) {
         const draftData = {
           session_id: this.sessionId,
           user_name: this.userName || 'demo_user',
@@ -849,7 +847,7 @@ export class HistoryComponent
   // Auto-save draft functionality for history component
   autoSaveDraft() {
     // Only save if we have meaningful conversation data and are in mock mode
-    if (this.mockEnabled && this.sessionId && this.chatHistory && this.chatHistory.length > 0) {
+    if (ServiceService.isMockEnabled && this.sessionId && this.chatHistory && this.chatHistory.length > 0) {
       const userMessages = this.chatHistory.filter(msg => msg.sender === 'user');
       
       // Only save if there are user messages (meaningful conversation)

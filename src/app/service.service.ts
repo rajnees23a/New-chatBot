@@ -8,6 +8,10 @@ import { environment } from '../environments/environment';
   providedIn: 'root',
 })
 export class ServiceService {
+  // Centralized mock switch - Toggle this to switch entire application between mock and real data
+  // Set to true for mock data, false for real API calls
+  static readonly isMockEnabled = true;
+  
   userName = environment.userName;
   portLocal = environment.portLocal;
   portDb = environment.portDb;

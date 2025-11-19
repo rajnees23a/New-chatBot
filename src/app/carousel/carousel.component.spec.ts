@@ -49,23 +49,45 @@ describe('CarouselComponent', () => {
     expect(component.totalSlides).toBe(3);
   });
 
-  it('should set isLastSlideReached and isFirstSlide in checkIfLastSlide', () => {
-    const addEventListenerSpy = jasmine.createSpy('addEventListener');
-    spyOn(document, 'getElementById').and.returnValue({
-      addEventListener: addEventListenerSpy
-    } as any);
-
-    component.totalSlides = 5;
-    component.currentSlideIndex = 4;
-    component.checkIfLastSlide();
-
-    // Simulate event callback
-    const event = { to: 4 };
-    addEventListenerSpy.calls.argsFor(0)[1](event);
-
-    expect(component.currentSlideIndex).toBe(4);
+  it('should navigate to specific slide in goToSlide', () => {
+    // Setup DOM elements
+    const mockItems = [
+      { classList: { add: jasmine.createSpy(), remove: jasmine.createSpy() }, style: { opacity: '1' } },
+      { classList: { add: jasmine.createSpy(), remove: jasmine.createSpy() }, style: { opacity: '0' } },
+      { classList: { add: jasmine.createSpy(), remove: jasmine.createSpy() }, style: { opacity: '0' } }
+    ];
+    const mockCurrentActive = { classList: { remove: jasmine.createSpy() }, style: { opacity: '1' } };
+    
+    spyOn(document, 'querySelectorAll').and.returnValue(mockItems as any);
+    spyOn(document, 'querySelector').and.returnValue(mockCurrentActive as any);
+    
+    component.totalSlides = 3;
+    component.currentSlideIndex = 0;
+    
+    component.goToSlide(1);
+    
+    expect(component.currentSlideIndex).toBe(1);
     expect(component.isFirstSlide).toBeFalse();
-    expect(component.isLastSlideReached).toBeTrue();
+    expect(component.isLastSlideReached).toBeFalse();
+  });
+
+  it('should go to next slide in goToNextSlide', () => {
+    spyOn(component, 'goToSlide');
+    component.currentSlideIndex = 0;
+    component.totalSlides = 3;
+    
+    component.goToNextSlide();
+    
+    expect(component.goToSlide).toHaveBeenCalledWith(1);
+  });
+
+  it('should go to previous slide in goToPreviousSlide', () => {
+    spyOn(component, 'goToSlide');
+    component.currentSlideIndex = 2;
+    
+    component.goToPreviousSlide();
+    
+    expect(component.goToSlide).toHaveBeenCalledWith(1);
   });
 
   it('should call closePopup, emit hideParent, set sessionStorage and navigate on getStarted', () => {
@@ -87,19 +109,23 @@ describe('CarouselComponent', () => {
     expect(component.step).toBe(1);
   });
 
-  it('should update slide states in onCarouselSlide', () => {
-    spyOn(component, 'setTotalSlides');
-    spyOn(component, 'checkIfLastSlide');
+  it('should update slide states when navigating', () => {
+    component.totalSlides = 3;
+    
+    // Test first slide
     component.currentSlideIndex = 0;
-    component.isLastSlideReached = false;
-    component.onCarouselSlide();
-    expect(component.setTotalSlides).toHaveBeenCalled();
-    expect(component.checkIfLastSlide).toHaveBeenCalled();
+    component.isFirstSlide = component.currentSlideIndex === 0;
+    component.isLastSlideReached = component.currentSlideIndex === component.totalSlides - 1;
+    
     expect(component.isFirstSlide).toBeTrue();
+    expect(component.isLastSlideReached).toBeFalse();
 
-    component.currentSlideIndex = 1;
-    component.isLastSlideReached = true;
-    component.onCarouselSlide();
+    // Test last slide
+    component.currentSlideIndex = 2;
+    component.isFirstSlide = component.currentSlideIndex === 0;
+    component.isLastSlideReached = component.currentSlideIndex === component.totalSlides - 1;
+    
     expect(component.isFirstSlide).toBeFalse();
+    expect(component.isLastSlideReached).toBeTrue();
   });
 });

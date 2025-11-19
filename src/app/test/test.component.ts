@@ -2,368 +2,215 @@ import {
   Component,
   NgZone,
   ElementRef,
-  Renderer2,
   ViewChild,
   OnDestroy,
-  ChangeDetectorRef,
+  AfterViewChecked,
+  AfterViewInit,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServiceService } from '../service.service';
 import { DatePipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import * as bootstrap from 'bootstrap';
+import { Tooltip } from 'bootstrap';
+import { Field } from './field.model';
+import { APP_CONSTANTS } from '../constants';
+import { MockResponseStage, MockDataService } from '../mock-data';
+import { CreateComponentMockData } from './test.component.mock';
 
 @Component({
   selector: 'app-test',
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.css'],
 })
-export class TestComponent implements OnDestroy {
-  @ViewChild('waveCanvas') waveCanvas!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('autoResizeTextarea') inputRef!: ElementRef<HTMLInputElement>;
-  transcript = '';
-  isRecording = false;
-  isSpeaking = false;
-  recognition!: any;
+export class TestComponent implements OnDestroy, AfterViewChecked, AfterViewInit
+{
+  staticText = APP_CONSTANTS.CREATE;
+  private conversationStage = 0;
+  private mockResponseStages: MockResponseStage[] = MockDataService.getChatbotConversationStages();
+  private mockChatHistory: any[] = [];
 
-  private audioContext!: AudioContext;
-  private analyser!: AnalyserNode;
-  private source!: MediaStreamAudioSourceNode;
-  private dataArray!: Uint8Array;
-  private animationFrameId: number | null = null;
+  // Start with empty form - will be filled progressively during conversation
+  private mockFormData: { [key: string]: string } = {};
 
-  fileExtension: string = '';
-  addfileExtension: string = '';
+  // Context detection properties
+  componentMode: 'create' | 'draft' | 'request-detail' = 'create';
+  isEmbeddedContext: boolean = false;
+  draftData: any;
+  private dataSubscription: any;
+  userName: string = '';
 
   constructor(
     private api: ServiceService,
     private ngZone: NgZone,
     private datePipe: DatePipe,
-    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute,
     private router: Router
   ) {
     const SpeechRecognition =
-      (window as any).webkitSpeechRecognition ||
-      (window as any).SpeechRecognition;
-
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
     this.recognition = new SpeechRecognition();
-    this.recognition.lang = 'en';
-    this.recognition.interimResults = true;
-    this.recognition.continuous = true;
+    this.recognition.lang = this.staticText.langForChat;
 
     this.recognition.onresult = (event: any) => {
-      const result = Array.from(event.results)
-        .map((res: any) => res[0].transcript)
-        .join('');
-      this.userInput = result;
-      this.cdr.detectChanges();
-      setTimeout(() => {
-        const inputEl = this.inputRef?.nativeElement;
-        inputEl?.scrollTo?.(inputEl.scrollWidth, 0);
+      this.ngZone.run(() => {
+        this.userInput = event.results[0][0].transcript;
       });
     };
 
-    this.recognition.onerror = () => {
-      this.isRecording = false;
-      this.isSpeaking = false;
-      this.cdr.detectChanges();
+    this.recognition.onend = () => {
+      this.isListening = false;
     };
   }
+  fileExtension: string = '';
+  addfileExtension: string = '';
   isActive = false;
   createNew: boolean = true;
   botMultiQuestion: boolean = false;
   isListening = false;
-
+  recognition: any;
   receivedValue: boolean | null = null;
   isCollapsed = false;
   @ViewChild('reviewModal') reviewModal!: ElementRef;
-  data = {
-    session_id: '1234abcd',
-    botmessage:
-      'Let’s start by understanding your idea. Give me a brief overview, covering the key challenge and what you want to achieve',
-    fieldText: 'Problem Statement',
-    fieldValue: '',
-    fieldStatus: false,
-    guieText: [
-      'What’s the problem? (What needs fixing or improving?)',
-      'What’s your goal? (What do you want to achieve?)',
-      'How will success be measured? (Think metrics or key results.)',
-      'Is there urgency? (Any deadlines, priorities, or risks?)',
-    ],
-    following: [
-      'Text input (Type your response)',
-      'Attachment (Upload a PDF, Word, PPT or Excel file)',
-      'Voice input (Record your response)',
-    ],
-  };
+  @ViewChild('chatContainerBox') chatContainerBox!: ElementRef;
+  @ViewChild('tooltipRef', { static: false }) tooltipElement!: ElementRef;
+  tooltipInstance: Tooltip | undefined;
   staticBotMsg = false;
   selectedFile: File | null = null;
   fileUploadFromAttachment: any;
   fileIcon: string = '';
-  fileUrlForChatUpload: any;
-  fileUrlForAttachmentUpload: any;
-  uploadFileName: any;
+  fileUrlForChatUpload: string = '';
+  fileUrlForAttachmentUpload: string = '';
+  uploadFileName: string = '';
   uploadFileFirstTime = false;
   errorDivVisible = false;
   errorDivText = '';
   successDivVisible = false;
   successDivText = '';
-  fileUploadFromChatBot: any;
+  fileUploadFromChatBot: File | null = null;
   allLooksGoodCliced: boolean = false;
 
   userInput: string = '';
   chatHistory: any[] = [];
-  fields = [
-    {
-      label: 'Your idea title',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/title.svg',
-      completed: false,
-      tooltip: 'Add static text here',
-    },
-    {
-      label: 'Problem statement',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/problem-statement.svg',
-      completed: false,
-    },
-    {
-      label: 'Objective',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/objective.svg',
-      completed: false,
-    },
-    {
-      label: 'Key results',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/key-result.svg',
-      completed: false,
-    },
-    {
-      label: 'Key features',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/key-feature.svg',
-      completed: false,
-    },
-    {
-      label: 'Urgency',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/urgency.svg',
-      completed: false,
-    },
-    {
-      label: 'Areas involved',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/area-involved.svg',
-      completed: false,
-    },
-    {
-      label: 'Destination 2027 alignment',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/destination.svg',
-      completed: false,
-    },
-    {
-      label: 'Risks',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/risk.svg',
-      completed: false,
-    },
-    {
-      label: 'KPIs',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/key-result.svg',
-      completed: false,
-    },
-    {
-      label: 'Data needed',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/data-needed.svg',
-      completed: false,
-    },
-    {
-      label: 'Impact',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/impact.svg',
-      completed: false,
-    },
-    {
-      label: 'Implementation considerations',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/implementation.svg',
-      completed: false,
-    },
-    {
-      label: 'Dependencies',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/dependencies.svg',
-      completed: false,
-    },
-    {
-      label: 'Key dates',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/key-dates.svg',
-      completed: false,
-    },
-    {
-      label: 'Timelines',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/timeline.svg',
-      completed: false,
-    },
-    {
-      label: 'Business sponsor',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/business-sponsor.svg',
-      completed: false,
-    },
-    {
-      label: 'Budget details',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/budget-details.svg',
-      completed: false,
-    },
-    {
-      label: 'Stakeholders',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/stakeholders.svg',
-      completed: false,
-    },
-    {
-      label: 'Out of scope',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/scope.svg',
-      completed: false,
-    },
-    {
-      label: 'Business case impacts',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/business-case-impact.svg',
-      completed: false,
-    },
-    {
-      label: 'Portfolio alignment',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/portfolio-alignment.svg',
-      completed: false,
-    },
-    {
-      label: 'IT sponsor',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/it-sponsor.svg',
-      completed: false,
-    },
-    {
-      label: 'Additional attachments',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/additional-attachments.svg',
-      completed: false,
-    },
-    {
-      label: 'Additional comments',
-      value: '',
-      valid: false,
-      editing: false,
-      image: 'assets/images/additional-comments.svg',
-      completed: false,
-    },
-  ];
-  bicFieldData: any;
-  botChatMessage = 'Hello';
+  fields: Field[] = [...APP_CONSTANTS.FIELDS];
+  bicFieldData: { [key: string]: string } = {};
+  botChatMessage: string = '';
   apiResponseData: any;
   progress = 0;
   loader = false;
-  botButtonResponse: any;
+  botButtonResponse: string[] = [];
   editFieldVal = '';
   buttonDisabled = true;
   editButtonClicked = false;
   sessionId = this.api.userName;
-  userM =
-    'I would like to develop a global process to enable users from HMS Host and Autogrill to access Avolta Insights, which currently is only available for Dufry users. This impacts approximatly 30% of all users from the whole company, and will help the business visualize critical data on key business initiatives';
   selectedOptionsofDropdown = '';
-  ADAtext =
-    "ADA couldn't fill this field, please continue the conversation to fill it";
   allFieldssLookGoodButton = true;
   showChatDelete = false;
   showAttachmentDelete = false;
   dataa = {
     session_id: this.sessionId,
     user_name: this.api.userName,
-    user_message: this.userM,
+    user_message: '',
     edit_field: '',
     confirmation: 'False',
   };
   selectedIndexOfButton: number | null = null;
   submitButtonClicked = false;
+  submissionSuccessful = false;
+  modalSubmitted = false;
   botRespondedFirstTime = false;
   comingFromCreate = '';
   selectedAreas: boolean[] = [];
   selectedDestination: boolean[] = [];
   userComeFirstTime = true;
   @ViewChild('autoResizeTextarea') textarea!: ElementRef<HTMLTextAreaElement>;
-  placeholder = 'Reply to ADA';
   bussinessMappingButtonClicke = false;
   bussinessUserInputForMappingButtons = '';
   itMappingButtonClicke = false;
   itUserInputForMappingButtons = '';
   bussinessDropDownKey = '';
   itDropDownKey = '';
-  // Index mapping based on design for progress %
-  groupA = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 9 fields 6%
-  groupB = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]; // 10 fields 3%
-  groupC = [19, 20, 21, 22, 23, 24, 25]; // 7 fields 2%
-  progressPercentage: any;
+  // Index mapping based on design for progress % - Total 24 fields = 100% (excluding Additional attachments field #23)
+  groupA = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 9 required fields - 6% each = 54%
+  groupB = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]; // 10 fields - 3% each = 30%
+  groupC = [19, 20, 21, 22, 24]; // 5 fields - 3.2% each = 16% total (excluding index 23: Additional attachments)
+  progressPercentage: number = 0;
   confirmBtnOfAreaClk = false;
   confirmBtnOfDestClk = false;
+  confirmBtnOfBussClk = false;
+  selectedBussiness: boolean[] = [];
+  isMobile = window.innerWidth < 768;
 
   ngOnInit() {
+    // Detect component context first
+    this.detectComponentMode();
+    
+    // Initialize based on mode
+    if (this.componentMode === 'create') {
+      this.initializeCreateMode();
+    } else if (this.componentMode === 'draft' || this.componentMode === 'request-detail') {
+      this.initializeHistoryMode();
+    }
+
+    // Common initialization regardless of mode
+    this.initializeCommonFeatures();
+    
+    // Clear any stale data when directly navigating to create route
+    const currentRoute = this.router.url;
+    if (currentRoute.includes('/create') && this.componentMode === 'create') {
+      // Clear any existing service data to ensure fresh create mode
+      setTimeout(() => {
+        if (!this.draftData && this.componentMode === 'create') {
+          this.api.setData(null);
+        }
+      }, 100);
+    }
+  }
+
+  // Method to detect which mode the component is in
+  detectComponentMode() {
+    this.isEmbeddedContext = this.checkIfEmbedded();
+    
+    // Subscribe to service data to detect context
+    this.dataSubscription = this.api.currentData$.subscribe((data) => {
+      if (data) {
+        if (data.comingFrom === 'draft') {
+          this.componentMode = 'draft';
+          this.userComeFirstTime = false; // Never show modal for draft mode
+          this.handleDraftMode(data);
+        } else if (data.comingFrom === 'request') {
+          this.componentMode = 'request-detail';
+          this.userComeFirstTime = false; // Never show modal for request detail mode
+          this.handleRequestDetailMode(data);
+        }
+      }
+    });
+
+    // Check route or other indicators for create mode
+    const currentRoute = this.router.url;
+    if (currentRoute.includes('/create') || currentRoute.includes('/bic')) {
+      // Default to create mode unless data subscription overrides it
+      if (this.componentMode === 'create') {
+        // Keep create mode
+      }
+    }
+  }
+
+  // Check if component is embedded within another page context
+  checkIfEmbedded(): boolean {
+    try {
+      // Check if we're in the request detail page context
+      return this.router.url.includes('/request-detail/') || 
+             document.querySelector('.user-detail-wrapper') !== null;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  // Initialize create mode (original functionality)
+  initializeCreateMode() {
+    // Only check first time user flag in create mode
     if (
       sessionStorage.getItem('userFirstTime') &&
       sessionStorage.getItem('userFirstTime') == 'false'
@@ -372,112 +219,335 @@ export class TestComponent implements OnDestroy {
     }
     this.sessionId = this.generateSessionId();
     this.dataa.session_id = this.sessionId;
-    this.chatHistory.push({ text: this.data.botmessage, sender: 'bot' });
-    this.chatHistory.push({
-      text: {
-        question:
-          'Let’s start with the basics! Share a brief description of your idea, covering',
-        guidelines: this.data.guieText,
-      },
-      sender: 'bot',
-      staticBotMessage: true,
-    });
-    this.chatHistory.push({
-      followingText: {
-        question: 'You can provide your response in one of the following ways',
-        hints: this.data.following,
-      },
-      sender: 'bot',
-    });
-
-    window.onbeforeunload = (event) => {};
-  }
-
-  async setupMicAnalyzer() {
-    try {
-      if (this.audioContext?.state !== 'closed') {
-        await this.audioContext?.close();
-      }
-      cancelAnimationFrame(this.animationFrameId!);
-
-      this.audioContext = new AudioContext();
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      this.source = this.audioContext.createMediaStreamSource(stream);
-
-      this.analyser = this.audioContext.createAnalyser();
-      this.analyser.fftSize = 64; // 32 bars
-      this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
-
-      this.source.connect(this.analyser);
-      this.drawWaveform(); // calls the updated bar-style version
-    } catch (err) {
-      console.error('Mic setup failed:', err);
+    
+    // Load mock data for demo or real data for production
+    if (ServiceService.isMockEnabled) {
+      this.loadMockData();
+    } else {
+      // Original initialization for real data
+      this.chatHistory.push({
+        text: this.staticText.bot_default_message,
+        sender: this.staticText.senderBot,
+      });
+      this.chatHistory.push({
+        text: {
+          question: this.staticText.guideQuestionTitle,
+          guidelines: this.staticText.bot_default_guideText,
+        },
+        sender: this.staticText.senderBot,
+        staticBotMessage: true,
+      });
+      this.chatHistory.push({
+        followingText: {
+          question: this.staticText.followingQuestionTitle,
+          hints: this.staticText.bot_default_following,
+        },
+        sender: this.staticText.senderBot,
+      });
     }
   }
 
-  drawWaveform() {
-    const canvas = this.waveCanvas.nativeElement;
-    const ctx = canvas.getContext('2d')!;
-    const WIDTH = canvas.width;
-    const HEIGHT = canvas.height;
+  // Initialize history mode (for draft and request-detail)
+  initializeHistoryMode() {
+    // For draft and request-detail modes, never show the first time modal
+    this.userComeFirstTime = false;
+    
+    this.selectedAreas = new Array(6).fill(false);
+    this.selectedDestination = new Array(4).fill(false);
+    this.selectedBussiness = new Array(8).fill(false);
+    
+    // Initialize arrays with false values for multi-select dropdowns
+    this.selectedAreas = [false, false, false, false, false, false];
+    this.selectedDestination = [false, false, false, false];
+    this.selectedBussiness = [false, false, false, false, false, false, false, false];
+    
+    // Setup mobile detection for history modes
+    this.detectMobile();
+  }
 
-    const draw = () => {
-      this.animationFrameId = requestAnimationFrame(draw);
-      // this.analyser.getByteFrequencyData(this.dataArray); // IMPORTANT: use frequency data
-
-      ctx.clearRect(0, 0, WIDTH, HEIGHT);
-
-      const barWidth = 6; // THICK bars
-      const gap = 2;
-      let x = 0;
-      let maxHeight = 0;
-
-      for (let i = 0; i < this.dataArray.length; i++) {
-        const barHeight = Math.max((this.dataArray[i] / 255) * HEIGHT, 4);
-        ctx.fillStyle = '#000'; // dark bold bars
-        ctx.fillRect(x, (HEIGHT - barHeight) / 2, barWidth, barHeight);
-        if (barHeight > maxHeight) maxHeight = barHeight;
-        x += barWidth + gap;
-      }
-
-      const speaking = maxHeight > 10;
-      if (speaking !== this.isSpeaking) {
-        this.isSpeaking = speaking;
-        this.cdr.detectChanges();
-      }
+  // Mobile detection method (for history modes)
+  detectMobile() {
+    this.isMobile = window.innerWidth < 768;
+    
+    // Add resize listener for dynamic detection
+    const resizeListener = () => {
+      this.isMobile = window.innerWidth < 768;
     };
-
-    draw();
+    
+    window.addEventListener('resize', resizeListener);
+    
+    // Store listener for cleanup
+    (this as any).resizeListener = resizeListener;
   }
 
-  toggleRecording(): void {
-    this.isRecording = true;
-    this.userInput = '';
-    this.recognition.start();
-    this.setupMicAnalyzer(); // always re-setup
+  // Handle draft mode specific logic
+  handleDraftMode(data: any) {
+    // Ensure modal never shows for draft mode
+    this.userComeFirstTime = false;
+    
+    this.draftData = data;
+    this.chatHistory = this.draftData['sessionDataDraft'].chatHistory;
+    this.fields = this.draftData['sessionDataDraft'].formFieldValue;
+    this.sessionId = this.draftData['sessionDataId'];
+    this.userName = this.draftData['sessionDataUserName'];
+    this.dataa.session_id = this.draftData['sessionDataId'];
+    this.dataa.user_name = this.draftData['sessionDataUserName'];
+
+    // Initialize bicFieldData from form fields for mock continuation
+    this.initializeBicFieldData();
+    this.determineConversationStage();
+    this.validateFieldStates();
+    this.filesSetForHistory();
+    this.calculateProgress();
+    this.checkFirst10Completed();
+    // Hide loader after processing draft data
+    this.api.hide();
   }
 
-  stopRecording(): void {
-    this.isRecording = false;
-    this.recognition.stop();
-    this.isSpeaking = false;
+  // Handle request detail mode specific logic
+  handleRequestDetailMode(data: any) {
+    // Ensure modal never shows for request detail mode
+    this.userComeFirstTime = false;
+    
+    this.chatHistory = data.chatData.chatHistory;
+    this.fields = data.chatData.formFieldValue;
+    this.sessionId = data.session_id;
+    this.userName = data.user_name;
+    this.dataa.session_id = data.session_id;
+    this.dataa.user_name = data.user_name;
 
-    if (this.audioContext && this.audioContext.state !== 'closed') {
-      this.audioContext.suspend();
+    this.initializeBicFieldData();
+    this.determineConversationStage();
+    this.validateFieldStates();
+    this.filesSetForHistory();
+    this.calculateProgress();
+    this.checkFirst10Completed();
+    this.api.hide();
+  }
+
+  // Common initialization for all modes
+  initializeCommonFeatures() {
+    // Only save drafts in create mode
+    if (this.componentMode === 'create') {
+      window.onbeforeunload = (event) => {
+        // Auto-save draft when user is about to leave the page (only if not submitting)
+        if (!this.submitButtonClicked && !this.submissionSuccessful && !this.modalSubmitted) {
+          this.saveCurrentConversationAsDraft();
+        }
+      };
+
+      // Subscribe to service actions for new conversation trigger
+      this.api.action$.subscribe(action => {
+        if (action.triggered && action.message === 'start_new_conversation') {
+          this.startNewConversation();
+          this.api.resetAction(); // Reset the action state
+        }
+      });
     }
-
-    if (this.animationFrameId) {
-      cancelAnimationFrame(this.animationFrameId);
-      this.animationFrameId = null;
+  }  // Method to save current conversation to session storage as draft
+  saveCurrentConversationAsDraft() {
+    // Don't save as draft if submission is in progress, was successful, or submitted via modal
+    if (this.submitButtonClicked || this.submissionSuccessful || this.modalSubmitted) {
+      console.log('Create Component: Skipping draft save - submission in progress, completed, or submitted via modal');
+      return;
     }
+    
+    // Only save if there's meaningful conversation (more than initial bot messages)
+    const userMessages = this.chatHistory.filter(msg => msg.sender === 'user');
+    if (userMessages.length > 0 && this.hasAnyFilledFields()) {
+      const draftData = {
+        session_id: this.sessionId,
+        user_name: this.api.userName || 'demo_user',
+        timestamp: new Date().toISOString(),
+        chatHistory: this.chatHistory,
+        formFieldValue: this.fields.map(field => ({
+          label: field.label,
+          value: this.bicFieldData[field.label] || field.value || '',
+          valid: field.valid,
+          editing: field.editing,
+          image: field.image,
+          completed: field.completed
+        })),
+        submit: false
+      };
 
-    const ctx = this.waveCanvas?.nativeElement.getContext('2d');
-    ctx?.clearRect(
-      0,
-      0,
-      this.waveCanvas.nativeElement.width,
-      this.waveCanvas.nativeElement.height
+      // Only get existing drafts if they already exist, don't create empty array
+      const existingDraftsString = sessionStorage.getItem('chat_drafts');
+      const existingDrafts = existingDraftsString ? JSON.parse(existingDraftsString) : [];
+      
+      const existingIndex = existingDrafts.findIndex((draft: any) => draft.session_id === this.sessionId);
+      
+      if (existingIndex > -1) {
+        existingDrafts[existingIndex] = draftData;
+      } else {
+        existingDrafts.unshift(draftData);
+      }
+
+      sessionStorage.setItem('chat_drafts', JSON.stringify(existingDrafts));
+      console.log('Create Component: Draft saved to session storage');
+      
+      // Note: No need to notify service as left-nav reads directly from session storage
+    }
+  }
+
+  // Method to get drafts from session storage
+  getDraftsFromSessionStorage(): any[] {
+    const drafts = sessionStorage.getItem('chat_drafts');
+    return drafts ? JSON.parse(drafts) : [];
+  }
+
+  // Method to check if any fields are filled
+  hasAnyFilledFields(): boolean {
+    return this.fields.some(field => 
+      field.value?.trim() !== '' && 
+      field.value !== this.staticText.ADA_STATIC_TEXT &&
+      this.bicFieldData[field.label]?.trim() !== ''
     );
+  }
+
+  // Method to handle new conversation (when + button is clicked)
+  startNewConversation() {
+    // Save current conversation as draft first (only if there's meaningful content and not already submitted)
+    const userMessages = this.chatHistory.filter(msg => msg.sender === 'user');
+    if (userMessages.length > 0 && this.hasAnyFilledFields() && !this.submitButtonClicked && !this.submissionSuccessful && !this.modalSubmitted) {
+      this.saveCurrentConversationAsDraft();
+    }
+    
+    // Clear any existing data service context
+    this.api.setData(null);
+    
+    // Reset component mode to create mode
+    this.componentMode = 'create';
+    this.isEmbeddedContext = false;
+    this.draftData = null;
+    this.userName = '';
+    
+    // Reset conversation state
+    this.resetConversationState();
+    
+    // Generate new session
+    this.sessionId = this.generateSessionId();
+    this.dataa.session_id = this.sessionId;
+    this.dataa.user_name = this.api.userName;
+    
+    // Check if user should see modal (first time user logic)
+    const userFirstTime = sessionStorage.getItem('userFirstTime');
+    if (!userFirstTime || userFirstTime === 'true') {
+      this.userComeFirstTime = true;
+    } else {
+      this.userComeFirstTime = false;
+    }
+    
+    // Reinitialize create mode properly
+    if (ServiceService.isMockEnabled) {
+      this.loadMockData();
+    } else {
+      // Initialize chat with default bot messages for real API
+      this.chatHistory = [];
+      this.chatHistory.push({
+        text: this.staticText.bot_default_message,
+        sender: this.staticText.senderBot,
+      });
+      this.chatHistory.push({
+        text: {
+          question: this.staticText.guideQuestionTitle,
+          guidelines: this.staticText.bot_default_guideText,
+        },
+        sender: this.staticText.senderBot,
+        staticBotMessage: true,
+      });
+      this.chatHistory.push({
+        followingText: {
+          question: this.staticText.followingQuestionTitle,
+          hints: this.staticText.bot_default_following,
+        },
+        sender: this.staticText.senderBot,
+      });
+    }
+    
+    // Reinitialize common features for create mode
+    this.initializeCommonFeatures();
+  }
+
+  resetConversationState() {
+    this.chatHistory = [];
+    this.bicFieldData = {};
+    this.conversationStage = 0;
+    this.fields = this.fields.map(field => ({
+      ...field,
+      value: '',
+      valid: false,
+      completed: false,
+      editing: false
+    }));
+    this.progress = 0;
+    this.progressPercentage = 0;
+    this.userInput = '';
+    this.selectedFile = null;
+    this.allFieldssLookGoodButton = true;
+    this.buttonDisabled = true;
+    this.loader = false;
+  }
+
+  loadMockData() {
+    // Start with initial bot messages only - no pre-filled form
+    this.chatHistory = [
+      {
+        text: this.staticText.bot_default_message,
+        sender: this.staticText.senderBot,
+      },
+      {
+        text: {
+          question: this.staticText.guideQuestionTitle,
+          guidelines: this.staticText.bot_default_guideText,
+        },
+        sender: this.staticText.senderBot,
+        staticBotMessage: true,
+      },
+      {
+        followingText: {
+          question: this.staticText.followingQuestionTitle,
+          hints: this.staticText.bot_default_following,
+        },
+        sender: this.staticText.senderBot,
+      }
+    ];
+    
+    // Start with empty form data - will be filled during conversation
+    this.bicFieldData = {};
+    this.conversationStage = 0;
+    
+    // Fields start empty
+    this.fields = this.fields.map((field) => ({
+      ...field,
+      value: '',
+      valid: false,
+      completed: false
+    }));
+    
+    // Update progress (should be 0% initially)
+    this.progressBarUpdate();
+  }
+
+  ngAfterViewInit() {
+    if (this.tooltipElement && this.tooltipElement.nativeElement) {
+      this.tooltipInstance = new Tooltip(this.tooltipElement.nativeElement, {
+        trigger: 'hover', // Only show on hover, not click
+        placement: 'auto', // Auto placement
+        container: 'body' // Append to body to avoid z-index issues
+      });
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.chatContainerBox.nativeElement.scrollTop =
+        this.chatContainerBox.nativeElement.scrollHeight;
+    } catch (err) {}
   }
 
   autoResize(): void {
@@ -494,14 +564,14 @@ export class TestComponent implements OnDestroy {
         isFile: true,
         fileName: this.selectedFile.name,
         fileUrl: this.fileUrlForChatUpload,
-        sender: 'user',
+        sender: this.staticText.senderUser,
       });
       this.uploadFileFirstTime = true;
     }
     if (this.userInput) {
       this.chatHistory.push({
         text: this.userInput,
-        sender: 'user',
+        sender: this.staticText.senderUser,
         isFile: false,
       });
     }
@@ -512,7 +582,15 @@ export class TestComponent implements OnDestroy {
       this.staticBotMsg = true;
     }
     this.loader = true;
-    this.responseDataMethod(data);
+    
+    // Handle based on component mode
+    if (this.componentMode === 'create') {
+      this.responseDataMethod(data);
+    } else {
+      // For draft and request-detail modes, use mock responses
+      this.simulateMockApiResponse(data);
+    }
+    
     this.userInput = '';
     this.editButtonClicked = false;
     this.selectedFile = null;
@@ -525,39 +603,112 @@ export class TestComponent implements OnDestroy {
       this.staticBotMsg = true;
       this.dataa.confirmation = 'True';
     }
-
-    this.api.sendData(this.dataa, this.selectedFile).subscribe({
-      next: (response) => {
-        this.botRespondedFirstTime = true;
-        this.loader = false;
-        this.apiResponseData = response;
-        if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
-            this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
+    
+    if (ServiceService.isMockEnabled) {
+      // Simulate API response with mock data
+      this.simulateMockApiResponse(data);
+    } else {
+      // Original API call
+      this.api.sendData(this.dataa, this.selectedFile).subscribe({
+        next: (response) => {
+          this.botRespondedFirstTime = true;
+          this.loader = false;
+          this.apiResponseData = response;
+          if (this.apiResponseData) {
+            if (this.apiResponseData.hasOwnProperty('BIC')) {
+              this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
+            }
+            if (this.apiResponseData.hasOwnProperty('bot_message')) {
+              this.botChatMessage = this.apiResponseData.bot_message;
+            }
+            if (this.apiResponseData.hasOwnProperty('button')) {
+              this.botButtonResponse = this.apiResponseData.button;
+            }
+            this.processChatResponse();
+            setTimeout(() => this.initializeTooltips(), 0);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
-            this.botChatMessage = this.apiResponseData.bot_message;
-          }
-          if (this.apiResponseData.hasOwnProperty('button')) {
-            this.botButtonResponse = this.apiResponseData.button;
-          }
-          this.processChatResponse();
-          setTimeout(() => {
-            this.initializeTooltips();
+        },
+        error: (error) => {
+          this.loader = false;
+          this.chatHistory.push({
+            text: this.staticText.sorryNetworkText,
+            sender: this.staticText.senderBot,
           });
-        }
-      },
-      error: (error) => {
-        console.log('error', error);
+        },
+        complete: () => {},
+      });
+    }
+  }
 
-        this.loader = false;
-        this.chatHistory.push({
-          text: 'Sorry for trouble,there is some network issues please try again',
-          sender: 'bot',
-        });
-      },
-      complete: () => console.log('Completed'),
-    });
+  simulateMockApiResponse(userMessage: string) {
+    // Simulate API delay
+    setTimeout(() => {
+      this.loader = false;
+      this.botRespondedFirstTime = true;
+      
+      let botResponse;
+      
+      // If editing a specific field, handle field-specific responses
+      if (this.dataa.edit_field) {
+        botResponse = this.generateMockBotResponse(userMessage);
+      } else {
+        // Progressive conversation flow
+        if (this.conversationStage < this.mockResponseStages.length) {
+          const stage = this.mockResponseStages[this.conversationStage];
+          
+          // Update form data progressively
+          Object.keys(stage.formUpdates).forEach(fieldLabel => {
+            this.bicFieldData[fieldLabel] = (stage.formUpdates as any)[fieldLabel];
+            this.mockFormData[fieldLabel] = (stage.formUpdates as any)[fieldLabel];
+          });
+          
+          botResponse = {
+            message: stage.botMessage,
+            buttons: stage.buttons || [],
+            dropdown: stage.dropdown || [],
+            fieldName: stage.fieldName || ''
+          };
+          
+          this.conversationStage++;
+        } else {
+          // Fallback for additional questions
+          botResponse = this.generateMockBotResponse(userMessage);
+        }
+      }
+      
+      // Store response data for processing (don't add to chat history yet - processChatResponse will handle it)
+      this.botChatMessage = botResponse.message;
+      this.botButtonResponse = botResponse.buttons || [];
+      this.chatHistory.push({
+        text: botResponse.message,
+        sender: 'bot',
+        button: botResponse.buttons || [],
+        dropdown: botResponse.dropdown || [],
+        mappingButton: botResponse.mappingButton || [],
+        fieldName: botResponse.fieldName || ''
+      });
+
+      if (this.dataa.edit_field && this.mockFormData[this.dataa.edit_field]) {
+        this.bicFieldData[this.dataa.edit_field] = this.mockFormData[this.dataa.edit_field];
+      }
+
+      this.progressBarUpdate();
+      this.allFieldssLookGoodButton = false;
+      setTimeout(() => this.initializeTooltips(), 0);
+      
+    }, 1500); // Simulate 1.5 second API delay
+  }
+
+  generateMockBotResponse(userMessage: string): any {
+    const currentField = this.dataa.edit_field;
+    
+    // If editing a specific field, use the centralized mock data
+    if (currentField) {
+      return CreateComponentMockData.generateFieldResponse(currentField);
+    }
+    
+    // General conversation responses
+    return CreateComponentMockData.getRandomGeneralResponse();
   }
 
   // This function is called when the user focuses on the textarea
@@ -587,7 +738,6 @@ export class TestComponent implements OnDestroy {
 
   // This function is called on every input in the textarea
   onInput(): void {
-    // You could do any additional logic based on input if necessary
     const div3 = document.getElementById('textAbut');
     if (div3) {
       div3.classList.add('primaryeffect');
@@ -608,6 +758,19 @@ export class TestComponent implements OnDestroy {
     const div2 = document.getElementById('rightBox');
     if (div1 && div2) {
       this.isActive = !this.isActive;
+      const newTitle = this.isActive ? 'Open' : 'Collapse';
+      const tooltipEl = this.tooltipElement.nativeElement;
+      tooltipEl.setAttribute('data-bs-original-title', newTitle); // <- THIS IS IMPORTANT
+      tooltipEl.setAttribute('title', newTitle);
+
+      if (this.tooltipInstance) {
+        this.tooltipInstance.dispose(); // destroy old instance
+        this.tooltipInstance = new Tooltip(tooltipEl, {
+          trigger: 'hover', // Only show on hover, not click
+          placement: 'auto', // Auto placement
+          container: 'body' // Append to body to avoid z-index issues
+        }); // create new instance
+      }
       if (this.isActive) {
         div1.classList.add('fieldresize');
       } else {
@@ -625,11 +788,14 @@ export class TestComponent implements OnDestroy {
     if (this.staticBotMsg == true) {
       this.chatHistory.push({
         text: this.botChatMessage,
-        sender: 'bot',
+        sender: this.staticText.senderBot,
         button: this.botButtonResponse,
       });
     } else {
-      this.chatHistory.push({ text: this.botChatMessage, sender: 'bot' });
+      this.chatHistory.push({
+        text: this.botChatMessage,
+        sender: this.staticText.senderBot,
+      });
     }
     this.progressBarUpdate();
   }
@@ -638,33 +804,35 @@ export class TestComponent implements OnDestroy {
     this.progress = 0;
     this.fields = this.fields.map((field) => ({
       ...field,
-      value: this.bicFieldData[field.label] || '', // Use mock data or default value
+      value: this.bicFieldData[field.label] || '',
+      // Preserve the completed status - only update value, don't auto-complete
     }));
-    if (this.uploadFileName) {
+    if (this.uploadFileName !== undefined && this.fields[23]) {
       this.fields[23].value = this.uploadFileName;
     }
     this.fields.forEach((field, index) => {
       const isFilled =
-        field.value.trim() !== '' && field.value !== this.ADAtext;
+        field.value.trim() !== '' &&
+        field.value !== this.staticText.ADA_STATIC_TEXT;
       if (isFilled) {
         if (this.groupA.includes(index)) {
-          this.progress += 6;
+          this.progress += 6; // 9 fields × 6% = 54%
         } else if (this.groupB.includes(index)) {
-          this.progress += 3;
+          this.progress += 3; // 10 fields × 3% = 30%
         } else if (this.groupC.includes(index)) {
-          this.progress += 2;
+          this.progress += 3.2; // 5 fields × 3.2% = 16% (total: 54+30+16=100%)
         }
+        // Note: Index 23 (Additional attachments) is excluded from progress calculation
       }
     });
 
-    // Cap it at 100%
-    this.progressPercentage = Math.min(this.progress, 100);
+    // Ensure exactly 100% when all counted fields are filled, but cap at 100%
+    this.progressPercentage = Math.min(Math.round(this.progress), 100);
     this.checkFirst10Completed();
   }
 
   dropDownSel() {
     this.userInput = this.selectedOptionsofDropdown[0];
-
     this.dataa.edit_field = this.editFieldVal;
   }
 
@@ -693,98 +861,49 @@ export class TestComponent implements OnDestroy {
     const fileName = file.name;
     this.fileExtension = fileName
       .substring(fileName.lastIndexOf('.'))
+      .toUpperCase();
+    let localfileExtension = fileName
+      .substring(fileName.lastIndexOf('.'))
       .toLowerCase();
 
     // Check file type
-    if (!allowedExtensions.includes(this.fileExtension)) {
+    if (!allowedExtensions.includes(localfileExtension)) {
       this.errorDivText =
-        'Files of following format is not supported' + ' ' + this.fileExtension;
+        this.staticText.notSupportedText + ' ' + localfileExtension;
       this.errorDivCloseAfterSec();
       return;
     }
 
     // Check file size
     if (file.size > maxSize) {
-      this.errorDivText = 'You may not upload files larger than 20mb';
+      this.errorDivText = this.staticText.fileSizeExceededText;
       this.errorDivCloseAfterSec();
       return;
     }
     // For now, set a default file icon based on extension
-    if (this.fileExtension === '.doc' || this.fileExtension === '.docx') {
+    if (localfileExtension === '.doc' || localfileExtension === '.docx') {
       this.fileIcon = 'assets/images/docs.png'; // Replace with actual icon path
     } else if (
-      this.fileExtension === '.ppt' ||
-      this.fileExtension === '.pptx'
+      localfileExtension === '.ppt' ||
+      localfileExtension === '.pptx'
     ) {
       this.fileIcon = 'assets/images/ppt-new.png'; // Replace with actual icon path
-    } else if (this.fileExtension === '.pdf') {
+    } else if (localfileExtension === '.pdf') {
       this.fileIcon = 'assets/images/pdf-download.png'; // Replace with actual icon path
     } else if (
-      this.fileExtension === '.xls' ||
-      this.fileExtension === '.xlsx'
+      localfileExtension === '.xls' ||
+      localfileExtension === '.xlsx'
     ) {
       this.fileIcon = 'assets/images/xl.png'; // Replace with actual icon path
     } else {
       this.fileIcon = 'assets/images/doc-download.png'; // Replace with a default icon
     }
-
     this.selectedFile = file;
     const div3 = document.getElementById('textAbut');
     if (div3) {
       div3.classList.add('primaryeffect');
     }
     this.fileUrlForChatUpload = URL.createObjectURL(file);
-  }
-
-  fileValidation(event: any) {
-    const file: File = event.target.files[0];
-    // Allowed file types
-    const allowedExtensions = [
-      '.pdf',
-      '.ppt',
-      '.pptx',
-      '.doc',
-      '.docx',
-      '.xls',
-      '.xlsx',
-    ];
-    const maxSize = 20 * 1024 * 1024; // 20 MB in bytes
-
-    // Get file extension
-    const fileName = file.name;
-    const fileExtension = fileName
-      .substring(fileName.lastIndexOf('.'))
-      .toLowerCase();
-
-    // Check file type
-    if (!allowedExtensions.includes(fileExtension)) {
-      this.errorDivText =
-        'Files of following format is not supported' + ' ' + fileExtension;
-      this.errorDivCloseAfterSec();
-      return;
-    }
-
-    // Check file size
-    if (file.size > maxSize) {
-      this.errorDivText = 'You may not upload files larger than 20mb';
-      this.errorDivCloseAfterSec();
-      return;
-    }
-    // For now, set a default file icon based on extension
-    if (fileExtension === '.doc' || fileExtension === '.docx') {
-      this.fileIcon = 'assets/images/docs.png'; // Replace with actual icon path
-    } else if (fileExtension === '.ppt' || fileExtension === '.pptx') {
-      this.fileIcon = 'assets/images/ppt-new.png'; // Replace with actual icon path
-    } else if (fileExtension === '.pdf') {
-      this.fileIcon = 'assets/images/pdf-download.png'; // Replace with actual icon path
-    } else if (
-      this.fileExtension === '.xls' ||
-      this.fileExtension === '.xlsx'
-    ) {
-      this.fileIcon = 'assets/images/xl.png'; // Replace with actual icon path
-    } else {
-      this.fileIcon = 'assets/images/doc-download.png'; // Replace with a default icon
-    }
   }
 
   onFileAttach(event: any) {
@@ -805,54 +924,47 @@ export class TestComponent implements OnDestroy {
     const fileName = file.name;
     this.addfileExtension = fileName
       .substring(fileName.lastIndexOf('.'))
-      .toLowerCase();
+      .toUpperCase();
+    let localExt = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
 
     // Check file type
-    if (!allowedExtensions.includes(this.addfileExtension)) {
-      this.errorDivText =
-        'Files of following format is not supported' +
-        ' ' +
-        this.addfileExtension;
+    if (!allowedExtensions.includes(localExt)) {
+      this.errorDivText = this.staticText.notSupportedText + ' ' + localExt;
       this.errorDivCloseAfterSec();
       return;
     }
 
     // Check file size
     if (file.size > maxSize) {
-      this.errorDivText = 'You may not upload files larger than 20mb';
+      this.errorDivText = this.staticText.largerThan;
       this.errorDivCloseAfterSec();
       return;
     }
     // For now, set a default file icon based on extension
-    if (this.addfileExtension === '.doc' || this.addfileExtension === '.docx') {
-      this.fileIcon = 'assets/images/docs.png'; // Replace with actual icon path
-    } else if (
-      this.addfileExtension === '.ppt' ||
-      this.addfileExtension === '.pptx'
-    ) {
-      this.fileIcon = 'assets/images/ppt-new.png'; // Replace with actual icon path
-    } else if (this.addfileExtension === '.pdf') {
-      this.fileIcon = 'assets/images/pdf-download.png'; // Replace with actual icon path
-    } else if (
-      this.addfileExtension === '.xls' ||
-      this.addfileExtension === '.xlsx'
-    ) {
-      this.fileIcon = 'assets/images/xl.png'; // Replace with actual icon path
+    if (localExt === '.doc' || localExt === '.docx') {
+      this.fileIcon = 'assets/images/docs.png';
+    } else if (localExt === '.ppt' || localExt === '.pptx') {
+      this.fileIcon = 'assets/images/ppt-new.png';
+    } else if (localExt === '.pdf') {
+      this.fileIcon = 'assets/images/pdf-download.png';
+    } else if (localExt === '.xls' || localExt === '.xlsx') {
+      this.fileIcon = 'assets/images/xl.png';
     } else {
-      this.fileIcon = 'assets/images/doc-download.png'; // Replace with a default icon
+      this.fileIcon = 'assets/images/doc-download.png';
     }
-    // this.fileValidation(event)
     this.fileUploadFromAttachment = file;
     this.fileUrlForAttachmentUpload = URL.createObjectURL(file);
     this.uploadFileFirstTime = true;
+    this.fields[23].value = fileName;
     if (this.fileUploadFromAttachment) {
       let dataa = { session_id: this.sessionId, user_name: this.api.userName };
+
       this.api.attachFile(dataa, this.fileUploadFromAttachment).subscribe({
         next: (response) => {
           this.apiResponseData = response;
           if (this.apiResponseData) {
-            this.successDivText = 'Successfully attach the file';
-            this.progress = 2;
+            this.successDivText = this.staticText.attachFile;
+            this.progress += 2;
             this.progressPercentage = Math.min(this.progress, 100);
             this.successDivCloseAfterSec();
             setTimeout(() => {
@@ -861,11 +973,10 @@ export class TestComponent implements OnDestroy {
           }
         },
         error: (error) => {
-          this.errorDivText =
-            'There is some error while uploading the file, please try again';
+          this.errorDivText = this.staticText.errorDiv;
           this.errorDivCloseAfterSec();
         },
-        complete: () => console.log('Completed'),
+        complete: () => {},
       });
     }
   }
@@ -873,9 +984,13 @@ export class TestComponent implements OnDestroy {
   deleteAttachment() {
     this.fileUploadFromAttachment = null;
     this.fileIcon = '';
-    this.successDivText = 'Successfully delete the file';
+    this.successDivText = this.staticText.deleteFile;
     this.successDivCloseAfterSec();
     this.uploadFileFirstTime = false;
+    this.showAttachmentDelete = false;
+    this.fields[23].value = '';
+    this.progress -= 2;
+    this.progressPercentage = Math.min(this.progress, 100);
   }
 
   // Trigger the download of the file
@@ -885,8 +1000,8 @@ export class TestComponent implements OnDestroy {
     link.download = this.uploadFileName; // Set the name of the file for download
     link.click(); // Programmatically trigger the download
   }
+
   downloadFileFromAdditional() {
-    // Create an invisible download link and trigger the download
     const link = document.createElement('a');
     link.href = this.fileUrlForAttachmentUpload;
     link.download = this.fileUploadFromAttachment.name; // Set the name of the file for download
@@ -899,15 +1014,18 @@ export class TestComponent implements OnDestroy {
       this.errorDivVisible = false;
     }, 5000);
   }
+
   errorDivCloseInstant() {
     this.errorDivVisible = false;
   }
+
   successDivCloseAfterSec() {
     this.successDivVisible = true;
     setTimeout(() => {
       this.successDivVisible = false;
     }, 9000);
   }
+
   successDivCloseInstant() {
     this.successDivVisible = false;
   }
@@ -920,11 +1038,10 @@ export class TestComponent implements OnDestroy {
   formatObjectKeys(obj: { [key: string]: string }): { [key: string]: string } {
     const formattedObj: { [key: string]: string } = {};
     for (const key in obj) {
-      if (obj[key] === 'NO INFORMATION PROVIDED') {
-        obj[key] = this.ADAtext;
+      if (obj[key] === this.staticText.noInformation) {
+        obj[key] = this.staticText.ADA_STATIC_TEXT;
       }
       if (obj.hasOwnProperty(key)) {
-        // this wil format the values of keys
         const words = key.split(' ');
         if (words.length > 1) {
           words[1] = words[1].toLowerCase();
@@ -937,23 +1054,25 @@ export class TestComponent implements OnDestroy {
 
   yesNoButton(value: any, index?: any) {
     this.selectedIndexOfButton = index;
-
-    if (value == 'Yes, everything looks good') {
-      this.chatHistory.push({ text: value, sender: 'user', isFile: false });
+    if (value == this.staticText.yesEverything) {
+      this.chatHistory.push({
+        text: value,
+        sender: this.staticText.senderUser,
+        isFile: false,
+      });
       this.loader = true;
       this.dataa = {
         session_id: this.sessionId,
         user_name: this.api.userName,
         user_message: value,
         edit_field: '',
-        confirmation: 'False',
+        confirmation: this.staticText.false,
       };
       this.api.sendData(this.dataa).subscribe({
         next: (response) => {
           this.loader = false;
           this.allLooksGoodCliced = true;
-          this.successDivText =
-            'Successfully accepted the ADA-generated content';
+          this.successDivText = this.staticText.successADAContent;
           this.successDivCloseAfterSec();
           this.apiResponseData = response;
           if (this.apiResponseData) {
@@ -971,30 +1090,35 @@ export class TestComponent implements OnDestroy {
             }
             this.chatHistory.push({
               text: this.botChatMessage,
-              sender: 'bot',
+              sender: this.staticText.senderBot,
               button: this.botButtonResponse,
             });
             this.staticBotMsg = false;
-            this.dataa.confirmation = 'False';
+            this.dataa.confirmation = this.staticText.false;
             this.fields = this.fields.map((field) => ({
               ...field,
               value: this.bicFieldData[field.label] || '',
             }));
             this.fields.forEach((field) => {
-              if (field.value !== '' && field.value !== this.ADAtext) {
+              if (
+                field.value !== '' &&
+                field.value !== this.staticText.ADA_STATIC_TEXT
+              ) {
                 field.completed = true;
               }
             });
             this.progressBarUpdate();
           }
         },
-        error: (error) => {
-          console.log('error', error);
-        },
-        complete: () => console.log('Completed'),
+        error: (err) => {},
+        complete: () => {},
       });
-    } else if (value == "No, I'd like to review and make edits") {
-      this.chatHistory.push({ text: value, sender: 'user', isFile: false });
+    } else if (value == this.staticText.noCheck) {
+      this.chatHistory.push({
+        text: value,
+        sender: this.staticText.senderUser,
+        isFile: false,
+      });
       this.loader = true;
       this.dataa = {
         session_id: this.sessionId,
@@ -1003,7 +1127,6 @@ export class TestComponent implements OnDestroy {
         edit_field: '',
         confirmation: 'False',
       };
-
       this.api.sendData(this.dataa).subscribe({
         next: (response) => {
           this.loader = false;
@@ -1025,26 +1148,30 @@ export class TestComponent implements OnDestroy {
             this.dataa.confirmation = 'False';
             this.chatHistory.push({
               text: this.botChatMessage,
-              sender: 'bot',
+              sender: this.staticText.senderBot,
               button: this.botButtonResponse,
             });
           }
         },
-        error: (error) => {
-          console.log('error', error);
-        },
-        complete: () => console.log('Completed'),
+        error: (err) => {},
+        complete: () => {},
       });
 
       this.fields.forEach((field) => {
-        if (field.value !== '' && field.value !== this.ADAtext) {
+        if (
+          field.value !== '' &&
+          field.value !== this.staticText.ADA_STATIC_TEXT
+        ) {
           field.completed = true;
         }
       });
     } else {
       this.editFieldVal = value;
-
-      this.chatHistory.push({ text: value, sender: 'user', isFile: false });
+      this.chatHistory.push({
+        text: value,
+        sender: this.staticText.senderUser,
+        isFile: false,
+      });
       this.loader = true;
       this.dataa = {
         session_id: this.sessionId,
@@ -1053,7 +1180,6 @@ export class TestComponent implements OnDestroy {
         edit_field: value,
         confirmation: 'False',
       };
-
       this.api.sendData(this.dataa).subscribe({
         next: (response) => {
           this.loader = false;
@@ -1084,7 +1210,7 @@ export class TestComponent implements OnDestroy {
                     ),
                   },
                   dropdown: this.botButtonResponse,
-                  sender: 'bot',
+                  sender: this.staticText.senderBot,
                   fieldName: value,
                 });
               } else if (
@@ -1099,7 +1225,7 @@ export class TestComponent implements OnDestroy {
                     ),
                   },
                   mappingButton: this.botButtonResponse,
-                  sender: 'bot',
+                  sender: this.staticText.senderBot,
                   fieldName: value,
                 });
               } else {
@@ -1110,7 +1236,7 @@ export class TestComponent implements OnDestroy {
                       this.botChatMessage['Guidelines']
                     ),
                   },
-                  sender: 'bot',
+                  sender: this.staticText.senderBot,
                 });
               }
             }
@@ -1123,10 +1249,8 @@ export class TestComponent implements OnDestroy {
             this.progressBarUpdate();
           }
         },
-        error: (error) => {
-          console.log('error', error);
-        },
-        complete: () => console.log('Completed'),
+        error: (err) => {},
+        complete: () => {},
       });
     }
     this.checkFirst10Completed();
@@ -1143,7 +1267,7 @@ export class TestComponent implements OnDestroy {
   businessConfirmButton() {
     this.chatHistory.push({
       text: `${this.bussinessDropDownKey}, ${this.bussinessUserInputForMappingButtons}`,
-      sender: 'user',
+      sender: this.staticText.senderUser,
       isFile: false,
     });
     this.loader = true;
@@ -1174,10 +1298,8 @@ export class TestComponent implements OnDestroy {
           });
         }
       },
-      error: (error) => {
-        console.log('error', error);
-      },
-      complete: () => console.log('Completed'),
+      error: (err) => {},
+      complete: () => {},
     });
   }
 
@@ -1189,7 +1311,7 @@ export class TestComponent implements OnDestroy {
   itConfirmButton() {
     this.chatHistory.push({
       text: `${this.itDropDownKey}, ${this.itUserInputForMappingButtons}`,
-      sender: 'user',
+      sender: this.staticText.senderUser,
       isFile: false,
     });
     this.loader = true;
@@ -1220,16 +1342,13 @@ export class TestComponent implements OnDestroy {
           });
         }
       },
-      error: (error) => {
-        console.log('error', error);
-      },
-      complete: () => console.log('Completed'),
+      error: (err) => {},
+      complete: () => {},
     });
   }
 
   handleBooleanValue(value: boolean) {
     this.receivedValue = value;
-
     this.createNew = this.receivedValue;
   }
 
@@ -1247,20 +1366,13 @@ export class TestComponent implements OnDestroy {
 
   checkFirst10Completed() {
     const first10Fields = this.fields.slice(0, 9); // Get first 10 elements
-
     let allCompleted = true;
-
     for (let field of first10Fields) {
-      if (
-        field.value == '' ||
-        field.value ==
-          "ADA couldn't fill this field, please continue the conversation to fill it"
-      ) {
+      if (field.value == '' || field.value == this.staticText.ADA_STATIC_TEXT) {
         allCompleted = false;
         break;
       }
     }
-
     if (allCompleted) {
       this.buttonDisabled = false;
     } else {
@@ -1273,37 +1385,73 @@ export class TestComponent implements OnDestroy {
   }
 
   checkButton(indexVal: any) {
-    this.successDivText = 'Successfully accepted the ADA-generated content';
+    this.successDivText = this.staticText.successADAContent;
     this.successDivCloseAfterSec();
     this.fields[indexVal].completed = true;
   }
 
   editButton(indexVal: any) {
-    this.userInput = this.fields[indexVal].value;
-    this.dataa.edit_field = this.fields[indexVal].label;
-    this.dataa.confirmation = 'False';
-    this.editButtonClicked = true;
-    setTimeout(() => {
-      const textArea = this.textarea.nativeElement;
-      textArea.style.height = 'auto'; // Reset height
-      textArea.style.height = `${textArea.scrollHeight}px`; // Recalculate after update
-    }, 0);
+    if (this.fields[indexVal].label == this.staticText.areaInvolvedText) {
+      this.addButton(indexVal);
+      setTimeout(() => {
+        this.confirmBtnOfAreaClk = false;
+      }, 0);
+    } else if (this.fields[indexVal].label == this.staticText.destinationText) {
+      this.addButton(indexVal);
+      setTimeout(() => {
+        this.confirmBtnOfDestClk = false;
+      }, 0);
+    } else if (
+      this.fields[indexVal].label == this.staticText.bussinessImpactText
+    ) {
+      this.addButton(indexVal);
+      setTimeout(() => {
+        this.confirmBtnOfBussClk = false;
+      }, 0);
+    } else if (
+      this.fields[indexVal].label == this.staticText.businessSponsorText
+    ) {
+      this.bussinessMappingButtonClicke = false;
+      this.bussinessUserInputForMappingButtons = '';
+      this.addButton(indexVal);
+    } else if (this.fields[indexVal].label == this.staticText.itSponsorText) {
+      this.itMappingButtonClicke = false;
+      this.itUserInputForMappingButtons = '';
+      this.addButton(indexVal);
+    } else if (this.fields[indexVal].label == this.staticText.timelinesText) {
+      this.addButton(indexVal);
+    } else if (this.fields[indexVal].label == this.staticText.portfolioText) {
+      this.addButton(indexVal);
+    } else {
+      this.userInput = this.fields[indexVal].value;
+      this.dataa.edit_field = this.fields[indexVal].label;
+      this.dataa.confirmation = this.staticText.false;
+      this.editButtonClicked = true;
+      setTimeout(() => {
+        const textArea = this.textarea.nativeElement;
+        textArea.style.height = 'auto'; // Reset height
+        textArea.style.height = `${textArea.scrollHeight}px`; // Recalculate after update
+      }, 0);
+    }
   }
 
   AllGoodButton() {
     this.allLooksGoodCliced = true;
     this.chatHistory.push({
-      text: 'All details looks good to me',
-      sender: 'user',
+      text: this.staticText.goodToMe,
+      sender: this.staticText.senderUser,
       isFile: false,
     });
     this.chatHistory.push({
       text: this.botChatMessage,
-      sender: 'bot',
+      sender: this.staticText.senderBot,
       button: this.botButtonResponse,
     });
     this.fields.forEach((field) => {
-      if (field.value !== '' && field.value !== this.ADAtext) {
+      if (
+        field.value !== '' &&
+        field.value !== this.staticText.ADA_STATIC_TEXT
+      ) {
         field.completed = true;
       }
     });
@@ -1313,14 +1461,16 @@ export class TestComponent implements OnDestroy {
   showAttachmentDeleteMethod() {
     this.showAttachmentDelete = !this.showAttachmentDelete;
   }
+
   showChatDeleteMethod() {
     this.showChatDelete = !this.showChatDelete;
   }
+
   addButton(indexVal: any) {
     this.editFieldVal = this.fields[indexVal].label;
     this.chatHistory.push({
       text: this.fields[indexVal].label,
-      sender: 'user',
+      sender: this.staticText.senderUser,
       isFile: false,
     });
     this.loader = true;
@@ -1329,7 +1479,7 @@ export class TestComponent implements OnDestroy {
       user_name: this.api.userName,
       user_message: '',
       edit_field: this.fields[indexVal].label,
-      confirmation: 'False',
+      confirmation: this.staticText.false,
     };
     this.api.sendData(this.dataa).subscribe({
       next: (response) => {
@@ -1354,95 +1504,95 @@ export class TestComponent implements OnDestroy {
               ) {
                 this.chatHistory.push({
                   text: {
-                    question: this.botChatMessage['Question'],
+                    question: this.botChatMessage[this.staticText.question],
                     guidelines: this.splitByDot(
-                      this.botChatMessage['Guidelines']
+                      this.botChatMessage[this.staticText.guidelines]
                     ),
                   },
                   dropdown: this.botButtonResponse,
-                  sender: 'bot',
+                  sender: this.staticText.senderBot,
                   fieldName: this.fields[indexVal].label,
                 });
               } else if (
                 this.botButtonResponse.length > 0 &&
                 this.apiResponseData.drop_down == false
               ) {
-                if (this.checkIfArray(this.botChatMessage['Guidelines'])) {
+                if (
+                  this.checkIfArray(
+                    this.botChatMessage[this.staticText.question]
+                  )
+                ) {
                   this.chatHistory.push({
                     text: {
-                      question: this.botChatMessage['Question'],
+                      question: this.botChatMessage[this.staticText.question],
                       guidelines: this.splitByDot(
-                        this.botChatMessage['Guidelines']
+                        this.botChatMessage[this.staticText.guidelines]
                       ),
                     },
                     mappingButton: this.botButtonResponse,
-                    sender: 'bot',
+                    sender: this.staticText.senderBot,
                     fieldName: this.fields[indexVal].label,
                   });
                 } else {
                   this.chatHistory.push({
                     text: {
-                      question: this.botChatMessage['Question'],
+                      question: this.botChatMessage[this.staticText.question],
                       guidelines: this.splitByDot(
-                        this.botChatMessage['Guidelines']
+                        this.botChatMessage[this.staticText.guidelines]
                       ),
                     },
                     button: this.botButtonResponse,
-                    sender: 'bot',
+                    sender: this.staticText.senderBot,
+                    fieldName: this.fields[indexVal].label,
                   });
                 }
               } else {
                 this.chatHistory.push({
                   text: {
-                    question: this.botChatMessage['Question'],
+                    question: this.botChatMessage[this.staticText.question],
                     guidelines: this.splitByDot(
-                      this.botChatMessage['Guidelines']
+                      this.botChatMessage[this.staticText.guidelines]
                     ),
                   },
-                  sender: 'bot',
+                  sender: this.staticText.senderBot,
                 });
               }
             } else {
               this.chatHistory.push({
                 text: {
-                  question: this.botChatMessage['Question'],
+                  question: this.botChatMessage[this.staticText.question],
                   guidelines: this.splitByDot(
-                    this.botChatMessage['Guidelines']
+                    this.botChatMessage[this.staticText.guidelines]
                   ),
                 },
-                sender: 'bot',
+                sender: this.staticText.senderBot,
               });
             }
           }
           this.staticBotMsg = false;
-          this.dataa.confirmation = 'False';
-
+          this.dataa.confirmation = this.staticText.false;
           this.fields = this.fields.map((field) => ({
             ...field,
-            value: this.bicFieldData[field.label] || '', // Use mock data or default value
+            value: this.bicFieldData[field.label] || '',
           }));
-
           this.progressBarUpdate();
           setTimeout(() => {
             this.initializeTooltips();
           });
         }
       },
-      error: (error) => {
-        console.log('error', error);
-      },
-      complete: () => console.log('Completed'),
+      error: (err) => {},
+      complete: () => {},
     });
   }
 
   onKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
+    if (event.key === this.staticText.enter) {
       if (event.shiftKey) {
-        return; // Do nothing to let the new line be created
+        return;
       } else {
-        // Enter pressed without Shift: Send the message
-        event.preventDefault(); // Prevent default Enter behavior (new line)
-        this.handleUserInput(this.userInput); // Call your send message function
+        event.preventDefault();
+        this.handleUserInput(this.userInput);
       }
     }
   }
@@ -1465,7 +1615,7 @@ export class TestComponent implements OnDestroy {
 
   // Helper function to generate a random alphanumeric string of a given length
   generateRandomString(length: number): string {
-    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    const characters = this.staticText.char;
     let result = '';
     for (let i = 0; i < length; i++) {
       result += characters.charAt(
@@ -1477,6 +1627,7 @@ export class TestComponent implements OnDestroy {
 
   submitButtonPopup() {
     this.submitButtonClicked = true;
+    this.modalSubmitted = true; // Track that user submitted via modal
     let chatData = {
       chatHistory: this.chatHistory,
       formFieldValue: this.fields,
@@ -1487,19 +1638,37 @@ export class TestComponent implements OnDestroy {
       user_name: this.api.userName,
       session_data: chatData,
     };
+    
+    if (ServiceService.isMockEnabled) {
+      // Mock submit response
+      setTimeout(() => {
+        this.mockSubmitSuccess();
+      }, 1000);
+    } else {
+      // Original API call
+      this.api.submitData(data).subscribe({
+        next: (response) => {
+          this.additionalDataForSubmit();
+        },
+        error: (err) => {},
+        complete: () => {},
+      });
+    }
+  }
 
-    this.api.submitData(data).subscribe({
-      next: (response) => {
-        this.additionalDataForSubmit();
-      },
-      error: (error) => {
-        console.log('error', error);
-      },
-      complete: () => console.log('Completed'),
-    });
+  mockSubmitSuccess() {
+    // Show success message
+    this.successDivText = this.staticText.successContent;
+    this.successDivCloseAfterSec();
+    
+    // Simulate what would happen after successful submission
+    this.additionalDataForSubmit();
   }
 
   submitButton() {
+    // Set submission intent immediately when user clicks submit (before modal)
+    this.submitButtonClicked = true;
+    
     if (!this.allLooksGoodCliced) {
       const modalElement = document.getElementById(
         'reviewModal'
@@ -1519,14 +1688,23 @@ export class TestComponent implements OnDestroy {
     const modalElement = document.getElementById('reviewModal') as HTMLElement;
     if (modalElement) {
       const myModal = new bootstrap.Modal(modalElement);
-      myModal.show(); // Show the modal correctly
-      // Log to check if it's being triggered
+      myModal.show();
     }
+  }
+
+  // Method to handle modal cancellation/closing without submission
+  onModalCancel() {
+    // Reset submission flag if user cancels modal without submitting
+    this.submitButtonClicked = false;
+    this.modalSubmitted = false;
+    console.log('Create Component: Modal cancelled - reset submission flags');
   }
 
   additionalDataForSubmit() {
     let filled = this.fields.filter(
-      (field) => field.value.trim() !== '' && field.value !== this.ADAtext
+      (field) =>
+        field.value.trim() !== '' &&
+        field.value !== this.staticText.ADA_STATIC_TEXT
     ).length;
     let additionalData = {
       user_name: this.api.userName,
@@ -1535,32 +1713,54 @@ export class TestComponent implements OnDestroy {
         Additional_Comments: '',
         Additional_Files: '',
         Total_no_of_questions_completed: filled.toString(),
-        Submitted_date: this.datePipe.transform(
-          new Date(),
-          'dd-MM-yyyy HH:mm:ss'
-        ),
-        Status: 'Pending-review',
+        Submitted_date: this.datePipe.transform(new Date(), 'dd-MMM-yyyy'),
+        Status: this.staticText.statusPending,
       },
     };
     if (this.fileUploadFromAttachment) {
       additionalData.update_data.Additional_Files =
         this.fileUploadFromAttachment;
     }
-    this.api.submitAdditionalData(additionalData).subscribe({
-      next: (response) => {
+    
+    if (ServiceService.isMockEnabled) {
+      // Remove the draft from session storage since it's being submitted
+      this.removeDraftFromSessionStorage();
+      this.submissionSuccessful = true;
+      
+      // Mock successful submission
+      setTimeout(() => {
+        this.api.triggerAction(this.staticText.generatedText);
         this.router.navigate(['/request']);
         setTimeout(() => {
           this.initializeTooltips();
         });
-      },
-      error: (error) => {
-        console.log('error', error);
-      },
-      complete: () => console.log('Completed'),
-    });
+      }, 500);
+    } else {
+      // Original API call
+      this.api.submitAdditionalData(additionalData).subscribe({
+        next: (response) => {
+          // Remove the draft from session storage since it's being submitted
+          this.removeDraftFromSessionStorage();
+          this.submissionSuccessful = true;
+          this.api.triggerAction(this.staticText.generatedText);
+          this.router.navigate(['/request']);
+          setTimeout(() => {
+            this.initializeTooltips();
+          });
+        },
+        error: (err) => {},
+        complete: () => {},
+      });
+    }
   }
 
   saveChatData() {
+    // Don't save as draft if any submission process has been initiated
+    if (this.submitButtonClicked || this.submissionSuccessful || this.modalSubmitted) {
+      console.log('Create Component: Skipping saveChatData - submission process initiated');
+      return;
+    }
+
     let chatData = {
       chatHistory: this.chatHistory,
       formFieldValue: this.fields,
@@ -1570,21 +1770,32 @@ export class TestComponent implements OnDestroy {
       session_id: this.sessionId,
       user_name: this.api.userName,
       session_data: chatData,
+      timestamp: new Date().toString(),
     };
 
-    this.api.submitData(data).subscribe({
-      next: (response) => {
-        const data = { user_name: this.api.userName }; // Data to pass to the API
-        this.api.retriveData(data);
-        setTimeout(() => {
-          this.initializeTooltips();
-        });
-      },
-      error: (error) => {
-        console.log('error', error);
-      },
-      complete: () => console.log('Completed'),
-    });
+    if (ServiceService.isMockEnabled) {
+      // Save to mock data by calling a method on the left-nav component
+      // We'll use the service to communicate this
+      this.api.saveMockDraft(this.sessionId, this.api.userName, this.chatHistory, this.fields);
+      
+      // Simulate the same behavior as real API
+      setTimeout(() => {
+        this.initializeTooltips();
+      });
+    } else {
+      // Original API call
+      this.api.submitData(data).subscribe({
+        next: (response) => {
+          const data = { user_name: this.api.userName };
+          this.api.retriveData(data);
+          setTimeout(() => {
+            this.initializeTooltips();
+          });
+        },
+        error: (err) => {},
+        complete: () => {},
+      });
+    }
   }
 
   onConfirmAreas() {
@@ -1594,12 +1805,20 @@ export class TestComponent implements OnDestroy {
     );
     this.chatHistory.push({
       text: this.getSelectedRegions(),
-      sender: 'user',
+      sender: this.staticText.senderUser,
       isFile: false,
     });
+    
+    if (ServiceService.isMockEnabled) {
+      // Update mock form data with selection
+      this.bicFieldData['Areas involved'] = this.getSelectedRegions();
+      this.mockFormData['Areas involved'] = this.getSelectedRegions();
+      this.progressBarUpdate();
+    }
+    
     this.loader = true;
     this.dataa.edit_field = this.editFieldVal;
-    this.dataa.confirmation = 'True';
+    this.dataa.confirmation = this.staticText.true;
     this.staticBotMsg = true;
     this.responseDataMethod(this.getSelectedRegions());
   }
@@ -1611,14 +1830,39 @@ export class TestComponent implements OnDestroy {
     );
     this.chatHistory.push({
       text: this.getSelectedDestination(),
-      sender: 'user',
+      sender: this.staticText.senderUser,
+      isFile: false,
+    });
+    
+    if (ServiceService.isMockEnabled) {
+      // Update mock form data with selection
+      this.bicFieldData['Destination 2027 alignment'] = this.getSelectedDestination();
+      this.mockFormData['Destination 2027 alignment'] = this.getSelectedDestination();
+      this.progressBarUpdate();
+    }
+    
+    this.loader = true;
+    this.dataa.edit_field = this.editFieldVal;
+    this.dataa.confirmation = this.staticText.true;
+    this.staticBotMsg = true;
+    this.responseDataMethod(this.getSelectedDestination());
+  }
+
+  onConfirmBussiness() {
+    this.confirmBtnOfBussClk = true;
+    const selected = this.botButtonResponse.filter(
+      (area: any, i: any) => this.selectedBussiness[i]
+    );
+    this.chatHistory.push({
+      text: this.getSelectedBussiness(),
+      sender: this.staticText.senderUser,
       isFile: false,
     });
     this.loader = true;
     this.dataa.edit_field = this.editFieldVal;
-    this.dataa.confirmation = 'True';
+    this.dataa.confirmation = this.staticText.true;
     this.staticBotMsg = true;
-    this.responseDataMethod(this.getSelectedDestination());
+    this.responseDataMethod(this.getSelectedBussiness());
   }
 
   getSelectedRegions() {
@@ -1626,9 +1870,16 @@ export class TestComponent implements OnDestroy {
       .filter((area: any, i: any) => this.selectedAreas[i])
       .join(', ');
   }
+
   getSelectedDestination() {
     return this.botButtonResponse
       .filter((area: any, i: any) => this.selectedDestination[i])
+      .join(', ');
+  }
+
+  getSelectedBussiness() {
+    return this.botButtonResponse
+      .filter((area: any, i: any) => this.selectedBussiness[i])
       .join(', ');
   }
 
@@ -1643,8 +1894,12 @@ export class TestComponent implements OnDestroy {
       );
       tooltipTriggerList.forEach((tooltipTriggerEl) => {
         const instance = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-        if (instance) instance.dispose(); // Clean up old instance
-        new bootstrap.Tooltip(tooltipTriggerEl);
+        if (instance) instance.dispose();
+        new bootstrap.Tooltip(tooltipTriggerEl, {
+          trigger: 'hover', // Only show on hover, not click
+          placement: 'auto', // Auto placement
+          container: 'body' // Append to body to avoid z-index issues
+        });
       });
     }, 0);
   }
@@ -1653,14 +1908,215 @@ export class TestComponent implements OnDestroy {
     return Array.isArray(value);
   }
 
-  ngOnDestroy() {
-    if (this.submitButtonClicked == true) {
-      this.submitButtonClicked = false;
-    } else {
-      if (this.botRespondedFirstTime == true) {
-        this.saveChatData();
-        this.api.triggerAction('The BIC should saved as a draft');
+  timeLiButton(value: any, index?: any) {
+    this.chatHistory.push({
+      text: value,
+      sender: this.staticText.senderUser,
+      isFile: false,
+    });
+    this.loader = true;
+    this.dataa.edit_field = this.editFieldVal;
+    this.dataa.confirmation = this.staticText.true;
+    this.staticBotMsg = true;
+    this.responseDataMethod(value);
+  }
+
+  get isAdditionalCommentsEmpty(): boolean {
+    const additionalField = this.fields.find(
+      (field) => field.label === this.staticText.additionalText
+    );
+    return additionalField ? additionalField.value === '' : false;
+  }
+
+  // Remove submitted draft from session storage
+  // Remove submitted draft from session storage
+  removeDraftFromSessionStorage() {
+    if (ServiceService.isMockEnabled && this.sessionId) {
+      // Only proceed if chat_drafts already exists in session storage
+      const existingDraftsString = sessionStorage.getItem('chat_drafts');
+      if (existingDraftsString) {
+        const existingDrafts = JSON.parse(existingDraftsString);
+        const filteredDrafts = existingDrafts.filter((draft: any) => 
+          draft.session_id !== this.sessionId
+        );
+        
+        // If no drafts left, remove the entire session storage item
+        if (filteredDrafts.length === 0) {
+          sessionStorage.removeItem('chat_drafts');
+          console.log('Create Component: Removed all drafts from session storage');
+        } else {
+          sessionStorage.setItem('chat_drafts', JSON.stringify(filteredDrafts));
+          console.log('Create Component: Removed submitted draft from session storage:', this.sessionId);
+        }
+      } else {
+        console.log('Create Component: No drafts found in session storage to remove');
       }
+    }
+  }
+
+  ngOnDestroy() {
+    // Cleanup subscription
+    if (this.dataSubscription) {
+      this.dataSubscription.unsubscribe();
+    }
+
+    // Cleanup resize listener
+    if ((this as any).resizeListener) {
+      window.removeEventListener('resize', (this as any).resizeListener);
+    }
+
+    // Only handle draft saving in create mode
+    if (this.componentMode === 'create') {
+      // Don't save as draft if any submission process has started or completed
+      if (this.submitButtonClicked || this.submissionSuccessful || this.modalSubmitted) {
+        console.log('Create Component: Not saving as draft - submission process initiated or completed');
+        // Reset flags for cleanup
+        this.submitButtonClicked = false;
+        this.submissionSuccessful = false;
+        this.modalSubmitted = false;
+        return; // Exit early without saving
+      }
+      
+      // Only save if bot has responded and no submission was attempted
+      if (this.botRespondedFirstTime === true) {
+        this.saveChatData();
+        this.api.triggerAction(this.staticText.draftSaved);
+      }
+    }
+  }
+
+  // Initialize bicFieldData from current field values (for history modes)
+  initializeBicFieldData() {
+    this.bicFieldData = {};
+    this.fields.forEach((field, index) => {
+      if (field.value && field.value.trim() !== '') {
+        this.bicFieldData[`field_${index}`] = field.value;
+      }
+    });
+  }
+
+  // Determine current conversation stage based on filled fields (for history modes)
+  determineConversationStage() {
+    const filledFields = this.fields.filter(field => field.value && field.value.trim() !== '').length;
+    this.conversationStage = Math.min(filledFields, this.mockResponseStages.length - 1);
+  }
+
+  // Validate field states without auto-completing them (for history modes)
+  validateFieldStates() {
+    this.fields.forEach(field => {
+      field.valid = !!(field.value && field.value.trim() !== '');
+      // Don't auto-mark as completed - preserve user's explicit completion actions
+    });
+  }
+
+  // Calculate progress percentage based on completed fields (for history modes)
+  calculateProgress() {
+    const completedFields = this.fields.filter(field => field.completed).length;
+    const totalFields = this.fields.length - 1; // Exclude additional attachments field
+    
+    let progressValue = 0;
+    
+    // Group A: First 9 fields (required) - 6% each = 54%
+    const groupACompleted = this.fields.slice(0, 9).filter(field => field.completed).length;
+    progressValue += groupACompleted * 6;
+    
+    // Group B: Next 10 fields - 3% each = 30%
+    const groupBCompleted = this.fields.slice(9, 19).filter(field => field.completed).length;
+    progressValue += groupBCompleted * 3;
+    
+    // Group C: Remaining 5 fields (excluding additional attachments) - 3.2% each = 16%
+    const groupCFields = [19, 20, 21, 22, 24]; // Exclude index 23
+    const groupCCompleted = groupCFields.filter(index => 
+      index < this.fields.length && this.fields[index].completed
+    ).length;
+    progressValue += groupCCompleted * 3.2;
+    
+    this.progressPercentage = Math.min(Math.round(progressValue), 100);
+    this.progress = this.progressPercentage;
+  }
+
+  // Update session storage with current form state (for draft mode)
+  updateSessionStorage() {
+    if (this.componentMode !== 'draft') return;
+    
+    const sessionData = {
+      sessionId: this.sessionId,
+      userName: this.userName,
+      chatHistory: this.chatHistory,
+      formFieldValue: this.fields,
+      timestamp: new Date().toISOString()
+    };
+
+    try {
+      const existingDrafts = JSON.parse(sessionStorage.getItem('chat_drafts') || '[]');
+      const draftIndex = existingDrafts.findIndex((draft: any) => 
+        draft.session_id === this.sessionId && draft.user_name === this.userName
+      );
+
+      if (draftIndex >= 0) {
+        existingDrafts[draftIndex] = {
+          session_id: this.sessionId,
+          user_name: this.userName,
+          session_data: sessionData,
+          timestamp: sessionData.timestamp
+        };
+      } else {
+        existingDrafts.push({
+          session_id: this.sessionId,
+          user_name: this.userName,
+          session_data: sessionData,
+          timestamp: sessionData.timestamp
+        });
+      }
+
+      sessionStorage.setItem('chat_drafts', JSON.stringify(existingDrafts));
+    } catch (error) {
+      console.error('Error updating session storage:', error);
+    }
+  }
+
+  // Set file icons for history (for history modes)
+  filesSetForHistory() {
+    // Implementation for setting file icons in history mode
+    this.fields.forEach(field => {
+      if (field.value && field.label === 'Additional attachments') {
+        // Set appropriate file icon based on file type
+        this.setFileIcon(this.getFileExtension(field.value));
+      }
+    });
+  }
+
+  // Get file extension helper
+  getFileExtension(filename: string): string {
+    return filename.split('.').pop()?.toLowerCase() || '';
+  }
+
+  // Set file icon based on extension
+  setFileIcon(extension: string) {
+    switch (extension) {
+      case 'pdf':
+        this.fileIcon = 'bi-file-earmark-pdf';
+        break;
+      case 'doc':
+      case 'docx':
+        this.fileIcon = 'bi-file-earmark-word';
+        break;
+      case 'xls':
+      case 'xlsx':
+        this.fileIcon = 'bi-file-earmark-excel';
+        break;
+      case 'ppt':
+      case 'pptx':
+        this.fileIcon = 'bi-file-earmark-ppt';
+        break;
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+        this.fileIcon = 'bi-file-earmark-image';
+        break;
+      default:
+        this.fileIcon = 'bi-file-earmark';
     }
   }
 }

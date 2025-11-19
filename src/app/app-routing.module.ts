@@ -18,8 +18,8 @@ const routes: Routes = [
       { path: 'request', component: UserRequestComponent },
       { path: 'requestDetail/:id', component: UserRequestDetailComponent },
       { path: 'trial', component: TestComponent },
-      { path: 'create', component: CreateComponent },
-      { path: 'bic', component: HistoryComponent },
+      { path: 'create', component: TestComponent }, // Use TestComponent for create mode
+      { path: 'bic', component: TestComponent }, // Use TestComponent for draft mode
     ],
   },
 ];

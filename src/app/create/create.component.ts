@@ -27,7 +27,6 @@ export class CreateComponent
   implements OnDestroy, AfterViewChecked, AfterViewInit
 {
   staticText = APP_CONSTANTS.CREATE;
-  private mockEnabled = true; // <-- Toggle this to switch between mock and real data
   private conversationStage = 0;
   private mockResponseStages: MockResponseStage[] = MockDataService.getChatbotConversationStages();
   private mockChatHistory: any[] = [];
@@ -148,7 +147,7 @@ export class CreateComponent
     this.dataa.session_id = this.sessionId;
     
     // Load mock data for demo or real data for production
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       this.loadMockData();
     } else {
       // Original initialization for real data
@@ -263,7 +262,7 @@ export class CreateComponent
     this.sessionId = this.generateSessionId();
     this.dataa.session_id = this.sessionId;
     
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       this.loadMockData();
     }
   }
@@ -395,7 +394,7 @@ export class CreateComponent
       this.dataa.confirmation = 'True';
     }
     
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       // Simulate API response with mock data
       this.simulateMockApiResponse(data);
     } else {
@@ -1430,7 +1429,7 @@ export class CreateComponent
       session_data: chatData,
     };
     
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       // Mock submit response
       setTimeout(() => {
         this.mockSubmitSuccess();
@@ -1513,7 +1512,7 @@ export class CreateComponent
         this.fileUploadFromAttachment;
     }
     
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       // Remove the draft from session storage since it's being submitted
       this.removeDraftFromSessionStorage();
       this.submissionSuccessful = true;
@@ -1564,7 +1563,7 @@ export class CreateComponent
       timestamp: new Date().toString(),
     };
 
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       // Save to mock data by calling a method on the left-nav component
       // We'll use the service to communicate this
       this.api.saveMockDraft(this.sessionId, this.api.userName, this.chatHistory, this.fields);
@@ -1600,7 +1599,7 @@ export class CreateComponent
       isFile: false,
     });
     
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       // Update mock form data with selection
       this.bicFieldData['Areas involved'] = this.getSelectedRegions();
       this.mockFormData['Areas involved'] = this.getSelectedRegions();
@@ -1625,7 +1624,7 @@ export class CreateComponent
       isFile: false,
     });
     
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       // Update mock form data with selection
       this.bicFieldData['Destination 2027 alignment'] = this.getSelectedDestination();
       this.mockFormData['Destination 2027 alignment'] = this.getSelectedDestination();
@@ -1722,7 +1721,7 @@ export class CreateComponent
   // Remove submitted draft from session storage
   // Remove submitted draft from session storage
   removeDraftFromSessionStorage() {
-    if (this.mockEnabled && this.sessionId) {
+    if (ServiceService.isMockEnabled && this.sessionId) {
       // Only proceed if chat_drafts already exists in session storage
       const existingDraftsString = sessionStorage.getItem('chat_drafts');
       if (existingDraftsString) {

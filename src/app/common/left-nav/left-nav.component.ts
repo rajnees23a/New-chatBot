@@ -25,11 +25,6 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
   isItemSelected: boolean = false;
   openedDropdownIndex: number | null = null;
 
-  // Mock data for demo purposes
-  // Set mockEnabled = false to use real API calls
-  // Set mockEnabled = true to use mock data for demo/testing
-  private mockEnabled = true; // <-- Toggle this to switch between mock and real data
-
   constructor(private router: Router, private dataService: ServiceService, private cdr: ChangeDetectorRef) { }
   
   isCollapsed = false;
@@ -92,7 +87,7 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Method to manually refresh drafts from session storage
   refreshDrafts() {
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       const draftsData = this.getDraftsFromSessionStorage();
       this.processData(draftsData);
       this.cdr.detectChanges();
@@ -107,7 +102,7 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Method to trigger Draft data retrieval
   fetchDraftData() {
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       // Use mock data
       this.loadMockDraftData();
     } else {
@@ -124,7 +119,7 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
     this.processData(draftsData);
     
     // Auto-expand sidebar when there are drafts for better demo experience
-    if (this.modifiedData.length > 0 && this.mockEnabled) {
+    if (this.modifiedData.length > 0 && ServiceService.isMockEnabled) {
       this.isCollapsed = true;
     }
   }
@@ -144,7 +139,7 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   addMockDraft(sessionId: string, userName: string, chatHistory: any[], formFieldValue: any[]) {
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       const newDraft = {
         session_id: sessionId,
         user_name: userName,
@@ -167,7 +162,7 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Method to remove a draft from session storage
   removeMockDraft(sessionId: string, userName: string) {
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       const existingDrafts = this.getDraftsFromSessionStorage();
       const filteredDrafts = existingDrafts.filter(draft => 
         !(draft.session_id === sessionId && draft.user_name === userName)
@@ -178,7 +173,7 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   deleteDraft() {
-    if (this.mockEnabled) {
+    if (ServiceService.isMockEnabled) {
       // Remove from session storage
       const existingDrafts = this.getDraftsFromSessionStorage();
       const filteredDrafts = existingDrafts.filter(draft => 
@@ -316,7 +311,7 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
-    if (this.isCollapsed && this.mockEnabled) {
+    if (this.isCollapsed && ServiceService.isMockEnabled) {
       setTimeout(() => this.refreshDrafts(), 100);
     }
   }
