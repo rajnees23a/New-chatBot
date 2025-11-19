@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { CarouselComponent } from './carousel.component';
-import { APP_CONSTANTS } from '../constants';
 
 describe('CarouselComponent', () => {
   let component: CarouselComponent;

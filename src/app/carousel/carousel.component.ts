@@ -71,7 +71,7 @@ export class CarouselComponent implements OnInit {
   ngOnInit() {
     if (
       sessionStorage.getItem('userFirstTime') &&
-      sessionStorage.getItem('userFirstTime') == 'false'
+      sessionStorage.getItem('userFirstTime') === 'false'
     ) {
       this.userComeFirstTime = false;
     }

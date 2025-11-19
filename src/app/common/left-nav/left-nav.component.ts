@@ -77,7 +77,7 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
     );
     tooltipTriggerList.forEach((tooltipTriggerEl) => {
       const instance = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-      if (instance) instance.dispose();
+      if (instance) {instance.dispose();}
     });
 
     // Initialize new tooltips with hover-only behavior
@@ -229,7 +229,9 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
         if (typeof item.session_data === 'string' && item.session_data.trim() !== '') {
           try {
             parsedSessionData = JSON.parse(item.session_data);
-          } catch (e) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (_e) {
+            // Intentionally ignoring parse error, fallback to empty object
             parsedSessionData = {};
           }
         } else if (typeof item.session_data === 'object') {
@@ -310,7 +312,7 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  closeDropdownOnClickOutside(event: MouseEvent) {
+  closeDropdownOnClickOutside(_event: MouseEvent) {
     this.openedDropdownIndex = null;
   }
 
@@ -331,7 +333,7 @@ export class LeftNavComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   navigateTo(route: string, name: any) {
-    if (name == 'create') {
+    if (name === 'create') {
       if (this.router.url === '/create') {
         // If already on the 'create' page, trigger new conversation and refresh
         this.triggerNewConversation();

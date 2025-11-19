@@ -10,17 +10,10 @@ import { fakeAsync, tick } from '@angular/core/testing';
 describe('LeftNavComponent', () => {
   let component: LeftNavComponent;
   let fixture: ComponentFixture<LeftNavComponent>;
-  let mockRouter: any;
   let mockService: any;
   let mockCdr: any;
 
   beforeEach(async () => {
-    mockRouter = {
-      events: of(),
-      navigate: jasmine.createSpy('navigate'),
-      navigateByUrl: jasmine.createSpy('navigateByUrl'),
-      url: '/home'
-    };
     mockService = {
       userName: 'testUser',
       retriveData: jasmine.createSpy('retriveData'),

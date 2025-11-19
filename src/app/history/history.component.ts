@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
 import { Tooltip } from 'bootstrap';
 import { MockDataService, FormField, MockResponseStage, MOCK_TEXT } from '../mock-data';
 import { HistoryComponentMockData } from './history.mock';
-declare var $: any;
+declare let $: any;
 
 @Component({
   selector: 'app-history',
@@ -443,7 +443,7 @@ export class HistoryComponent
   checkFirst10Completed() {
     const first9Fields = this.fields.slice(0, 9); // Get first 9 elements (indices 0-8)
     let allCompleted = true;
-    for (let field of first9Fields) {
+    for (const field of first9Fields) {
       if (!field.value || field.value.trim() === '' || field.value === this.ADAtext) {
         allCompleted = false;
         break;
@@ -812,7 +812,7 @@ export class HistoryComponent
       tooltipTriggerList.map((tooltipTriggerEl) => {
         // Dispose existing instance first
         const instance = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-        if (instance) instance.dispose();
+        if (instance) {instance.dispose();}
         
         return new Tooltip(tooltipTriggerEl, {
           trigger: 'hover', // Only show on hover, not click

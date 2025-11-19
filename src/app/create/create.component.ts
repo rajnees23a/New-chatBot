@@ -140,7 +140,7 @@ export class CreateComponent
   ngOnInit() {
     if (
       sessionStorage.getItem('userFirstTime') &&
-      sessionStorage.getItem('userFirstTime') == 'false'
+      sessionStorage.getItem('userFirstTime') === 'false'
     ) {
       this.userComeFirstTime = false;
     }
@@ -173,7 +173,7 @@ export class CreateComponent
       });
     }
 
-    window.onbeforeunload = (event) => {
+    window.onbeforeunload = (_event) => {
       // Auto-save draft when user is about to leave the page (only if not submitting)
       if (!this.submitButtonClicked && !this.submissionSuccessful && !this.modalSubmitted) {
         this.saveCurrentConversationAsDraft();
@@ -346,7 +346,10 @@ export class CreateComponent
     try {
       this.chatContainerBox.nativeElement.scrollTop =
         this.chatContainerBox.nativeElement.scrollHeight;
-    } catch (err) {}
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_err) {
+      // Silently ignore scroll errors - non-critical UI operation
+    }
   }
 
   autoResize(): void {
@@ -390,7 +393,7 @@ export class CreateComponent
 
   responseDataMethod(data: any) {
     this.dataa.user_message = data;
-    if (this.dataa.edit_field == '') {
+    if (this.dataa.edit_field === '') {
       this.staticBotMsg = true;
       this.dataa.confirmation = 'True';
     }
@@ -401,25 +404,25 @@ export class CreateComponent
     } else {
       // Original API call
       this.api.sendData(this.dataa, this.selectedFile).subscribe({
-        next: (response) => {
+        next: (_response) => {
           this.botRespondedFirstTime = true;
           this.loader = false;
-          this.apiResponseData = response;
+          this.apiResponseData = _response;
           if (this.apiResponseData) {
-            if (this.apiResponseData.hasOwnProperty('BIC')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
               this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
             }
-            if (this.apiResponseData.hasOwnProperty('bot_message')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
               this.botChatMessage = this.apiResponseData.bot_message;
             }
-            if (this.apiResponseData.hasOwnProperty('button')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
               this.botButtonResponse = this.apiResponseData.button;
             }
             this.processChatResponse();
             setTimeout(() => this.initializeTooltips(), 0);
           }
         },
-        error: (error) => {
+        error: (_error) => {
           this.loader = false;
           this.chatHistory.push({
             text: this.staticText.sorryNetworkText,
@@ -431,7 +434,7 @@ export class CreateComponent
     }
   }
 
-  simulateMockApiResponse(userMessage: string) {
+  simulateMockApiResponse(_userMessage: string) {
     // Simulate API delay
     setTimeout(() => {
       this.loader = false;
@@ -441,7 +444,7 @@ export class CreateComponent
       
       // If editing a specific field, handle field-specific responses
       if (this.dataa.edit_field) {
-        botResponse = this.generateMockBotResponse(userMessage);
+        botResponse = this.generateMockBotResponse(_userMessage);
       } else {
         // Progressive conversation flow
         if (this.conversationStage < this.mockResponseStages.length) {
@@ -463,7 +466,7 @@ export class CreateComponent
           this.conversationStage++;
         } else {
           // Fallback for additional questions
-          botResponse = this.generateMockBotResponse(userMessage);
+          botResponse = this.generateMockBotResponse(_userMessage);
         }
       }
       
@@ -490,7 +493,7 @@ export class CreateComponent
     }, 1500); // Simulate 1.5 second API delay
   }
 
-  generateMockBotResponse(userMessage: string): any {
+  generateMockBotResponse(_userMessage: string): any {
     const currentField = this.dataa.edit_field;
     
     // If editing a specific field, use the centralized mock data
@@ -521,7 +524,7 @@ export class CreateComponent
       div1.classList.remove('active');
     }
     if (div3) {
-      if (this.userInput == '' && !this.selectedFile) {
+      if (this.userInput === '' && !this.selectedFile) {
         div3.classList.remove('primaryeffect');
       }
     }
@@ -576,7 +579,7 @@ export class CreateComponent
 
   processChatResponse() {
     this.allFieldssLookGoodButton = false;
-    if (this.staticBotMsg == true) {
+    if (this.staticBotMsg === true) {
       this.chatHistory.push({
         text: this.botChatMessage,
         sender: this.staticText.senderBot,
@@ -601,16 +604,16 @@ export class CreateComponent
     if (this.uploadFileName !== undefined && this.fields[23]) {
       this.fields[23].value = this.uploadFileName;
     }
-    this.fields.forEach((field, index) => {
+    this.fields.forEach((field, _index) => {
       const isFilled =
         field.value.trim() !== '' &&
         field.value !== this.staticText.ADA_STATIC_TEXT;
       if (isFilled) {
-        if (this.groupA.includes(index)) {
+        if (this.groupA.includes(_index)) {
           this.progress += 6; // 9 fields × 6% = 54%
-        } else if (this.groupB.includes(index)) {
+        } else if (this.groupB.includes(_index)) {
           this.progress += 3; // 10 fields × 3% = 30%
-        } else if (this.groupC.includes(index)) {
+        } else if (this.groupC.includes(_index)) {
           this.progress += 3.2; // 5 fields × 3.2% = 16% (total: 54+30+16=100%)
         }
         // Note: Index 23 (Additional attachments) is excluded from progress calculation
@@ -751,8 +754,8 @@ export class CreateComponent
       const dataa = { session_id: this.sessionId, user_name: this.api.userName };
 
       this.api.attachFile(dataa, this.fileUploadFromAttachment).subscribe({
-        next: (response) => {
-          this.apiResponseData = response;
+        next: (_response) => {
+          this.apiResponseData = _response;
           if (this.apiResponseData) {
             this.successDivText = this.staticText.attachFile;
             this.progress += 2;
@@ -763,7 +766,7 @@ export class CreateComponent
             });
           }
         },
-        error: (error) => {
+        error: (_error) => {
           this.errorDivText = this.staticText.errorDiv;
           this.errorDivCloseAfterSec();
         },
@@ -832,7 +835,7 @@ export class CreateComponent
       if (obj[key] === this.staticText.noInformation) {
         obj[key] = this.staticText.ADA_STATIC_TEXT;
       }
-      if (obj.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
         const words = key.split(' ');
         if (words.length > 1) {
           words[1] = words[1].toLowerCase();
@@ -845,7 +848,7 @@ export class CreateComponent
 
   yesNoButton(value: any, index?: any) {
     this.selectedIndexOfButton = index;
-    if (value == this.staticText.yesEverything) {
+    if (value === this.staticText.yesEverything) {
       this.chatHistory.push({
         text: value,
         sender: this.staticText.senderUser,
@@ -860,23 +863,23 @@ export class CreateComponent
         confirmation: this.staticText.false,
       };
       this.api.sendData(this.dataa).subscribe({
-        next: (response) => {
+        next: (_response) => {
           this.loader = false;
           this.allLooksGoodCliced = true;
           this.successDivText = this.staticText.successADAContent;
           this.successDivCloseAfterSec();
-          this.apiResponseData = response;
+          this.apiResponseData = _response;
           if (this.apiResponseData) {
-            if (this.apiResponseData.hasOwnProperty('BIC')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
               this.bicFieldData = this.formatObjectKeys(
                 this.apiResponseData.BIC
               );
             }
-            if (this.apiResponseData.hasOwnProperty('bot_message')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
               this.botChatMessage = this.apiResponseData.bot_message;
             }
 
-            if (this.apiResponseData.hasOwnProperty('button')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
               this.botButtonResponse = this.apiResponseData.button;
             }
             this.chatHistory.push({
@@ -901,10 +904,10 @@ export class CreateComponent
             this.progressBarUpdate();
           }
         },
-        error: (err) => {},
+        error: (_err) => {},
         complete: () => {},
       });
-    } else if (value == this.staticText.noCheck) {
+    } else if (value === this.staticText.noCheck) {
       this.chatHistory.push({
         text: value,
         sender: this.staticText.senderUser,
@@ -919,20 +922,20 @@ export class CreateComponent
         confirmation: 'False',
       };
       this.api.sendData(this.dataa).subscribe({
-        next: (response) => {
+        next: (_response) => {
           this.loader = false;
-          this.apiResponseData = response;
+          this.apiResponseData = _response;
           if (this.apiResponseData) {
-            if (this.apiResponseData.hasOwnProperty('BIC')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
               this.bicFieldData = this.formatObjectKeys(
                 this.apiResponseData.BIC
               );
             }
-            if (this.apiResponseData.hasOwnProperty('bot_message')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
               this.botChatMessage = this.apiResponseData.bot_message;
             }
 
-            if (this.apiResponseData.hasOwnProperty('button')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
               this.botButtonResponse = this.apiResponseData.button;
             }
             this.staticBotMsg = false;
@@ -944,7 +947,7 @@ export class CreateComponent
             });
           }
         },
-        error: (err) => {},
+        error: (_err) => {},
         complete: () => {},
       });
 
@@ -972,26 +975,26 @@ export class CreateComponent
         confirmation: 'False',
       };
       this.api.sendData(this.dataa).subscribe({
-        next: (response) => {
+        next: (_response) => {
           this.loader = false;
-          this.apiResponseData = response;
+          this.apiResponseData = _response;
           if (this.apiResponseData) {
-            if (this.apiResponseData.hasOwnProperty('BIC')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
               this.bicFieldData = this.formatObjectKeys(
                 this.apiResponseData.BIC
               );
             }
-            if (this.apiResponseData.hasOwnProperty('bot_message')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
               this.botChatMessage = this.apiResponseData.bot_message;
             }
 
-            if (this.apiResponseData.hasOwnProperty('button')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
               this.botButtonResponse = this.apiResponseData.button;
             }
             if (typeof this.botChatMessage !== 'string') {
               if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == true
+                this.apiResponseData.drop_down === true
               ) {
                 this.chatHistory.push({
                   text: {
@@ -1006,7 +1009,7 @@ export class CreateComponent
                 });
               } else if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == false
+                this.apiResponseData.drop_down === false
               ) {
                 this.chatHistory.push({
                   text: {
@@ -1040,7 +1043,7 @@ export class CreateComponent
             this.progressBarUpdate();
           }
         },
-        error: (err) => {},
+        error: (_err) => {},
         complete: () => {},
       });
     }
@@ -1067,18 +1070,18 @@ export class CreateComponent
     this.dataa.confirmation = 'True';
     this.staticBotMsg = true;
     this.api.sendData(this.dataa).subscribe({
-      next: (response) => {
+      next: (_response) => {
         this.loader = false;
-        this.apiResponseData = response;
+        this.apiResponseData = _response;
         if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
             this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
             this.botChatMessage = this.apiResponseData.bot_message;
           }
 
-          if (this.apiResponseData.hasOwnProperty('button')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
             this.botButtonResponse = this.apiResponseData.button;
           }
           this.processChatResponse();
@@ -1089,7 +1092,7 @@ export class CreateComponent
           });
         }
       },
-      error: (err) => {},
+      error: (_err) => {},
       complete: () => {},
     });
   }
@@ -1111,18 +1114,18 @@ export class CreateComponent
     this.dataa.confirmation = 'True';
     this.staticBotMsg = true;
     this.api.sendData(this.dataa).subscribe({
-      next: (response) => {
+      next: (_response) => {
         this.loader = false;
-        this.apiResponseData = response;
+        this.apiResponseData = _response;
         if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
             this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
             this.botChatMessage = this.apiResponseData.bot_message;
           }
 
-          if (this.apiResponseData.hasOwnProperty('button')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
             this.botButtonResponse = this.apiResponseData.button;
           }
           this.processChatResponse();
@@ -1133,7 +1136,7 @@ export class CreateComponent
           });
         }
       },
-      error: (err) => {},
+      error: (_err) => {},
       complete: () => {},
     });
   }
@@ -1159,7 +1162,7 @@ export class CreateComponent
     const first10Fields = this.fields.slice(0, 9); // Get first 10 elements
     let allCompleted = true;
     for (const field of first10Fields) {
-      if (field.value == '' || field.value == this.staticText.ADA_STATIC_TEXT) {
+      if (field.value === '' || field.value === this.staticText.ADA_STATIC_TEXT) {
         allCompleted = false;
         break;
       }
@@ -1182,36 +1185,36 @@ export class CreateComponent
   }
 
   editButton(indexVal: any) {
-    if (this.fields[indexVal].label == this.staticText.areaInvolvedText) {
+    if (this.fields[indexVal].label === this.staticText.areaInvolvedText) {
       this.addButton(indexVal);
       setTimeout(() => {
         this.confirmBtnOfAreaClk = false;
       }, 0);
-    } else if (this.fields[indexVal].label == this.staticText.destinationText) {
+    } else if (this.fields[indexVal].label === this.staticText.destinationText) {
       this.addButton(indexVal);
       setTimeout(() => {
         this.confirmBtnOfDestClk = false;
       }, 0);
     } else if (
-      this.fields[indexVal].label == this.staticText.bussinessImpactText
+      this.fields[indexVal].label === this.staticText.bussinessImpactText
     ) {
       this.addButton(indexVal);
       setTimeout(() => {
         this.confirmBtnOfBussClk = false;
       }, 0);
     } else if (
-      this.fields[indexVal].label == this.staticText.businessSponsorText
+      this.fields[indexVal].label === this.staticText.businessSponsorText
     ) {
       this.bussinessMappingButtonClicke = false;
       this.bussinessUserInputForMappingButtons = '';
       this.addButton(indexVal);
-    } else if (this.fields[indexVal].label == this.staticText.itSponsorText) {
+    } else if (this.fields[indexVal].label === this.staticText.itSponsorText) {
       this.itMappingButtonClicke = false;
       this.itUserInputForMappingButtons = '';
       this.addButton(indexVal);
-    } else if (this.fields[indexVal].label == this.staticText.timelinesText) {
+    } else if (this.fields[indexVal].label === this.staticText.timelinesText) {
       this.addButton(indexVal);
-    } else if (this.fields[indexVal].label == this.staticText.portfolioText) {
+    } else if (this.fields[indexVal].label === this.staticText.portfolioText) {
       this.addButton(indexVal);
     } else {
       this.userInput = this.fields[indexVal].value;
@@ -1273,25 +1276,25 @@ export class CreateComponent
       confirmation: this.staticText.false,
     };
     this.api.sendData(this.dataa).subscribe({
-      next: (response) => {
+      next: (_response) => {
         this.loader = false;
-        this.apiResponseData = response;
+        this.apiResponseData = _response;
         if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
             this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
             this.botChatMessage = this.apiResponseData.bot_message;
           }
 
-          if (this.apiResponseData.hasOwnProperty('button')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
             this.botButtonResponse = this.apiResponseData.button;
           }
           if (typeof this.botChatMessage !== 'string') {
             if (this.botButtonResponse !== null) {
               if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == true
+                this.apiResponseData.drop_down === true
               ) {
                 this.chatHistory.push({
                   text: {
@@ -1306,7 +1309,7 @@ export class CreateComponent
                 });
               } else if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == false
+                this.apiResponseData.drop_down === false
               ) {
                 if (
                   this.checkIfArray(
@@ -1372,7 +1375,7 @@ export class CreateComponent
           });
         }
       },
-      error: (err) => {},
+      error: (_err) => {},
       complete: () => {},
     });
   }
@@ -1437,10 +1440,10 @@ export class CreateComponent
     } else {
       // Original API call
       this.api.submitData(data).subscribe({
-        next: (response) => {
+        next: (_response) => {
           this.additionalDataForSubmit();
         },
-        error: (err) => {},
+        error: (_err) => {},
         complete: () => {},
       });
     }
@@ -1468,6 +1471,7 @@ export class CreateComponent
         myModal.show();
         return;
       } else {
+        // All required fields are filled - continue with normal flow
       }
     } else {
       this.submitButtonPopup();
@@ -1528,7 +1532,7 @@ export class CreateComponent
     } else {
       // Original API call
       this.api.submitAdditionalData(additionalData).subscribe({
-        next: (response) => {
+        next: (_response) => {
           // Remove the draft from session storage since it's being submitted
           this.removeDraftFromSessionStorage();
           this.submissionSuccessful = true;
@@ -1538,7 +1542,7 @@ export class CreateComponent
             this.initializeTooltips();
           });
         },
-        error: (err) => {},
+        error: (_err) => {},
         complete: () => {},
       });
     }
@@ -1569,14 +1573,14 @@ export class CreateComponent
     } else {
       // Original API call
       this.api.submitData(data).subscribe({
-        next: (response) => {
+        next: (_response) => {
           const data = { user_name: this.api.userName };
           this.api.retriveData(data);
           setTimeout(() => {
             this.initializeTooltips();
           });
         },
-        error: (err) => {},
+        error: (_err) => {},
         complete: () => {},
       });
     }
@@ -1584,7 +1588,7 @@ export class CreateComponent
 
   onConfirmAreas() {
     this.confirmBtnOfAreaClk = true;
-    const selected = this.botButtonResponse.filter(
+    const _selected = this.botButtonResponse.filter(
       (area: any, i: any) => this.selectedAreas[i]
     );
     this.chatHistory.push({
@@ -1609,7 +1613,7 @@ export class CreateComponent
 
   onConfirmDestination() {
     this.confirmBtnOfDestClk = true;
-    const selected = this.botButtonResponse.filter(
+    const _selected = this.botButtonResponse.filter(
       (area: any, i: any) => this.selectedDestination[i]
     );
     this.chatHistory.push({
@@ -1634,7 +1638,7 @@ export class CreateComponent
 
   onConfirmBussiness() {
     this.confirmBtnOfBussClk = true;
-    const selected = this.botButtonResponse.filter(
+    const _selected = this.botButtonResponse.filter(
       (area: any, i: any) => this.selectedBussiness[i]
     );
     this.chatHistory.push({
@@ -1688,7 +1692,7 @@ export class CreateComponent
     return Array.isArray(value);
   }
 
-  timeLiButton(value: any, index?: any) {
+  timeLiButton(value: any, _index?: any) {
     this.chatHistory.push({
       text: value,
       sender: this.staticText.senderUser,
