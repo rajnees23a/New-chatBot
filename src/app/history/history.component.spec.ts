@@ -17,7 +17,7 @@ describe('HistoryComponent', () => {
   let processChatResponseSpy: jasmine.Spy;
 
   beforeEach(async () => {
-    apiServiceSpy = jasmine.createSpyObj('SerrviceService', [
+    apiServiceSpy = jasmine.createSpyObj('ServiceService', [
       'sendData',
       'attachFile',
       'submitData',
