@@ -6,13 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { of, Subject, throwError } from 'rxjs';
 
 import { HistoryComponent } from './history.component';
-import { SerrviceService } from '../serrvice.service';
+import { ServiceService } from '../service.service';
 import { mockDraftData, mockRequestData, mockApiResponse, mockFile } from './history.mock';
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
   let fixture: ComponentFixture<HistoryComponent>;
-  let apiServiceSpy: jasmine.SpyObj<SerrviceService>;
+  let apiServiceSpy: jasmine.SpyObj<ServiceService>;
   let routerSpy: jasmine.SpyObj<Router>;
   let processChatResponseSpy: jasmine.Spy;
 
@@ -35,7 +35,7 @@ describe('HistoryComponent', () => {
       imports: [HttpClientTestingModule, FormsModule],
       providers: [
         DatePipe,
-        { provide: SerrviceService, useValue: apiServiceSpy },
+        { provide: ServiceService, useValue: apiServiceSpy },
         { provide: ActivatedRoute, useValue: {} },
         { provide: Router, useValue: routerSpy }
       ]
@@ -166,8 +166,8 @@ it('should handle onFocus and onBlur', () => {
   // Clean up any previous elements
   const oldDiv1 = document.getElementById('textArDiv');
   const oldDiv3 = document.getElementById('textAbut');
-  if (oldDiv1) oldDiv1.remove();
-  if (oldDiv3) oldDiv3.remove();
+  if (oldDiv1) {oldDiv1.remove();}
+  if (oldDiv3) {oldDiv3.remove();}
 
   // Create and attach elements
   const div1 = document.createElement('div');

@@ -151,7 +151,7 @@ export class LeftNavComponent implements OnInit, OnDestroy {
     }, 0);
     this.isItemSelected = true;
     this.cdr.detectChanges();
-    let data = {
+    const data = {
       sessionDataDraft: item,
       sessionDataId: id,
       sessionDataUserName: userName,

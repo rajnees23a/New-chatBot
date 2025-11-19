@@ -423,7 +423,7 @@ export class TestComponent implements OnDestroy {
 
     const draw = () => {
       this.animationFrameId = requestAnimationFrame(draw);
-      this.analyser.getByteFrequencyData(this.dataArray); // IMPORTANT: use frequency data
+      // this.analyser.getByteFrequencyData(this.dataArray); // IMPORTANT: use frequency data
 
       ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
@@ -436,7 +436,7 @@ export class TestComponent implements OnDestroy {
         const barHeight = Math.max((this.dataArray[i] / 255) * HEIGHT, 4);
         ctx.fillStyle = '#000'; // dark bold bars
         ctx.fillRect(x, (HEIGHT - barHeight) / 2, barWidth, barHeight);
-        if (barHeight > maxHeight) maxHeight = barHeight;
+        if (barHeight > maxHeight) {maxHeight = barHeight;}
         x += barWidth + gap;
       }
 
@@ -846,7 +846,7 @@ export class TestComponent implements OnDestroy {
     this.fileUrlForAttachmentUpload = URL.createObjectURL(file);
     this.uploadFileFirstTime = true;
     if (this.fileUploadFromAttachment) {
-      let dataa = { session_id: this.sessionId, user_name: this.api.userName };
+      const dataa = { session_id: this.sessionId, user_name: this.api.userName };
       this.api.attachFile(dataa, this.fileUploadFromAttachment).subscribe({
         next: (response) => {
           this.apiResponseData = response;
@@ -1250,7 +1250,7 @@ export class TestComponent implements OnDestroy {
 
     let allCompleted = true;
 
-    for (let field of first10Fields) {
+    for (const field of first10Fields) {
       if (
         field.value == '' ||
         field.value ==
@@ -1477,12 +1477,12 @@ export class TestComponent implements OnDestroy {
 
   submitButtonPopup() {
     this.submitButtonClicked = true;
-    let chatData = {
+    const chatData = {
       chatHistory: this.chatHistory,
       formFieldValue: this.fields,
       submit: true,
     };
-    let data = {
+    const data = {
       session_id: this.sessionId,
       user_name: this.api.userName,
       session_data: chatData,
@@ -1525,10 +1525,10 @@ export class TestComponent implements OnDestroy {
   }
 
   additionalDataForSubmit() {
-    let filled = this.fields.filter(
+    const filled = this.fields.filter(
       (field) => field.value.trim() !== '' && field.value !== this.ADAtext
     ).length;
-    let additionalData = {
+    const additionalData = {
       user_name: this.api.userName,
       session_id: this.sessionId,
       update_data: {
@@ -1561,12 +1561,12 @@ export class TestComponent implements OnDestroy {
   }
 
   saveChatData() {
-    let chatData = {
+    const chatData = {
       chatHistory: this.chatHistory,
       formFieldValue: this.fields,
       submit: false,
     };
-    let data = {
+    const data = {
       session_id: this.sessionId,
       user_name: this.api.userName,
       session_data: chatData,
@@ -1643,7 +1643,7 @@ export class TestComponent implements OnDestroy {
       );
       tooltipTriggerList.forEach((tooltipTriggerEl) => {
         const instance = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-        if (instance) instance.dispose(); // Clean up old instance
+        if (instance) {instance.dispose();} // Clean up old instance
         new bootstrap.Tooltip(tooltipTriggerEl);
       });
     }, 0);

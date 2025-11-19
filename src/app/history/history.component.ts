@@ -677,7 +677,7 @@ export class HistoryComponent
     this.fileExtension = fileName
       .substring(fileName.lastIndexOf('.'))
       .toUpperCase();
-    let localfileExtension = fileName
+    const localfileExtension = fileName
       .substring(fileName.lastIndexOf('.'))
       .toLowerCase();
 
@@ -787,7 +787,7 @@ export class HistoryComponent
     this.addfileExtension = fileName
       .substring(fileName.lastIndexOf('.'))
       .toLowerCase();
-    let localExt = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
+    const localExt = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
 
     // Check file type
     if (!allowedExtensions.includes(this.addfileExtension)) {
@@ -824,7 +824,7 @@ export class HistoryComponent
     this.uploadFileFirstTime = true;
     this.fields[23].value = fileName;
     if (this.fileUploadFromAttachment) {
-      let dataa = { session_id: this.sessionId, user_name: this.api.userName };
+      const dataa = { session_id: this.sessionId, user_name: this.api.userName };
       this.api.attachFile(dataa, this.fileUploadFromAttachment).subscribe({
         next: (response) => {
           this.apiResponseData = response;
@@ -1233,7 +1233,7 @@ export class HistoryComponent
 
     let allCompleted = true;
 
-    for (let field of first10Fields) {
+    for (const field of first10Fields) {
       if (
         field.value == '' ||
         field.value ==
@@ -1633,12 +1633,12 @@ export class HistoryComponent
 
   submitButtonPopup() {
     this.submitButtonClicked = true;
-    let chatData = {
+    const chatData = {
       chatHistory: this.chatHistory,
       formFieldValue: this.fields,
       submit: true,
     };
-    let data = {
+    const data = {
       session_id: this.sessionId,
       user_name: this.userName,
       session_data: chatData,
@@ -1680,10 +1680,10 @@ export class HistoryComponent
   }
 
   additionalDataForSubmit() {
-    let filled = this.fields.filter(
+    const filled = this.fields.filter(
       (field) => field.value.trim() !== '' && field.value !== this.ADAtext
     ).length;
-    let additionalData = {
+    const additionalData = {
       user_name: this.userName,
       session_id: this.sessionId,
       update_data: {
@@ -1714,12 +1714,12 @@ export class HistoryComponent
   }
 
   saveChatData() {
-    let chatData = {
+    const chatData = {
       chatHistory: this.chatHistory,
       formFieldValue: this.fields,
       submit: false,
     };
-    let data = {
+    const data = {
       session_id: this.sessionId,
       user_name: this.userName,
       session_data: chatData,
@@ -1816,7 +1816,7 @@ export class HistoryComponent
       );
       tooltipTriggerList.forEach((tooltipTriggerEl) => {
         const instance = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-        if (instance) instance.dispose(); // Clean up old instance
+        if (instance) {instance.dispose();} // Clean up old instance
         new bootstrap.Tooltip(tooltipTriggerEl);
       });
     }, 0);
@@ -1829,7 +1829,7 @@ export class HistoryComponent
     this.fileUploadFromAttachment = null;
     this.fileIcon = ''; 
     if (this.chatHistory && this.chatHistory.length > 0) {
-      let lastElement = this.chatHistory[this.chatHistory.length - 1];
+      const lastElement = this.chatHistory[this.chatHistory.length - 1];
       if (lastElement.dropdown) {
         this.botButtonResponse = lastElement.dropdown;
         this.dataa.edit_field = lastElement.fieldName;

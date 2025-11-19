@@ -2,7 +2,7 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ServiceService } from './service.service';
-declare var bootstrap: any;
+declare let bootstrap: any;
 
 
 @Component({
@@ -79,7 +79,7 @@ export class AppComponent implements AfterViewInit, OnInit {
             const el = document.querySelector('[data-bs-toggle="tooltip"][data-tooltip-id="upload-icon"]'); // use custom selector or unique ID if needed
             if (el) {
               const instance = bootstrap.Tooltip.getInstance(el as Element);
-              if (instance) instance.hide();
+              if (instance) {instance.hide();}
             }
           }, 300); // Delay gives enough time for DOM update
         });

@@ -52,7 +52,7 @@ export class UserRequestDetailComponent implements OnInit {
   }
   fetchRequestChat() {
     if (this.RequestDetailFromRequestPAge) {
-      let newData = {
+      const newData = {
         session_id: this.RequestDetailFromRequestPAge.sessionDataId,
         user_name: this.RequestDetailFromRequestPAge.sessionDataUserName,
       };
@@ -66,8 +66,8 @@ export class UserRequestDetailComponent implements OnInit {
 
   processData(data: any) {
     if (data) {
-      let modifiedData = JSON.parse(data.message_session_data);
-      let addsomemorekey = {
+      const modifiedData = JSON.parse(data.message_session_data);
+      const addsomemorekey = {
         session_id: this.RequestDetailFromRequestPAge.sessionDataId,
         user_name: this.RequestDetailFromRequestPAge.sessionDataUserName,
         chatData: modifiedData,

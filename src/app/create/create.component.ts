@@ -396,7 +396,7 @@ export class CreateComponent
     this.fileExtension = fileName
       .substring(fileName.lastIndexOf('.'))
       .toUpperCase();
-    let localfileExtension = fileName
+    const localfileExtension = fileName
       .substring(fileName.lastIndexOf('.'))
       .toLowerCase();
 
@@ -459,7 +459,7 @@ export class CreateComponent
     this.addfileExtension = fileName
       .substring(fileName.lastIndexOf('.'))
       .toUpperCase();
-    let localExt = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
+    const localExt = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
 
     // Check file type
     if (!allowedExtensions.includes(localExt)) {
@@ -491,7 +491,7 @@ export class CreateComponent
     this.uploadFileFirstTime = true;
     this.fields[23].value = fileName;
     if (this.fileUploadFromAttachment) {
-      let dataa = { session_id: this.sessionId, user_name: this.api.userName };
+      const dataa = { session_id: this.sessionId, user_name: this.api.userName };
 
       this.api.attachFile(dataa, this.fileUploadFromAttachment).subscribe({
         next: (response) => {
@@ -901,7 +901,7 @@ export class CreateComponent
   checkFirst10Completed() {
     const first10Fields = this.fields.slice(0, 9); // Get first 10 elements
     let allCompleted = true;
-    for (let field of first10Fields) {
+    for (const field of first10Fields) {
       if (field.value == '' || field.value == this.staticText.ADA_STATIC_TEXT) {
         allCompleted = false;
         break;
@@ -1161,12 +1161,12 @@ export class CreateComponent
 
   submitButtonPopup() {
     this.submitButtonClicked = true;
-    let chatData = {
+    const chatData = {
       chatHistory: this.chatHistory,
       formFieldValue: this.fields,
       submit: true,
     };
-    let data = {
+    const data = {
       session_id: this.sessionId,
       user_name: this.api.userName,
       session_data: chatData,
@@ -1205,12 +1205,12 @@ export class CreateComponent
   }
 
   additionalDataForSubmit() {
-    let filled = this.fields.filter(
+    const filled = this.fields.filter(
       (field) =>
         field.value.trim() !== '' &&
         field.value !== this.staticText.ADA_STATIC_TEXT
     ).length;
-    let additionalData = {
+    const additionalData = {
       user_name: this.api.userName,
       session_id: this.sessionId,
       update_data: {
@@ -1239,12 +1239,12 @@ export class CreateComponent
   }
 
   saveChatData() {
-    let chatData = {
+    const chatData = {
       chatHistory: this.chatHistory,
       formFieldValue: this.fields,
       submit: false,
     };
-    let data = {
+    const data = {
       session_id: this.sessionId,
       user_name: this.api.userName,
       session_data: chatData,
@@ -1344,7 +1344,7 @@ export class CreateComponent
       );
       tooltipTriggerList.forEach((tooltipTriggerEl) => {
         const instance = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-        if (instance) instance.dispose();
+        if (instance) {instance.dispose();}
         new bootstrap.Tooltip(tooltipTriggerEl);
       });
     }, 0);

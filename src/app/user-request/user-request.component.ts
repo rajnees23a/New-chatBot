@@ -61,7 +61,7 @@ export class UserRequestComponent implements OnInit {
 
   onClickRequestID(id: any, userName: any, reqId: any) {
     this.api.show();
-    let data = {
+    const data = {
       sessionDataId: id,
       sessionDataUserName: userName
     }

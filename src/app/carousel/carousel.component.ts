@@ -83,7 +83,7 @@ export class CarouselComponent implements OnInit {
   }
 
   goToSlide(index: number) {
-    if (index === this.currentSlideIndex) return;
+    if (index === this.currentSlideIndex) {return;}
     
     const items = document.querySelectorAll('#carouselExampleIndicators .carousel-item');
     const currentActive = document.querySelector('#carouselExampleIndicators .carousel-item.active');
