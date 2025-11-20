@@ -2,7 +2,6 @@ import {
   Component,
   NgZone,
   ElementRef,
-  Renderer2,
   ViewChild,
   OnDestroy,
   AfterViewChecked,
@@ -15,7 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 import * as bootstrap from 'bootstrap';
 import { Subscription } from 'rxjs';
 import { Tooltip } from 'bootstrap';
-import { MockDataService, FormField, MockResponseStage, MOCK_TEXT } from '../mock-data';
+import { MockDataService, MockResponseStage } from '../mock-data';
 import { HistoryComponentMockData } from './history.mock';
 
 @Component({
@@ -386,7 +385,7 @@ export class HistoryComponent
     
     this.dataSubscription = this.api.currentData$.subscribe((data) => {
       if (data) {
-        if (data.comingFrom == 'draft') {
+        if (data.comingFrom === 'draft') {
           this.draftData = data;
           
           console.log('History Component - Loading draft:', {
@@ -419,7 +418,7 @@ export class HistoryComponent
           if (this.mockEnabled) {
             this.api.hide();
           }
-        } else if (data.comingFrom == 'request') {
+        } else if (data.comingFrom === 'request') {
           this.chatHistory = data.chatData.chatHistory;
           this.fields = data.chatData.formFieldValue;
           this.sessionId = data.session_id;
@@ -573,7 +572,7 @@ export class HistoryComponent
     // ORIGINAL API LOGIC (when mockEnabled = false)
     // ============================================================
     this.dataa.user_message = data;
-    if (this.dataa.edit_field == '') {
+    if (this.dataa.edit_field === '') {
       this.staticBotMsg = true;
       this.dataa.confirmation = 'True';
     }
@@ -585,13 +584,13 @@ export class HistoryComponent
         this.loader = false;
         this.apiResponseData = response;
         if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
             this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
             this.botChatMessage = this.apiResponseData.bot_message;
           }
-          if (this.apiResponseData.hasOwnProperty('button')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
             this.botButtonResponse = this.apiResponseData.button;
           }
           this.processChatResponse();
@@ -632,7 +631,7 @@ export class HistoryComponent
       div1.classList.remove('active');
     }
     if (div3) {
-      if (this.userInput == '' && !this.selectedFile) {
+      if (this.userInput === '' && !this.selectedFile) {
         div3.classList.remove('primaryeffect');
       }
     }
@@ -688,7 +687,7 @@ export class HistoryComponent
 
   processChatResponse() {
     this.allFieldssLookGoodButton = false;
-    if (this.staticBotMsg == true) {
+    if (this.staticBotMsg === true) {
       this.chatHistory.push({
         text: this.botChatMessage,
         sender: 'bot',
@@ -949,7 +948,7 @@ export class HistoryComponent
             });
           }
         },
-        error: (error) => {
+        error: (_error) => {
           this.errorDivText =
             'There is some error while uploading the file, please try again';
           this.errorDivCloseAfterSec();
@@ -1017,7 +1016,7 @@ export class HistoryComponent
       if (obj[key] === 'NO INFORMATION PROVIDED') {
         obj[key] = this.ADAtext;
       }
-      if (obj.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
         // this wil format the values of keys
         const words = key.split(' ');
         if (words.length > 1) {
@@ -1032,7 +1031,7 @@ export class HistoryComponent
   yesNoButton(value: any, index?: any) {
     this.selectedIndexOfButton = index;
 
-    if (value == 'Yes, everything looks good') {
+    if (value === 'Yes, everything looks good') {
       this.chatHistory.push({ text: value, sender: 'user', isFile: false });
       this.loader = true;
       this.dataa = {
@@ -1051,16 +1050,16 @@ export class HistoryComponent
           this.successDivCloseAfterSec();
           this.apiResponseData = response;
           if (this.apiResponseData) {
-            if (this.apiResponseData.hasOwnProperty('BIC')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
               this.bicFieldData = this.formatObjectKeys(
                 this.apiResponseData.BIC
               );
             }
-            if (this.apiResponseData.hasOwnProperty('bot_message')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
               this.botChatMessage = this.apiResponseData.bot_message;
             }
 
-            if (this.apiResponseData.hasOwnProperty('button')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
               this.botButtonResponse = this.apiResponseData.button;
             }
             this.chatHistory.push({
@@ -1090,7 +1089,7 @@ export class HistoryComponent
         },
         complete: () => console.log('Completed'),
       });
-    } else if (value == "No, I'd like to review and make edits") {
+    } else if (value === "No, I'd like to review and make edits") {
       this.chatHistory.push({ text: value, sender: 'user', isFile: false });
       this.loader = true;
       this.dataa = {
@@ -1106,16 +1105,16 @@ export class HistoryComponent
           this.loader = false;
           this.apiResponseData = response;
           if (this.apiResponseData) {
-            if (this.apiResponseData.hasOwnProperty('BIC')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
               this.bicFieldData = this.formatObjectKeys(
                 this.apiResponseData.BIC
               );
             }
-            if (this.apiResponseData.hasOwnProperty('bot_message')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
               this.botChatMessage = this.apiResponseData.bot_message;
             }
 
-            if (this.apiResponseData.hasOwnProperty('button')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
               this.botButtonResponse = this.apiResponseData.button;
             }
 
@@ -1151,22 +1150,22 @@ export class HistoryComponent
           this.loader = false;
           this.apiResponseData = response;
           if (this.apiResponseData) {
-            if (this.apiResponseData.hasOwnProperty('BIC')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
               this.bicFieldData = this.formatObjectKeys(
                 this.apiResponseData.BIC
               );
             }
-            if (this.apiResponseData.hasOwnProperty('bot_message')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
               this.botChatMessage = this.apiResponseData.bot_message;
             }
 
-            if (this.apiResponseData.hasOwnProperty('button')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
               this.botButtonResponse = this.apiResponseData.button;
             }
             if (typeof this.botChatMessage !== 'string') {
               if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == true
+                this.apiResponseData.drop_down === true
               ) {
                 this.chatHistory.push({
                   text: {
@@ -1181,7 +1180,7 @@ export class HistoryComponent
                 });
               } else if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == false
+                this.apiResponseData.drop_down === false
               ) {
                 this.chatHistory.push({
                   text: {
@@ -1250,14 +1249,14 @@ export class HistoryComponent
         this.loader = false;
         this.apiResponseData = response;
         if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
             this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
             this.botChatMessage = this.apiResponseData.bot_message;
           }
 
-          if (this.apiResponseData.hasOwnProperty('button')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
             this.botButtonResponse = this.apiResponseData.button;
           }
           this.processChatResponse();
@@ -1297,14 +1296,14 @@ export class HistoryComponent
         this.loader = false;
         this.apiResponseData = response;
         if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
             this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
             this.botChatMessage = this.apiResponseData.bot_message;
           }
 
-          if (this.apiResponseData.hasOwnProperty('button')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
             this.botButtonResponse = this.apiResponseData.button;
           }
           this.processChatResponse();
@@ -1346,8 +1345,8 @@ export class HistoryComponent
 
     for (const field of first10Fields) {
       if (
-        field.value == '' ||
-        field.value ==
+        field.value === '' ||
+        field.value ===
           "ADA couldn't fill this field, please continue the conversation to fill it"
       ) {
         allCompleted = false;
@@ -1377,32 +1376,32 @@ export class HistoryComponent
   if (!field) {
     return;
   }
-    if (this.fields[indexVal].label == 'Areas involved') {
+    if (this.fields[indexVal].label === 'Areas involved') {
       this.editDropButton(indexVal);
       setTimeout(() => {
         this.confirmBtnOfAreaClk = false;
       }, 0);
-    } else if (this.fields[indexVal].label == 'Destination 2027 alignment') {
+    } else if (this.fields[indexVal].label === 'Destination 2027 alignment') {
       this.editDropButton(indexVal);
       setTimeout(() => {
         this.confirmBtnOfDestClk = false;
       }, 0);
-    } else if (this.fields[indexVal].label == 'Business case impacts') {
+    } else if (this.fields[indexVal].label === 'Business case impacts') {
       this.editDropButton(indexVal);
       setTimeout(() => {
         this.confirmBtnOfBussClk = false;
       }, 0);
-    } else if (this.fields[indexVal].label == 'Business sponsor') {
+    } else if (this.fields[indexVal].label === 'Business sponsor') {
       this.bussinessMappingButtonClicke = false;
       this.bussinessUserInputForMappingButtons = '';
       this.editDropButton(indexVal);
-    } else if (this.fields[indexVal].label == 'IT sponsor') {
+    } else if (this.fields[indexVal].label === 'IT sponsor') {
       this.itMappingButtonClicke = false;
       this.itUserInputForMappingButtons = '';
       this.editDropButton(indexVal);
-    } else if (this.fields[indexVal].label == 'Timelines') {
+    } else if (this.fields[indexVal].label === 'Timelines') {
       this.editDropButton(indexVal);
-    } else if (this.fields[indexVal].label == 'Portfolio alignment') {
+    } else if (this.fields[indexVal].label === 'Portfolio alignment') {
       this.addButton(indexVal);
     } else {
       this.userInput = this.fields[indexVal].value;
@@ -1463,21 +1462,21 @@ export class HistoryComponent
         this.loader = false;
         this.apiResponseData = response;
         if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
             this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
             this.botChatMessage = this.apiResponseData.bot_message;
           }
 
-          if (this.apiResponseData.hasOwnProperty('button')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
             this.botButtonResponse = this.apiResponseData.button;
           }
           if (typeof this.botChatMessage !== 'string') {
             if (this.botButtonResponse !== null) {
               if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == true
+                this.apiResponseData.drop_down === true
               ) {
                 this.chatHistory.push({
                   text: {
@@ -1492,7 +1491,7 @@ export class HistoryComponent
                 });
               } else if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == false
+                this.apiResponseData.drop_down === false
               ) {
                 if (this.checkIfArray(this.botChatMessage['Question'])) {
                   this.chatHistory.push({
@@ -1584,21 +1583,21 @@ export class HistoryComponent
         this.loader = false;
         this.apiResponseData = response;
         if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
             this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
             this.botChatMessage = this.apiResponseData.bot_message;
           }
 
-          if (this.apiResponseData.hasOwnProperty('button')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
             this.botButtonResponse = this.apiResponseData.button;
           }
           if (typeof this.botChatMessage !== 'string') {
             if (this.botButtonResponse !== null) {
               if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == true
+                this.apiResponseData.drop_down === true
               ) {
                 this.chatHistory.push({
                   text: {
@@ -1613,7 +1612,7 @@ export class HistoryComponent
                 });
               } else if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == false
+                this.apiResponseData.drop_down === false
               ) {
                 if (this.checkIfArray(this.botChatMessage['Question'])) {
                   this.chatHistory.push({
@@ -1664,17 +1663,17 @@ export class HistoryComponent
             }
           }
           const previous = this.fields[indexVal].value;
-          if (this.fields[indexVal].label == 'Areas involved') {
+          if (this.fields[indexVal].label === 'Areas involved') {
             this.selectedAreas = this.botButtonResponse.map((region: string) =>
               previous.includes(region)
             );
           } else if (
-            this.fields[indexVal].label == 'Destination 2027 alignment'
+            this.fields[indexVal].label === 'Destination 2027 alignment'
           ) {
             this.selectedDestination = this.botButtonResponse.map(
               (region: string) => previous.includes(region)
             );
-          } else if (this.fields[indexVal].label == 'Business case impacts') {
+          } else if (this.fields[indexVal].label === 'Business case impacts') {
             this.selectedBussiness = this.botButtonResponse.map(
               (region: string) => previous.includes(region)
             );
@@ -1756,7 +1755,7 @@ export class HistoryComponent
     };
 
     this.api.submitData(data).subscribe({
-      next: (response) => {
+      next: (_response) => {
         this.additionalDataForSubmit();
       },
       error: (error) => {
@@ -1775,7 +1774,6 @@ export class HistoryComponent
         const myModal = new bootstrap.Modal(modalElement);
         myModal.show();
         return;
-      } else {
       }
     } else {
       this.submitButtonPopup();
@@ -1810,7 +1808,7 @@ export class HistoryComponent
         this.fileUploadFromAttachment;
     }
     this.api.submitAdditionalData(additionalData).subscribe({
-      next: (response) => {
+      next: (_response) => {
         this.api.triggerAction('Request is updated');
         this.router.navigate(['/request']);
         setTimeout(() => {
@@ -1838,7 +1836,7 @@ export class HistoryComponent
     };
 
     this.api.submitData(data).subscribe({
-      next: (response) => {
+      next: (_response) => {
         const data = { user_name: this.userName }; // Data to pass to the API
         this.api.retriveData(data);
         setTimeout(() => {
@@ -1854,8 +1852,8 @@ export class HistoryComponent
 
   onConfirmAreas() {
     this.confirmBtnOfAreaClk = true;
-    const selected = this.botButtonResponse.filter(
-      (area: any, i: any) => this.selectedAreas[i]
+    const _selected = this.botButtonResponse.filter(
+      (_area: any, i: any) => this.selectedAreas[i]
     );
     this.chatHistory.push({
       text: this.getSelectedRegions(),
@@ -1876,8 +1874,8 @@ export class HistoryComponent
 
   onConfirmDestination() {
     this.confirmBtnOfDestClk = true;
-    const selected = this.botButtonResponse.filter(
-      (area: any, i: any) => this.selectedDestination[i]
+    const _selected = this.botButtonResponse.filter(
+      (_area: any, i: any) => this.selectedDestination[i]
     );
     this.chatHistory.push({
       text: this.getSelectedDestination(),
@@ -1898,8 +1896,8 @@ export class HistoryComponent
 
   onConfirmBussiness() {
     this.confirmBtnOfBussClk = true;
-    const selected = this.botButtonResponse.filter(
-      (area: any, i: any) => this.selectedBussiness[i]
+    const _selected = this.botButtonResponse.filter(
+      (_area: any, i: any) => this.selectedBussiness[i]
     );
     this.chatHistory.push({
       text: this.getSelectedBussiness(),
@@ -2026,7 +2024,7 @@ export class HistoryComponent
     return Array.isArray(value);
   }
 
-  timeLiButton(value: any, index?: any) {
+  timeLiButton(value: any, _index?: any) {
     this.chatHistory.push({ text: value, sender: 'user', isFile: false });
     this.loader = true;
     this.dataa.edit_field = this.editFieldVal;
@@ -2071,7 +2069,7 @@ export class HistoryComponent
   }
 
   // Simulate mock API response (for mock mode)
-  simulateMockApiResponse(userMessage: string) {
+  simulateMockApiResponse(_userMessage: string) {
     if (this.conversationStage < this.mockResponseStages.length) {
       const currentStage = this.mockResponseStages[this.conversationStage];
 
@@ -2245,7 +2243,7 @@ export class HistoryComponent
     try {
       const container = document.querySelector('.request-detail-container');
       return container !== null;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -2292,10 +2290,10 @@ export class HistoryComponent
       window.removeEventListener('resize', this.resizeListener);
     }
     
-    if (this.submitButtonClicked == true) {
+    if (this.submitButtonClicked === true) {
       this.submitButtonClicked = false;
     } else {
-      if (this.botRespondedFirstTime == true && !this.mockEnabled) {
+      if (this.botRespondedFirstTime === true && !this.mockEnabled) {
         this.saveChatData();
         this.api.triggerAction('The draft should saved as a draft');
       }

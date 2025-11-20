@@ -64,11 +64,10 @@ describe('CarouselComponent', () => {
     component.totalSlides = 3;
     component.currentSlideIndex = 0;
     
-    // Go to last slide
-    component.goToSlide(2);
-    
     // Wait for setTimeout
     jasmine.clock().install();
+    // Go to last slide
+    component.goToSlide(2);
     jasmine.clock().tick(300);
     
     expect(component.currentSlideIndex).toBe(2);
@@ -110,9 +109,8 @@ describe('CarouselComponent', () => {
     component.totalSlides = 2;
     component.currentSlideIndex = 0;
     
-    component.goToNextSlide();
-    
     jasmine.clock().install();
+    component.goToNextSlide();
     jasmine.clock().tick(300);
     
     expect(component.currentSlideIndex).toBe(1);
@@ -133,9 +131,8 @@ describe('CarouselComponent', () => {
     component.totalSlides = 2;
     component.currentSlideIndex = 1;
     
-    component.goToPreviousSlide();
-    
     jasmine.clock().install();
+    component.goToPreviousSlide();
     jasmine.clock().tick(300);
     
     expect(component.currentSlideIndex).toBe(0);

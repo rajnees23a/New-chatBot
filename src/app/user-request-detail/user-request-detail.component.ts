@@ -84,7 +84,7 @@ export class UserRequestDetailComponent implements OnInit {
       this.requestDetails =
         this.requestData.find(
           (req: { Requestnumber: string | null }) =>
-            req.Requestnumber == this.requestNumber
+            req.Requestnumber === this.requestNumber
         ) ?? null;
     });
   }

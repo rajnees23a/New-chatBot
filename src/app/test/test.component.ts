@@ -2,7 +2,6 @@ import {
   Component,
   NgZone,
   ElementRef,
-  Renderer2,
   ViewChild,
   OnDestroy,
   ChangeDetectorRef,
@@ -366,7 +365,7 @@ export class TestComponent implements OnDestroy {
   ngOnInit() {
     if (
       sessionStorage.getItem('userFirstTime') &&
-      sessionStorage.getItem('userFirstTime') == 'false'
+      sessionStorage.getItem('userFirstTime') === 'false'
     ) {
       this.userComeFirstTime = false;
     }
@@ -390,7 +389,7 @@ export class TestComponent implements OnDestroy {
       sender: 'bot',
     });
 
-    window.onbeforeunload = (event) => {};
+    window.onbeforeunload = (_event) => {};
   }
 
   async setupMicAnalyzer() {
@@ -521,7 +520,7 @@ export class TestComponent implements OnDestroy {
 
   responseDataMethod(data: any) {
     this.dataa.user_message = data;
-    if (this.dataa.edit_field == '') {
+    if (this.dataa.edit_field === '') {
       this.staticBotMsg = true;
       this.dataa.confirmation = 'True';
     }
@@ -532,13 +531,13 @@ export class TestComponent implements OnDestroy {
         this.loader = false;
         this.apiResponseData = response;
         if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
             this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
             this.botChatMessage = this.apiResponseData.bot_message;
           }
-          if (this.apiResponseData.hasOwnProperty('button')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
             this.botButtonResponse = this.apiResponseData.button;
           }
           this.processChatResponse();
@@ -579,7 +578,7 @@ export class TestComponent implements OnDestroy {
       div1.classList.remove('active');
     }
     if (div3) {
-      if (this.userInput == '' && !this.selectedFile) {
+      if (this.userInput === '' && !this.selectedFile) {
         div3.classList.remove('primaryeffect');
       }
     }
@@ -622,7 +621,7 @@ export class TestComponent implements OnDestroy {
 
   processChatResponse() {
     this.allFieldssLookGoodButton = false;
-    if (this.staticBotMsg == true) {
+    if (this.staticBotMsg === true) {
       this.chatHistory.push({
         text: this.botChatMessage,
         sender: 'bot',
@@ -860,7 +859,7 @@ export class TestComponent implements OnDestroy {
             });
           }
         },
-        error: (error) => {
+        error: (_error) => {
           this.errorDivText =
             'There is some error while uploading the file, please try again';
           this.errorDivCloseAfterSec();
@@ -923,7 +922,7 @@ export class TestComponent implements OnDestroy {
       if (obj[key] === 'NO INFORMATION PROVIDED') {
         obj[key] = this.ADAtext;
       }
-      if (obj.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
         // this wil format the values of keys
         const words = key.split(' ');
         if (words.length > 1) {
@@ -938,7 +937,7 @@ export class TestComponent implements OnDestroy {
   yesNoButton(value: any, index?: any) {
     this.selectedIndexOfButton = index;
 
-    if (value == 'Yes, everything looks good') {
+    if (value === 'Yes, everything looks good') {
       this.chatHistory.push({ text: value, sender: 'user', isFile: false });
       this.loader = true;
       this.dataa = {
@@ -957,16 +956,16 @@ export class TestComponent implements OnDestroy {
           this.successDivCloseAfterSec();
           this.apiResponseData = response;
           if (this.apiResponseData) {
-            if (this.apiResponseData.hasOwnProperty('BIC')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
               this.bicFieldData = this.formatObjectKeys(
                 this.apiResponseData.BIC
               );
             }
-            if (this.apiResponseData.hasOwnProperty('bot_message')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
               this.botChatMessage = this.apiResponseData.bot_message;
             }
 
-            if (this.apiResponseData.hasOwnProperty('button')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
               this.botButtonResponse = this.apiResponseData.button;
             }
             this.chatHistory.push({
@@ -993,7 +992,7 @@ export class TestComponent implements OnDestroy {
         },
         complete: () => console.log('Completed'),
       });
-    } else if (value == "No, I'd like to review and make edits") {
+    } else if (value === "No, I'd like to review and make edits") {
       this.chatHistory.push({ text: value, sender: 'user', isFile: false });
       this.loader = true;
       this.dataa = {
@@ -1009,16 +1008,16 @@ export class TestComponent implements OnDestroy {
           this.loader = false;
           this.apiResponseData = response;
           if (this.apiResponseData) {
-            if (this.apiResponseData.hasOwnProperty('BIC')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
               this.bicFieldData = this.formatObjectKeys(
                 this.apiResponseData.BIC
               );
             }
-            if (this.apiResponseData.hasOwnProperty('bot_message')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
               this.botChatMessage = this.apiResponseData.bot_message;
             }
 
-            if (this.apiResponseData.hasOwnProperty('button')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
               this.botButtonResponse = this.apiResponseData.button;
             }
             this.staticBotMsg = false;
@@ -1059,22 +1058,22 @@ export class TestComponent implements OnDestroy {
           this.loader = false;
           this.apiResponseData = response;
           if (this.apiResponseData) {
-            if (this.apiResponseData.hasOwnProperty('BIC')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
               this.bicFieldData = this.formatObjectKeys(
                 this.apiResponseData.BIC
               );
             }
-            if (this.apiResponseData.hasOwnProperty('bot_message')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
               this.botChatMessage = this.apiResponseData.bot_message;
             }
 
-            if (this.apiResponseData.hasOwnProperty('button')) {
+            if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
               this.botButtonResponse = this.apiResponseData.button;
             }
             if (typeof this.botChatMessage !== 'string') {
               if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == true
+                this.apiResponseData.drop_down === true
               ) {
                 this.chatHistory.push({
                   text: {
@@ -1089,7 +1088,7 @@ export class TestComponent implements OnDestroy {
                 });
               } else if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == false
+                this.apiResponseData.drop_down === false
               ) {
                 this.chatHistory.push({
                   text: {
@@ -1156,14 +1155,14 @@ export class TestComponent implements OnDestroy {
         this.loader = false;
         this.apiResponseData = response;
         if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
             this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
             this.botChatMessage = this.apiResponseData.bot_message;
           }
 
-          if (this.apiResponseData.hasOwnProperty('button')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
             this.botButtonResponse = this.apiResponseData.button;
           }
           this.processChatResponse();
@@ -1202,14 +1201,14 @@ export class TestComponent implements OnDestroy {
         this.loader = false;
         this.apiResponseData = response;
         if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
             this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
             this.botChatMessage = this.apiResponseData.bot_message;
           }
 
-          if (this.apiResponseData.hasOwnProperty('button')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
             this.botButtonResponse = this.apiResponseData.button;
           }
           this.processChatResponse();
@@ -1252,8 +1251,8 @@ export class TestComponent implements OnDestroy {
 
     for (const field of first10Fields) {
       if (
-        field.value == '' ||
-        field.value ==
+        field.value === '' ||
+        field.value ===
           "ADA couldn't fill this field, please continue the conversation to fill it"
       ) {
         allCompleted = false;
@@ -1336,21 +1335,21 @@ export class TestComponent implements OnDestroy {
         this.loader = false;
         this.apiResponseData = response;
         if (this.apiResponseData) {
-          if (this.apiResponseData.hasOwnProperty('BIC')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'BIC')) {
             this.bicFieldData = this.formatObjectKeys(this.apiResponseData.BIC);
           }
-          if (this.apiResponseData.hasOwnProperty('bot_message')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'bot_message')) {
             this.botChatMessage = this.apiResponseData.bot_message;
           }
 
-          if (this.apiResponseData.hasOwnProperty('button')) {
+          if (Object.prototype.hasOwnProperty.call(this.apiResponseData, 'button')) {
             this.botButtonResponse = this.apiResponseData.button;
           }
           if (typeof this.botChatMessage !== 'string') {
             if (this.botButtonResponse !== null) {
               if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == true
+                this.apiResponseData.drop_down === true
               ) {
                 this.chatHistory.push({
                   text: {
@@ -1365,7 +1364,7 @@ export class TestComponent implements OnDestroy {
                 });
               } else if (
                 this.botButtonResponse.length > 0 &&
-                this.apiResponseData.drop_down == false
+                this.apiResponseData.drop_down === false
               ) {
                 if (this.checkIfArray(this.botChatMessage['Guidelines'])) {
                   this.chatHistory.push({
@@ -1489,7 +1488,7 @@ export class TestComponent implements OnDestroy {
     };
 
     this.api.submitData(data).subscribe({
-      next: (response) => {
+      next: (_response) => {
         this.additionalDataForSubmit();
       },
       error: (error) => {
@@ -1508,7 +1507,6 @@ export class TestComponent implements OnDestroy {
         const myModal = new bootstrap.Modal(modalElement);
         myModal.show();
         return;
-      } else {
       }
     } else {
       this.submitButtonPopup();
@@ -1547,7 +1545,7 @@ export class TestComponent implements OnDestroy {
         this.fileUploadFromAttachment;
     }
     this.api.submitAdditionalData(additionalData).subscribe({
-      next: (response) => {
+      next: (_response) => {
         this.router.navigate(['/request']);
         setTimeout(() => {
           this.initializeTooltips();
@@ -1573,7 +1571,7 @@ export class TestComponent implements OnDestroy {
     };
 
     this.api.submitData(data).subscribe({
-      next: (response) => {
+      next: (_response) => {
         const data = { user_name: this.api.userName }; // Data to pass to the API
         this.api.retriveData(data);
         setTimeout(() => {
@@ -1589,8 +1587,8 @@ export class TestComponent implements OnDestroy {
 
   onConfirmAreas() {
     this.confirmBtnOfAreaClk = true;
-    const selected = this.botButtonResponse.filter(
-      (area: any, i: any) => this.selectedAreas[i]
+    const _selected = this.botButtonResponse.filter(
+      (_area: any, i: any) => this.selectedAreas[i]
     );
     this.chatHistory.push({
       text: this.getSelectedRegions(),
@@ -1606,8 +1604,8 @@ export class TestComponent implements OnDestroy {
 
   onConfirmDestination() {
     this.confirmBtnOfDestClk = true;
-    const selected = this.botButtonResponse.filter(
-      (area: any, i: any) => this.selectedDestination[i]
+    const _selected = this.botButtonResponse.filter(
+      (_area: any, i: any) => this.selectedDestination[i]
     );
     this.chatHistory.push({
       text: this.getSelectedDestination(),
@@ -1654,10 +1652,10 @@ export class TestComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.submitButtonClicked == true) {
+    if (this.submitButtonClicked === true) {
       this.submitButtonClicked = false;
     } else {
-      if (this.botRespondedFirstTime == true) {
+      if (this.botRespondedFirstTime === true) {
         this.saveChatData();
         this.api.triggerAction('The BIC should saved as a draft');
       }

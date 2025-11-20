@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { LayoutComponent } from './layout.component';
 import { Router, ActivatedRoute } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ServiceService } from '../service.service';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 

@@ -29,13 +29,13 @@ export class FirstTimeUserComponent implements OnInit {
   
 
   ngOnInit() {
-    if (sessionStorage.getItem('userFirstTime') && sessionStorage.getItem('userFirstTime') == 'false') {
+    if (sessionStorage.getItem('userFirstTime') && sessionStorage.getItem('userFirstTime') === 'false') {
       this.userComeFirstTime = false;
     }
   }
 
   openPopup(): void {
-    if (this.userComeFirstTime == true) {
+    if (this.userComeFirstTime === true) {
       this.showCarousel = true;
     } else {
       this.router.navigate(['/create']);

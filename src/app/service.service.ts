@@ -156,7 +156,7 @@ export class ServiceService {
     formData.append('request', JSON.stringify(data));
 
     this.http.post(this.apiDeleteDraft, formData).subscribe(
-      (response: any) => {
+      (_response: any) => {
         const data = { user_name: this.userName };
         this.retriveData(data);
       },

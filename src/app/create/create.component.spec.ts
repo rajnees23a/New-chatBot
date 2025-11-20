@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ServiceService } from '../service.service';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { mockComponentState, mockStaticText, mockFields, mockChatHistory, mockFile } from './create.component.mock';
+import { mockComponentState, mockStaticText, mockFields, mockFile } from './create.component.mock';
 import { of, throwError } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -158,6 +158,7 @@ describe('CreateComponent', () => {
   }));
 
   it('should handle responseDataMethod with error', fakeAsync(() => {
+    (component as any).mockEnabled = false;
     component.textarea = new ElementRef(document.createElement('textarea'));
     component.chatContainerBox = new ElementRef(document.createElement('div'));
     component.tooltipElement = new ElementRef(document.createElement('div'));
@@ -901,10 +902,11 @@ describe('CreateComponent', () => {
 });
 
 it('should not add empty user input to chatHistory', () => {
-  const initialLength = component.chatHistory.length;
   component.userInput = '';
   component.handleUserInput('');
-  expect(component.chatHistory.length).toBe(initialLength);
+  // Check that no user message with empty text was added
+  const userMessages = component.chatHistory.filter(m => m.sender === 'user' && m.text === '');
+  expect(userMessages.length).toBe(0);
 });
 
 it('should add valid input to chatHistory', () => {

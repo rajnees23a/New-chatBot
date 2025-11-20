@@ -14,7 +14,6 @@ describe('HistoryComponent', () => {
   let fixture: ComponentFixture<HistoryComponent>;
   let apiServiceSpy: jasmine.SpyObj<ServiceService>;
   let routerSpy: jasmine.SpyObj<Router>;
-  let processChatResponseSpy: jasmine.Spy;
 
   beforeEach(async () => {
     apiServiceSpy = jasmine.createSpyObj('ServiceService', [
@@ -473,7 +472,10 @@ it('should handle onFocus and onBlur', () => {
   // --- Utility and error branch coverage ---
 
   it('should handle error in responseDataMethod', fakeAsync(() => {
+    (component as any).mockEnabled = false;
     apiServiceSpy.sendData.and.returnValue(throwError(() => new Error('fail')));
+    component.bicFieldData = {};
+    component.dataa = { edit_field: '', user_message: '', confirmation: '' } as any;
     component.dataa.edit_field = '';
     component.userInput = 'Test';
     component.responseDataMethod('Test');
@@ -1254,7 +1256,7 @@ it('should handle recognition error event', () => {
   component.isListening = true;
   spyOn(component, 'stopListening');
   // Ensure recognition has onerror as a function
-  component.recognition.onerror = (event: any) => {
+  component.recognition.onerror = (_event: any) => {
     component.stopListening();
   };
   component.recognition.onerror({ error: 'network' });
@@ -1347,7 +1349,7 @@ it('should show reviewModal when submitButton is called', () => {
   document.body.appendChild(modalDiv);
 
   (window as any).bootstrap = {
-    Modal: function(el: any) {
+    Modal: function(_el: any) {
       return { show: jasmine.createSpy('show'), hide: jasmine.createSpy('hide') };
     }
   };
@@ -1479,7 +1481,10 @@ it('should handle ngOnInit with no data', fakeAsync(() => {
   });
 
    it('should handle responseDataMethod with error and edit_field', fakeAsync(() => {
+    (component as any).mockEnabled = false;
     apiServiceSpy.sendData.and.returnValue(throwError(() => new Error('fail')));
+    component.bicFieldData = {};
+    component.dataa = { edit_field: 'edit', user_message: '', confirmation: '' } as any;
     component.dataa.edit_field = 'edit';
     component.responseDataMethod('Test');
     tick();
