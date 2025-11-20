@@ -91,6 +91,59 @@ Opens coverage report at:
 /coverage/chat-bot/index.html
 ```
 
+---
+
+## 🔍 Code Quality & Linting
+
+We use **ESLint** to maintain consistent code quality across the project. The configuration enforces TypeScript best practices and helps catch common issues before they reach production.
+
+### Running the Linter
+
+To check your code for linting issues:
+```bash
+npm run lint
+```
+
+This will scan all TypeScript files and report any problems it finds.
+
+### Auto-Fixing Issues
+
+Many linting issues can be automatically fixed:
+```bash
+npm run lint:fix
+```
+
+This command will try to fix problems like:
+- Missing semicolons
+- Incorrect spacing/indentation  
+- Unused imports
+- Simple code style issues
+
+### What We Check For
+
+Our linting rules catch common issues like:
+- **Unused variables and imports** – Keeps code clean by removing dead code
+- **Strict equality checks** – Enforces `===` instead of `==` to prevent bugs
+- **Proper object property access** – Ensures safe use of `hasOwnProperty`
+- **Empty code blocks** – Removes unnecessary empty catch/if/else blocks
+- **Unused parameters** – Parameters that aren't used should be prefixed with `_`
+
+### Linting Configuration
+
+The linting setup includes:
+- **ESLint** with TypeScript support
+- **Angular-specific rules** via `@angular-eslint`
+- Custom rules defined in `.eslintrc.json`
+
+If you need to adjust any rules, you can modify the `.eslintrc.json` file in the project root.
+
+### Best Practices
+
+- Run `npm run lint` before committing your code
+- Fix any errors before pushing to the repository
+- Warnings are informational but should be addressed when possible
+- The CI/CD pipeline may run lint checks automatically
+
 ### 🖼️ Sample Test & Coverage Screenshots
 
 <img width="1312" height="991" alt="test_specs" src="https://github.com/user-attachments/assets/a4241303-0c26-4b8f-b5ce-ff9d8a34715d" />
