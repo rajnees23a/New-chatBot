@@ -22,8 +22,13 @@ describe('CreateComponent', () => {
       'submitData',
       'submitAdditionalData',
       'retriveData',
-      'triggerAction'
-    ]);
+      'triggerAction',
+      'saveMockDraft',
+      'resetAction'
+    ], {
+      action$: of({ triggered: false, message: '' }),
+      userName: 'test_user'
+    });
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
@@ -58,6 +63,8 @@ describe('CreateComponent', () => {
     apiServiceSpy.submitAdditionalData.and.returnValue(of({}));
     // apiServiceSpy.retriveData.and.returnValue(of({}));
     apiServiceSpy.triggerAction.and.stub();
+    apiServiceSpy.saveMockDraft.and.stub();
+    apiServiceSpy.resetAction.and.stub();
     spyOn(component, 'initializeTooltips').and.stub();
     fixture.detectChanges();
   });
@@ -145,6 +152,7 @@ describe('CreateComponent', () => {
     component.dataa.edit_field = '';
     component.responseDataMethod('Test');
     tick();
+    flush(); // Clear any remaining timers
     expect(component.loader).toBeFalse();
     expect(component.botRespondedFirstTime).toBeTrue();
   }));
@@ -158,6 +166,7 @@ describe('CreateComponent', () => {
     component.dataa.edit_field = '';
     component.responseDataMethod('Test');
     tick();
+    flush(); // Clear any remaining timers
     expect(component.loader).toBeFalse();
     expect(component.chatHistory.some(m => m.text === mockStaticText.sorryNetworkText)).toBeTrue();
   }));
@@ -666,6 +675,7 @@ describe('CreateComponent', () => {
     component.apiResponseData = {};
     component.submitButtonPopup();
     tick();
+    flush(); // Clear any remaining timers
     expect(component.submitButtonClicked).toBeTrue();
   }));
 
@@ -694,6 +704,7 @@ describe('CreateComponent', () => {
   // });
 
   it('should handle additionalDataForSubmit', fakeAsync(() => {
+    (component as any).mockEnabled = false;
     component.textarea = new ElementRef(document.createElement('textarea'));
   component.chatContainerBox = new ElementRef(document.createElement('div'));
   component.tooltipElement = new ElementRef(document.createElement('div'));
@@ -702,10 +713,12 @@ describe('CreateComponent', () => {
     component.fields = mockFields.map(f => ({ ...f, value: 'filled' }));
     component.additionalDataForSubmit();
     tick();
+    flush(); // Clear any remaining timers
     expect(apiServiceSpy.submitAdditionalData).toHaveBeenCalled();
   }));
 
   it('should handle saveChatData', fakeAsync(() => {
+    (component as any).mockEnabled = false;
     component.textarea = new ElementRef(document.createElement('textarea'));
   component.chatContainerBox = new ElementRef(document.createElement('div'));
   component.tooltipElement = new ElementRef(document.createElement('div'));
@@ -888,9 +901,10 @@ describe('CreateComponent', () => {
 });
 
 it('should not add empty user input to chatHistory', () => {
+  const initialLength = component.chatHistory.length;
   component.userInput = '';
   component.handleUserInput('');
-  expect(component.chatHistory.length).toBe(mockChatHistory.length);
+  expect(component.chatHistory.length).toBe(initialLength);
 });
 
 it('should add valid input to chatHistory', () => {

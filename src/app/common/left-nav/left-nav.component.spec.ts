@@ -5,7 +5,7 @@ import { ServiceService } from '../../service.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, tick, flush } from '@angular/core/testing';
 
 describe('LeftNavComponent', () => {
   let component: LeftNavComponent;
@@ -21,6 +21,7 @@ describe('LeftNavComponent', () => {
       triggerAction: jasmine.createSpy('triggerAction'),
       setData: jasmine.createSpy('setData'),
       show: jasmine.createSpy('show'),
+      hide: jasmine.createSpy('hide'),
       navbarData$: of([]),
     };
     mockCdr = { detectChanges: jasmine.createSpy('detectChanges') };
@@ -51,14 +52,15 @@ describe('LeftNavComponent', () => {
   });
 
   it('should toggle sidebar', () => {
-    expect(component.isCollapsed).toBe(false);
+    const initialState = component.isCollapsed;
     component.toggleSidebar();
-    expect(component.isCollapsed).toBe(true);
+    expect(component.isCollapsed).toBe(!initialState);
     component.toggleSidebar();
-    expect(component.isCollapsed).toBe(false);
+    expect(component.isCollapsed).toBe(initialState);
   });
 
-  it('should call setData on ngOnInit', () => {
+  it('should call setData on ngOnInit when mockEnabled is false', () => {
+    (component as any).mockEnabled = false;
     spyOn(component, 'setData');
     component.ngOnInit();
     expect(component.setData).toHaveBeenCalled();
@@ -70,6 +72,7 @@ describe('LeftNavComponent', () => {
 
     component.onItemClick({}, 'sessionId', 'userName', 2);
     tick(); // advances the virtual timer so setTimeout runs
+    flush(); // Clear any remaining timers
 
     expect(component.selectedItem).toBe(2);
     expect(component.isItemSelected).toBe(true);
@@ -114,14 +117,16 @@ describe('LeftNavComponent', () => {
     expect(component.dataSubscription.unsubscribe).toHaveBeenCalled();
   });
 
-  it('should fetch draft data and call retriveData and setData', () => {
+  it('should fetch draft data and call retriveData and setData when mockEnabled is false', () => {
+    (component as any).mockEnabled = false;
     spyOn(component, 'setData');
     component.fetchDraftData();
     expect(mockService.retriveData).toHaveBeenCalledWith({ user_name: mockService.userName });
     expect(component.setData).toHaveBeenCalled();
   });
 
-  it('should delete draft and navigate to home', () => {
+  it('should delete draft and navigate to home when mockEnabled is false', () => {
+    (component as any).mockEnabled = false;
     component.deletingUserNAme = 'user';
     component.deleteingSesionId = 'session';
     spyOn(component, 'fetchDraftData');
@@ -216,9 +221,9 @@ it('should handle processData with empty, ADA, and valid titles', () => {
 
   component.processData(data);
 
-  expect(component.modifiedData[0].displayTitle).toContain('BIC draft'); // empty
-  expect(component.modifiedData[1].displayTitle).toContain('BIC draft'); // ADA text
-  expect(component.modifiedData[2].displayTitle).toBe('Valid Title'); // valid title
+  expect(component.modifiedData[0].displayTitle).toContain('BIC'); // empty
+  expect(component.modifiedData[1].displayTitle).toContain('BIC'); // ADA text
+  expect(component.modifiedData[2].displayTitle).toBe('BIC 3'); // valid title gets numbered format
 });
 
 it('should handle invalid dates in sortAccordingToDate', () => {

@@ -48,23 +48,34 @@ describe('CarouselComponent', () => {
     expect(component.totalSlides).toBe(3);
   });
 
-  it('should set isLastSlideReached and isFirstSlide in checkIfLastSlide', () => {
-    const addEventListenerSpy = jasmine.createSpy('addEventListener');
-    spyOn(document, 'getElementById').and.returnValue({
-      addEventListener: addEventListenerSpy
-    } as any);
+  it('should update isLastSlideReached and isFirstSlide in goToSlide', () => {
+    // Create mock DOM elements
+    const mockItems = [
+      { classList: { add: jasmine.createSpy(), remove: jasmine.createSpy() }, style: {} },
+      { classList: { add: jasmine.createSpy(), remove: jasmine.createSpy() }, style: {} },
+      { classList: { add: jasmine.createSpy(), remove: jasmine.createSpy() }, style: {} }
+    ];
+    const mockActive = mockItems[0];
+    mockActive.classList.add('active');
+    
+    spyOn(document, 'querySelectorAll').and.returnValue(mockItems as any);
+    spyOn(document, 'querySelector').and.returnValue(mockActive as any);
 
-    component.totalSlides = 5;
-    component.currentSlideIndex = 4;
-    (component as any).checkIfLastSlide();
-
-    // Simulate event callback
-    const event = { to: 4 };
-    addEventListenerSpy.calls.argsFor(0)[1](event);
-
-    expect(component.currentSlideIndex).toBe(4);
+    component.totalSlides = 3;
+    component.currentSlideIndex = 0;
+    
+    // Go to last slide
+    component.goToSlide(2);
+    
+    // Wait for setTimeout
+    jasmine.clock().install();
+    jasmine.clock().tick(300);
+    
+    expect(component.currentSlideIndex).toBe(2);
     expect(component.isFirstSlide).toBeFalse();
     expect(component.isLastSlideReached).toBeTrue();
+    
+    jasmine.clock().uninstall();
   });
 
   it('should call closePopup, emit hideParent, set sessionStorage and navigate on getStarted', () => {
@@ -86,19 +97,50 @@ describe('CarouselComponent', () => {
     expect(component.step).toBe(1);
   });
 
-  it('should update slide states in onCarouselSlide', () => {
-    spyOn(component, 'setTotalSlides');
-    spyOn(component as any, 'checkIfLastSlide');
+  it('should navigate to next slide when goToNextSlide is called', () => {
+    const mockItems = [
+      { classList: { add: jasmine.createSpy(), remove: jasmine.createSpy() }, style: {} },
+      { classList: { add: jasmine.createSpy(), remove: jasmine.createSpy() }, style: {} }
+    ];
+    mockItems[0].classList.add('active');
+    
+    spyOn(document, 'querySelectorAll').and.returnValue(mockItems as any);
+    spyOn(document, 'querySelector').and.returnValue(mockItems[0] as any);
+    
+    component.totalSlides = 2;
     component.currentSlideIndex = 0;
-    component.isLastSlideReached = false;
-    (component as any).onCarouselSlide();
-    expect(component.setTotalSlides).toHaveBeenCalled();
-    expect((component as any).checkIfLastSlide).toHaveBeenCalled();
-    expect(component.isFirstSlide).toBeTrue();
-
+    
+    component.goToNextSlide();
+    
+    jasmine.clock().install();
+    jasmine.clock().tick(300);
+    
+    expect(component.currentSlideIndex).toBe(1);
+    
+    jasmine.clock().uninstall();
+  });
+  
+  it('should navigate to previous slide when goToPreviousSlide is called', () => {
+    const mockItems = [
+      { classList: { add: jasmine.createSpy(), remove: jasmine.createSpy() }, style: {} },
+      { classList: { add: jasmine.createSpy(), remove: jasmine.createSpy() }, style: {} }
+    ];
+    mockItems[1].classList.add('active');
+    
+    spyOn(document, 'querySelectorAll').and.returnValue(mockItems as any);
+    spyOn(document, 'querySelector').and.returnValue(mockItems[1] as any);
+    
+    component.totalSlides = 2;
     component.currentSlideIndex = 1;
-    component.isLastSlideReached = true;
-    (component as any).onCarouselSlide();
-    expect(component.isFirstSlide).toBeFalse();
+    
+    component.goToPreviousSlide();
+    
+    jasmine.clock().install();
+    jasmine.clock().tick(300);
+    
+    expect(component.currentSlideIndex).toBe(0);
+    expect(component.isFirstSlide).toBeTrue();
+    
+    jasmine.clock().uninstall();
   });
 });

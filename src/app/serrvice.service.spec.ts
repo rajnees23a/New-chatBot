@@ -1,18 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { SerrviceService } from './serrvice.service';
+import { ServiceService } from './service.service';
 import { environment } from '../environments/environment';
 
-describe('SerrviceService', () => {
-  let service: SerrviceService;
+describe('ServiceService', () => {
+  let service: ServiceService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [SerrviceService]
+      providers: [ServiceService]
     });
-    service = TestBed.inject(SerrviceService);
+    service = TestBed.inject(ServiceService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -34,7 +34,7 @@ describe('SerrviceService', () => {
 
   it('should update selected data', (done) => {
     const data = { test: 1 };
-    service.selectedData$.subscribe(val => {
+    service.selectedData$.subscribe((val: any) => {
       if (val) {
         expect(val).toEqual(data);
         done();
@@ -106,7 +106,7 @@ describe('SerrviceService', () => {
 
   it('should set and get data', (done) => {
     const data = { foo: 'bar' };
-    service.currentData$.subscribe(val => {
+    service.currentData$.subscribe((val: any) => {
       if (val) {
         expect(val).toEqual(data);
         done();
@@ -117,7 +117,7 @@ describe('SerrviceService', () => {
 
   it('should set and get data for request chat show', (done) => {
     const data = { foo: 'bar' };
-    service.chatDetailsForRequest$.subscribe(val => {
+    service.chatDetailsForRequest$.subscribe((val: any) => {
       if (val) {
         expect(val).toEqual(data);
         done();
@@ -128,7 +128,7 @@ describe('SerrviceService', () => {
 
   it('should trigger and reset action', (done) => {
     let first = true;
-    const sub = service.action$.subscribe(val => {
+    const sub = service.action$.subscribe((val: any) => {
       if (first) {
         first = false; // skip the initial value
         return;
@@ -146,7 +146,7 @@ describe('SerrviceService', () => {
 
   it('should show and hide loading', (done) => {
     let first = true;
-    service.loading$.subscribe(val => {
+    service.loading$.subscribe((val: any) => {
       if (first) {
         first = false; // skip the initial false
         return;
@@ -167,7 +167,7 @@ describe('SerrviceService', () => {
     service.retriveData(data);
     const req = httpMock.expectOne(`${environment.portLocal}retrieve-draft`);
     req.flush({ draft_data: { test: 1 } });
-    service.navbarData$.subscribe(val => {
+    service.navbarData$.subscribe((val: any) => {
       expect(val).toEqual({ test: 1 });
     });
   });

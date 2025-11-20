@@ -454,6 +454,7 @@ it('should handle onFocus and onBlur', () => {
   });
 
   it('should call ngOnDestroy and save chat data', () => {
+    (component as any).mockEnabled = false;
     component.submitButtonClicked = false;
     component.botRespondedFirstTime = true;
     spyOn(component, 'saveChatData');
@@ -477,6 +478,7 @@ it('should handle onFocus and onBlur', () => {
     component.userInput = 'Test';
     component.responseDataMethod('Test');
     tick();
+    flush(); // Clear any remaining timers
     expect(component.loader).toBeFalse();
     expect(component.chatHistory.some(m => m.sender === 'bot')).toBeTrue();
   }));
@@ -739,6 +741,7 @@ it('should handle onFocus and onBlur', () => {
   });
 
   it('should call ngOnDestroy and saveChatData if not submitted', () => {
+    (component as any).mockEnabled = false;
     component.dataSubscription = { unsubscribe: jasmine.createSpy('unsubscribe') } as any;
     component.submitButtonClicked = false;
     component.botRespondedFirstTime = true;
@@ -1480,6 +1483,7 @@ it('should handle ngOnInit with no data', fakeAsync(() => {
     component.dataa.edit_field = 'edit';
     component.responseDataMethod('Test');
     tick();
+    flush(); // Clear any remaining timers
     expect(component.loader).toBeFalse();
   }));
 
@@ -1774,6 +1778,7 @@ it('should handle ngOnInit with no data', fakeAsync(() => {
   });
 
   it('should call ngOnDestroy with saveChatData', () => {
+    (component as any).mockEnabled = false;
     component.dataSubscription = { unsubscribe: jasmine.createSpy('unsubscribe') } as any;
     component.submitButtonClicked = false;
     component.botRespondedFirstTime = true;
